@@ -1,0 +1,162 @@
+<script lang="ts">
+import { Icon } from '@iconify/vue';
+import { useRoute, useRouter } from 'vue-router';
+import Logout from 'src/components/LogoutBtn.vue';
+import Setting from 'src/components/SettingBtn.vue';
+
+export default {
+  setup() {
+    return {
+      route: useRoute(),
+      router: useRouter(),
+    };
+  },
+  data() {
+    return {
+      nav: false,
+    };
+  },
+  methods: {
+    showNav() {
+      this.nav = !this.nav;
+    },
+  },
+  components: {
+    Icon,
+    Logout,
+    Setting,
+  },
+};
+</script>
+
+<template>
+  <q-layout view="lHh lpR fFf">
+    <q-header reveal class="bg-white text-black">
+      <q-toolbar class="flex justify-between p-4 items-center">
+        <q-img
+          src="../assets/img/logo_wgs_fullBlack.svg"
+          class="w-[130px] h-[29px]"
+        />
+
+        <div class="md:hidden">
+          <q-btn dense flat class="" @click="showNav">
+            <Icon icon="mdi:menu" width="24" />
+          </q-btn>
+        </div>
+
+        <div class="md:flex hid">
+          <Setting />
+          <Logout />
+        </div>
+      </q-toolbar>
+
+      <q-toolbar
+        class="transition-all absolute"
+        v-if="$route.path !== '/admin/*' && nav"
+      >
+        <div class="w-full bg-white h-[150x]">
+          <Setting />
+          <Logout />
+        </div>
+      </q-toolbar>
+    </q-header>
+
+    <div class="flex items-center flex-col gap-6">
+      <h1 class="text-3xl font-bold text-center mt-44">Welcome, Mang Jack</h1>
+
+      <div
+        class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
+      >
+        <h1 class="text-center font-bold text-5xl">5</h1>
+        <p class="text-center">Is your remaining leave</p>
+      </div>
+
+      <div
+        class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
+      >
+        <a
+          href="/"
+          :class="{
+            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+              $route.path === '/',
+          }"
+          class=""
+          >History</a
+        >
+        <a
+          href="/#/mandatory"
+          :class="{
+            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+              $route.path === '/mandatory',
+          }"
+          >Mandatory</a
+        >
+        <a
+          href="/#/optional"
+          :class="{
+            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+              $route.path === '/optional',
+          }"
+          >Optional</a
+        >
+      </div>
+    </div>
+
+    <q-footer reveal class="bg-white text-black">
+      <q-toolbar class="md:hidden">
+        <div class="flex justify-start items-start flex-row w-full">
+          <q-btn
+            dense
+            flat
+            href="/"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[33%]"
+            :class="{
+              'border-b-2 border-[#0021ED] text-primary font-semibold':
+                $route.path === '/',
+            }"
+          >
+            <p class="capitalize">History</p>
+          </q-btn>
+          <q-btn
+            dense
+            flat
+            href="/#/mandatory"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
+            :class="{
+              ' border-b-4 border-b-[#0021ED] text-primary':
+                $route.path === '/mandatory',
+            }"
+          >
+            <p class="capitalize">Mandatory</p>
+          </q-btn>
+          <q-btn
+            dense
+            flat
+            href="/#/optional"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
+            :class="{
+              ' border-b-4 border-b-[#0021ED] text-primary':
+                $route.path === '/optional',
+            }"
+          >
+            <p class="capitalize">Optional</p>
+          </q-btn>
+        </div>
+      </q-toolbar>
+    </q-footer>
+    <q-page-container class="px-4 md:hidden">
+      <router-view />
+    </q-page-container>
+    <div class="hid md:flex justify-center">
+      <router-view />
+    </div>
+  </q-layout>
+</template>
+
+<style>
+@media (max-width: 786px) {
+  .hid {
+    display: none;
+  }
+}
+</style>
