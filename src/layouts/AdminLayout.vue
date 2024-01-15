@@ -36,7 +36,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/admin/dashboard"
+            href="/admin/dashboard"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] rounded-xl transition-all hover:bg-transparent pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] text-primary font-semibold':
@@ -49,7 +49,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/admin/list"
+            href="/admin/list"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] rounded-xl transition-all hover:bg-transparent pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] text-primary font-semibold':
@@ -76,7 +76,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/admin/dashboard"
+            href="/admin/dashboard"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[50%] flex items-start"
             :class="{
               ' border-b-4 border-b-[#0021ED]':
@@ -89,7 +89,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/admin/list"
+            href="/admin/list"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[50%] pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] ': $route.path === '/admin/list',

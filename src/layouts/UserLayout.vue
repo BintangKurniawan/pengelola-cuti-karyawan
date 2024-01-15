@@ -84,7 +84,7 @@ export default {
           >History</a
         >
         <a
-          href="/#/mandatory"
+          href="/mandatory"
           :class="{
             'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
               $route.path === '/mandatory',
@@ -92,7 +92,7 @@ export default {
           >Mandatory</a
         >
         <a
-          href="/#/optional"
+          href="/optional"
           :class="{
             'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
               $route.path === '/optional',
@@ -120,7 +120,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/mandatory"
+            href="/mandatory"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] text-primary':
@@ -132,7 +132,7 @@ export default {
           <q-btn
             dense
             flat
-            href="/#/optional"
+            href="/optional"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] text-primary':
