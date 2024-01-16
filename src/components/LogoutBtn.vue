@@ -29,7 +29,9 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
+
           <q-btn
+            @click="logout"
             label="Logout"
             unelevated
             text-color="negative"
@@ -44,6 +46,8 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { Cookies } from 'quasar';
 export default {
   data() {
     return {
@@ -54,7 +58,37 @@ export default {
     Icon,
   },
 
-  methods: {},
+  methods: {
+    async refresh() {
+      try {
+        await api
+          .get('/auth/refresh', {
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res);
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async logout() {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const refreshToken = Cookies.get('refreshToken');
+
+      try {
+        await api
+          .get('/auth/logout', { withCredentials: true })
+          .then((resp) => {
+            console.log(resp);
+            localStorage.removeItem('role');
+            this.$router.push('/login');
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  },
 };
 </script>
 

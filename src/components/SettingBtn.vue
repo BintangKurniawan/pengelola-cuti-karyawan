@@ -22,7 +22,7 @@
             <div class="flex flex-col items-start gap-1">
               <p class="text-primary font-semibold">Name</p>
               <q-input
-                v-model="email"
+                v-model="name"
                 outlined
                 color="dark"
                 bg-color="white"
@@ -130,7 +130,7 @@ export default {
     return {
       dialog: ref(false),
       modal: ref(false),
-      email: '',
+      name: '',
       password: '',
       passwordFieldType: 'password',
     };

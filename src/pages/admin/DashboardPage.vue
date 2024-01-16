@@ -11,7 +11,7 @@
         <q-input
           borderless
           dense
-          v-model="filter"
+          v-model="searchQuery"
           debounce="300"
           input-class="placeholder-color text-black"
           placeholder="Search"
@@ -75,15 +75,25 @@
       </q-td>
     </template>
   </q-table>
+  <q-pagination
+    v-model="current"
+    color="primary"
+    :max="pagination.rowsNumber"
+    :max-pages="5"
+    :ellipses="false"
+    @update:model-value="getData(current)"
+    :boundary-numbers="false"
+  />
 </template>
 
-<script>
+<script lang="ts">
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
 import SetCollective from '../../components/SetCollectiveBtn.vue';
 import AddEmployee from 'src/components/AddEmployee.vue';
 import SetLeave from 'src/components/SetLeaveBtn.vue';
 import Delete from 'src/components/DeleteBtn.vue';
+import api from 'src/AxiosInterceptors';
 export default {
   components: {
     SetCollective,
@@ -225,28 +235,45 @@ export default {
         status: true,
       },
     ];
-    const pagination = ref({
-      sortBy: 'nik',
-      descending: false,
-      page: 1,
-      rowsPerPage: 10,
-    });
+
     return {
       column,
       rows,
-      pagination,
+      current: ref(1),
     };
   },
   data() {
     return {
+      searchQuery: '',
       filter: '',
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
   methods: {
-    tes(nik) {
+    async getData(page: number | undefined) {
+      try {
+        await api
+          .get(`/employee?page=${page}`, {
+            params: { search: this.searchQuery },
+            withCredentials: true,
+          })
+          .then((res) => {
+            console.log(res);
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tes(nik: any) {
       console.log(nik);
     },
-    getStatusText(status) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getStatusText(status: any) {
       return status ? 'Active' : 'Resign';
     },
   },

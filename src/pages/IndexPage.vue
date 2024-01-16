@@ -3,7 +3,8 @@
     class="my-table table-rounded"
     flat
     :columns="column"
-    :rows="rows"
+    :rows="data"
+    no-data-label="No data available"
     v-model:pagination="pagination"
   >
     <template v-slot:body-cell-status="props">
@@ -11,22 +12,45 @@
         <div
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'Approved',
+            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
             'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'Reject',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'Waiting',
+            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
           }"
         >
           <p class="font-semibold">{{ props.row.status }}</p>
         </div>
       </q-td>
     </template>
+    <template v-slot:body-cell-type="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-start="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-end="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
   </q-table>
 </template>
 
-<script>
+<script lang="ts">
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
-
+import api from 'src/AxiosInterceptors';
+import moment from 'moment';
+import { date } from 'quasar';
 export default {
   components: {
     // Icon,
@@ -50,7 +74,7 @@ export default {
         name: 'start',
         label: 'Start Leave',
         align: 'center',
-        field: 'start',
+        field: 'startLeave',
         style: 'width: 250px;',
         sortable: true,
       },
@@ -58,14 +82,14 @@ export default {
         name: 'end',
         label: 'End Leave',
         align: 'center',
-        field: 'end',
+        field: 'endLeave',
         style: 'width: 100px;',
       },
       {
         name: 'amountleave',
         label: 'Amount of Leave',
         align: 'center',
-        field: 'amountleave',
+        field: 'amountOfLeave',
       },
 
       {
@@ -77,57 +101,6 @@ export default {
       },
     ];
 
-    const rows = [
-      {
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        type: 'Personal',
-        amountleave: 2,
-        start: '11 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '14 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        type: 'Personal',
-        amountleave: 1,
-        start: '12 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        type: 'Optional',
-        amountleave: 1,
-        start: '15 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-      {
-        type: 'Optional',
-        amountleave: 1,
-        start: '16 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-    ];
-
     const pagination = ref({
       sortBy: 'start',
       descending: false,
@@ -136,17 +109,45 @@ export default {
     });
     return {
       column,
-      rows,
       pagination,
     };
   },
   data() {
     return {
       filter: '',
+      data: [],
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
-    tes(nik) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getData() {
+      try {
+        await api
+          .get('/leave/history/me', { withCredentials: true })
+          .then((resp) => {
+            this.data = resp.data.data.employee.leaves;
+            console.log(this.data);
+          });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formatDate(dateString: any) {
+      // const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      // const date = new Date(dateString);
+      // return date.toLocaleDateString('en-UK', options);
+
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-UK', options);
+      // return moment(dateString).local(true).format('ll');
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tes(nik: any) {
       console.log(nik);
     },
   },

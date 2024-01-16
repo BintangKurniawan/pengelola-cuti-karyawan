@@ -2,21 +2,20 @@
   <div>
     <q-btn
       @click="dialog = true"
-      label="Accept"
+      label="Reject"
       unelevated
-      color="primary"
-      text-color="white"
+      text-color="negative"
       class="font-bold round text-center capitalize px-4 mx-4 my-0 py-0 h-[21px]"
     />
     <q-dialog v-model="dialog">
       <q-card class="bg-white">
         <q-card-section>
-          <h6 class="font-bold text-center">Accept Optional Leave</h6>
+          <h6 class="font-bold text-center">Reject Optional Leave</h6>
         </q-card-section>
 
         <q-card-section>
           <p class="text-center text-[#a0a0a0]">
-            Are you sure want to take this optional leave?
+            Are you sure want to reject this optional leave?
           </p>
         </q-card-section>
 
@@ -30,9 +29,10 @@
           </div>
 
           <q-btn
-            label="Accept"
+            label="Reject"
+            @click="acc(id)"
             unelevated
-            text-color="positive"
+            text-color="negative"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -43,7 +43,7 @@
 
 <script>
 import { ref } from 'vue';
-
+import { Icon } from '@iconify/vue';
 export default {
   data() {
     return {
@@ -53,7 +53,9 @@ export default {
   props: {
     id: Number,
   },
-
+  components: {
+    Icon,
+  },
   methods: {
     acc(id) {
       console.log(id);
@@ -64,7 +66,7 @@ export default {
 
 <style lang="scss" scoped>
 .round {
-  background-color: #ebf9f1;
+  background-color: #fbe7e8;
   border-radius: 8px;
 }
 </style>

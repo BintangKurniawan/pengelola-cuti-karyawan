@@ -3,7 +3,6 @@ import { Icon } from '@iconify/vue';
 import { useRoute, useRouter } from 'vue-router';
 import Logout from 'src/components/LogoutBtn.vue';
 import Setting from 'src/components/SettingBtn.vue';
-
 export default {
   setup() {
     return {
@@ -111,7 +110,7 @@ export default {
             href="/"
             class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[33%]"
             :class="{
-              'border-b-2 border-[#0021ED] text-primary font-semibold':
+              'border-b-4 border-[#0021ED] text-primary font-semibold':
                 $route.path === '/',
             }"
           >

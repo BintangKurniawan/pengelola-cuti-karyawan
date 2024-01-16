@@ -7,20 +7,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/UserLayout.vue'),
     children: user_routes,
   },
-  // {
-  //   path: '/mandatory',
-  //   component: () => import('layouts/UserLayout.vue'),
-  //   children: [
-  //     { path: '', component: () => import('pages/user/MandatoryPage.vue') },
-  //   ],
-  // },
-  // {
-  //   path: '/optional',
-  //   component: () => import('layouts/UserLayout.vue'),
-  //   children: [
-  //     { path: '', component: () => import('pages/user/OptionalPage.vue') },
-  //   ],
-  // },
 
   {
     path: '/admin',
@@ -31,11 +17,17 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     component: () => import('layouts/BlankLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/blank/LoginPage.vue') },
+      {
+        path: '',
+        component: () => import('pages/blank/LoginPage.vue'),
+        meta: {
+          title: 'Login',
+          protected: true,
+        },
+      },
     ],
   },
-  // Always leave this as last one,
-  // but you can also remove it
+
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
