@@ -1,19 +1,23 @@
 <template>
-  <q-btn flat text-color="white" class="" @click="dialog = true">
-    <Icon icon="mdi:delete-outline" width="24" class="text-negative" />
-  </q-btn>
+  <q-btn
+    color="primary"
+    text-color="white"
+    label="Activate"
+    class="w-[270px] h-[56px] rounded-3xl"
+    @click="dialog = true"
+  />
 
   <div>
     <q-dialog v-model="dialog">
       <q-card class="bg-white">
         <q-card-section>
-          <h6 class="font-bold text-center">Delete Data</h6>
+          <h6 class="font-bold text-center">Activate Employee</h6>
         </q-card-section>
 
         <q-card-section>
           <p class="text-center text-[#a0a0a0]">
-            Are you sure want to delete this data? <br />
-            It will change it's status into resign
+            Are you sure want to activate this employee? <br />
+            It will change it's status into Active
           </p>
         </q-card-section>
 
@@ -27,10 +31,10 @@
           </div>
 
           <q-btn
-            label="Delete"
+            label="Activate"
             unelevated
-            text-color="negative"
-            @click="remove(id)"
+            text-color="positive"
+            @click="activate(id)"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -80,10 +84,10 @@ export default {
     Icon,
   },
   methods: {
-    remove(id) {
+    activate(id) {
       try {
         api
-          .post(`/employee/disable/${id}`, { withCredentials: true })
+          .post(`/employee/enable/${id}`, { withCredentials: true })
           .then((resp) => {
             this.deleteNotif();
             this.dialog = false;
@@ -101,7 +105,7 @@ export default {
 
 <style lang="scss" scoped>
 .round {
-  background-color: #fbe7e8;
+  background-color: #ebf9f1;
   border-radius: 8px;
 }
 </style>

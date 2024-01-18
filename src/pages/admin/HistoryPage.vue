@@ -1,15 +1,12 @@
 <template>
-  <h1 class="mx-4 md:text-3xl text-xl font-bold text-start">Name: Mang Jack</h1>
+  <h1 class="mx-4 md:text-3xl text-xl font-bold text-start">
+    Name: {{ name }}
+  </h1>
   <h3 class="mx-4 md:text-2xl text-lg font-semibold text-start">
-    NIK: 1234567891011
+    NIK: {{ nik }}
   </h3>
 
-  <q-table
-    class="my-table table-rounded"
-    flat
-    :columns="column"
-    :rows="filteredData"
-  >
+  <q-table class="my-table table-rounded" flat :columns="column" :rows="data">
     <template v-slot:top-left>
       <div class="px-2 rounded-lg border-2 border-secondary">
         <q-input
@@ -26,60 +23,57 @@
         </q-input>
       </div>
     </template>
-
+    <template v-slot:body-cell-type="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-start="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-end="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
     <template v-slot:body-cell-status="props">
       <q-td class="text-center" :props="props">
         <div
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'Approved',
+            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
             'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'Reject',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'Waiting',
+            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
           }"
         >
           <p class="font-semibold">{{ props.row.status }}</p>
         </div>
       </q-td>
     </template>
-    <template v-slot:body-cell-action="props">
-      <q-td :props="props" class="flex gap-1 justify-center items-center">
-        <div
-          v-if="props.row.status === 'Reject' || props.row.status === 'Waiting'"
-        >
-          <Approve status1="Reject" status2="Waiting" />
-        </div>
-        <div
-          v-if="
-            props.row.status === 'Approved' || props.row.status === 'Waiting'
-          "
-        >
-          <Reject status1="Approved" status2="Waiting" />
-        </div>
-      </q-td>
-    </template>
   </q-table>
 </template>
 
-<script>
+<script lang="ts">
 // import { Icon } from '@iconify/vue'
 import Reject from 'src/components/RejectBtn.vue';
 import Approve from 'src/components/ApproveBtn.vue';
+import api from 'src/AxiosInterceptors';
+import moment from 'moment';
+import { useRoute } from 'vue-router';
 export default {
   components: {
     // Icon,
-    Reject,
-    Approve,
   },
   setup() {
     const column = [
-      {
-        name: 'id',
-        label: 'ID',
-        align: 'center',
-        field: 'id',
-        style: 'width: 160px;',
-      },
-
       {
         name: 'type',
         label: 'Type',
@@ -105,12 +99,13 @@ export default {
         name: 'amountleave',
         label: 'Amount of Leave',
         align: 'center',
-        field: 'amountleave',
+        field: 'amountOfLeave',
       },
       {
         name: 'status',
         label: 'Status',
         align: 'center',
+
         field: 'statust',
       },
       {
@@ -121,93 +116,47 @@ export default {
       },
     ];
 
-    const rows = [
-      {
-        id: '#12345',
-        name: 'Cristiano',
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        id: '#12346',
-        name: 'Alexis',
-        type: 'Personal',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        id: '#12345',
-        name: 'Dominic',
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        id: '#12345',
-        name: 'Dominic',
-        type: 'Personal',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        id: '#12345',
-        name: 'Fernando',
-        type: 'Optional',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-      {
-        id: '#12345',
-        name: 'Higuain',
-        type: 'Optional',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-    ];
+    const route = useRoute();
+
+    const id = route.params.id;
     return {
       column,
-      rows,
+      id,
     };
+  },
+  mounted() {
+    this.getData();
   },
   data() {
     return {
       filter: '',
+      name: '',
+      nik: '',
+      data: [],
     };
   },
   methods: {
-    tes(nik) {
-      console.log(nik);
+    async getData() {
+      await api
+        .get(`/leave/history/${this.id}`, { withCredentials: true })
+        .then((resp) => {
+          this.data = resp.data.data;
+          this.name = resp.data.data[0].employee.name;
+          this.nik = resp.data.data[0].employee.nik;
+          console.log(resp);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    formatDate(dateString: string | number | Date) {
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-UK', options);
+      // return moment(dateString).format('ll');
     },
   },
-  computed: {
-    filteredData() {
-      const lowCase = this.filter.toLowerCase();
-      return this.rows.filter(
-        (item) =>
-          item.name.toLowerCase().includes(lowCase) ||
-          item.type.toLowerCase().includes(lowCase)
-      );
-    },
-  },
+  computed: {},
 };
 </script>
 

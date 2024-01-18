@@ -16,7 +16,7 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/history',
+    path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),
     meta: {
       title: 'History',
@@ -24,7 +24,7 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/detail',
+    path: '/admin/detail/:id',
     component: () => import('pages/admin/DetailPage.vue'),
     meta: {
       title: 'Detail',
@@ -32,7 +32,7 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/detail/edit',
+    path: '/admin/detail/:id/edit',
     component: () => import('pages/admin/EditPage.vue'),
     meta: {
       title: 'Edit',

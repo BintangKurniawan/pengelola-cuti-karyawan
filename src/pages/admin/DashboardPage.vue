@@ -3,7 +3,7 @@
     class="my-table table-rounded"
     flat
     :columns="column"
-    :rows="filteredData"
+    :rows="data"
     v-model:pagination="pagination"
   >
     <template v-slot:top-left>
@@ -12,7 +12,8 @@
           borderless
           dense
           v-model="searchQuery"
-          debounce="300"
+          debounce="400"
+          @update:model-value="getData(pagination.page)"
           input-class="placeholder-color text-black"
           placeholder="Search"
         >
@@ -28,17 +29,23 @@
         <AddEmployee />
       </div>
     </template>
-
+    <template v-slot:body-cell-position="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ props.row.positions.name }}</p>
+        </div>
+      </q-td>
+    </template>
     <template v-slot:body-cell-status="props">
       <q-td class="text-center" :props="props">
         <div
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === true,
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === false,
+            'bg-[#EBF9F1] text-[#1F9254] ': props.row.isWorking === true,
+            'bg-[#FBE7E8] text-[#A30D11] ': props.row.isWorking === false,
           }"
         >
-          <p class="font-semibold">{{ getStatusText(props.row.status) }}</p>
+          <p class="font-semibold">{{ getStatusText(props.row.isWorking) }}</p>
         </div>
       </q-td>
     </template>
@@ -59,7 +66,7 @@
           flat
           text-color="white"
           class=""
-          @click="$router.push('/admin/detail')"
+          @click="$router.push(`/admin/detail/${props.row.nik}`)"
         >
           <Icon icon="mdi:information-outline" width="24" class="text-info" />
         </q-btn>
@@ -67,23 +74,25 @@
           flat
           text-color="white"
           class=""
-          @click="$router.push('/admin/history')"
+          @click="$router.push(`/admin/history/${props.row.nik}`)"
         >
           <Icon icon="mdi:history" width="24" class="text-dark" />
         </q-btn>
-        <Delete />
+        <Delete :id="props.row.nik" />
       </q-td>
     </template>
+    <template v-slot:bottom>
+      <q-pagination
+        v-model="current"
+        color="primary"
+        :max="pagination.rowsNumber"
+        :max-pages="5"
+        :ellipses="false"
+        @update:model-value="getData(current)"
+        :boundary-numbers="false"
+      />
+    </template>
   </q-table>
-  <q-pagination
-    v-model="current"
-    color="primary"
-    :max="pagination.rowsNumber"
-    :max-pages="5"
-    :ellipses="false"
-    @update:model-value="getData(current)"
-    :boundary-numbers="false"
-  />
 </template>
 
 <script lang="ts">
@@ -128,10 +137,10 @@ export default {
         style: 'width: 300px;',
       },
       {
-        name: 'remainingleave',
+        name: 'amountOfLeave',
         label: 'Remaining Leave',
         align: 'center',
-        field: 'remainingleave',
+        field: 'amountOfLeave',
         style: 'width: 250px;',
       },
       {
@@ -156,89 +165,8 @@ export default {
       },
     ];
 
-    const rows = [
-      {
-        nik: 12345,
-        name: 'Cristiano',
-        position: 'Manager',
-        remainingleave: 1,
-        status: true,
-      },
-      {
-        nik: 12346,
-        name: 'Alexis',
-        position: 'CEO',
-        remainingleave: 5,
-        status: true,
-      },
-      {
-        nik: 12347,
-        name: 'Dominic',
-        position: 'Employee',
-        remainingleave: 1,
-        status: true,
-      },
-      {
-        nik: 12348,
-        name: 'Bernardo',
-        position: '-',
-        remainingleave: 0,
-        status: false,
-      },
-      {
-        nik: 12349,
-        name: 'Fernando',
-        position: 'HR',
-        remainingleave: 7,
-        status: true,
-      },
-      {
-        nik: 12350,
-        name: 'Higuain',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-      {
-        nik: 12351,
-        name: 'Darwin',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-      {
-        nik: 12352,
-        name: 'Luis',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-      {
-        nik: 12353,
-        name: 'Andrew',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-      {
-        nik: 12354,
-        name: 'Virgil',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-      {
-        nik: 12355,
-        name: 'Trent',
-        position: 'HR',
-        remainingleave: 3,
-        status: true,
-      },
-    ];
-
     return {
       column,
-      rows,
       current: ref(1),
     };
   },
@@ -251,18 +179,24 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      data: [],
     };
+  },
+  mounted() {
+    this.getData(this.pagination.page);
   },
   methods: {
     async getData(page: number | undefined) {
       try {
         await api
-          .get(`/employee?page=${page}`, {
+          .get(`/employee?page=${page}&perPage=10`, {
             params: { search: this.searchQuery },
             withCredentials: true,
           })
           .then((res) => {
-            console.log(res);
+            this.data = res.data.data;
+            this.pagination.rowsNumber = res.data.meta.lastPage;
+            console.log(this.data);
           });
       } catch (err) {
         console.error(err);

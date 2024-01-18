@@ -36,6 +36,7 @@
           <q-btn
             label="Reset"
             unelevated
+            @click="reset(id)"
             text-color="negative"
             class="danger px-10 py-2 font-bold rounded-lg text-center"
           />
@@ -48,14 +49,48 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      resetNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Password successfully reset',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
     };
   },
+  props: {
+    id: Number,
+  },
   components: {
     Icon,
+  },
+  methods: {
+    async reset(id) {
+      await api
+        .post(`/employee/reset-password/${id}`, { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+
+          this.dialog = false;
+          this.resetNotif();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
 };
 </script>

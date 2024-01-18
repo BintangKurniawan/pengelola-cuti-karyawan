@@ -72,9 +72,9 @@
                 outlined
                 class="w-full"
                 label-color="Primary"
-                v-model="typeContract"
-                :options="typeContractOptions"
-                @update:model-value="tes"
+                v-model="typeEmployee"
+                :options="typeEmployeeOptions"
+                @update:model-value="employeeTypeUpdate"
                 label="Type Employee"
               >
               </q-select>
@@ -95,7 +95,7 @@
               />
             </div>
             <div
-              v-if="type === 2"
+              v-if="type === true"
               class="flex flex-col items-start gap-1 w-[45%]"
             >
               <p class="text-primary font-semibold">Expires Contract</p>
@@ -108,6 +108,35 @@
                 class="w-full"
                 v-model="endContract"
               />
+            </div>
+          </div>
+
+          <div class="flex justify-around items-end gap-1 w-full">
+            <div class="flex flex-col items-start gap-1 w-[45%]">
+              <p class="text-primary font-semibold">Position</p>
+              <q-select
+                outlined
+                class="w-full"
+                label="Position"
+                v-model="typePosition"
+                :options="typePositionOptions"
+                @update:model-value="positionIdUpdate"
+              />
+            </div>
+            <div
+              v-if="type === true"
+              class="flex flex-col items-start gap-1 w-[45%]"
+            >
+              <p class="text-primary font-semibold">Type of Contract</p>
+              <q-select
+                outlined
+                class="w-full"
+                v-model="typeContract"
+                :options="typeContractOptions"
+                @update:model-value="contractTypeUpdate"
+                label="Type Contract"
+              >
+              </q-select>
             </div>
           </div>
 
@@ -125,6 +154,7 @@
               label="Confirm"
               color="primary"
               unelevated
+              @click="addEmployee"
               text-color="white"
               class="font-bold round text-center capitalize px-10 py-2"
             />
@@ -135,9 +165,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
 export default {
   data() {
     return {
@@ -146,13 +177,22 @@ export default {
       email: '',
       startWorking: '',
       endContract: '',
-      type: 0,
+      type: false,
       dialog: ref(false),
+      typeEmployee: null,
+      typeEmployeeOptions: [
+        { value: false, label: 'Permanent' },
+        { value: true, label: 'Contract' },
+      ],
       typeContract: null,
       typeContractOptions: [
-        { value: 1, label: 'Permanent' },
-        { value: 2, label: 'Contract' },
+        { value: false, label: 'Old Employee' },
+        { value: true, label: 'New Employee' },
       ],
+      contract: false,
+      typePosition: null,
+      typePositionOptions: [],
+      positionId: '',
     };
   },
   props: {
@@ -161,11 +201,86 @@ export default {
   components: {
     Icon,
   },
-
+  async mounted() {
+    await this.getPosition();
+  },
   methods: {
-    tes() {
-      this.type = this.typeContract.value;
+    employeeTypeUpdate() {
+      this.type = this.typeEmployee.value;
+      if (this.type === false) {
+        this.contract = false;
+        this.endContract = '';
+      }
       console.log(this.type);
+    },
+    contractTypeUpdate() {
+      this.contract = this.typeContract.value;
+      console.log(this.contract);
+    },
+    positionIdUpdate() {
+      this.positionId = this.typePosition.value;
+      console.log(this.positionId);
+    },
+    async getPosition() {
+      await api
+        .get('/employee/positions', { withCredentials: true })
+        .then((resp) => {
+          const positions = resp.data.data;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedPositions = positions.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (position: { id: any; name: any }) => {
+              return {
+                value: position.id,
+                label: position.name,
+              };
+            }
+          );
+
+          this.typePositionOptions = mappedPositions;
+          console.log(this.typePositionOptions);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    async addEmployee() {
+      await api
+        .post(
+          '/employee/add',
+          {
+            nik: this.nik,
+            name: this.name,
+            email: this.email,
+            isContract: this.type,
+            startContract: this.startWorking,
+            endContract: this.endContract,
+            positionId: this.positionId,
+            newContract: this.contract,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((resp) => {
+          console.log(resp);
+          this.dialog = false;
+          this.nik = '';
+          this.name = '';
+          this.email = '';
+          this.type = false;
+          this.startWorking = '';
+          this.endContract = '';
+          this.positionId = '';
+          this.contract = false;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };

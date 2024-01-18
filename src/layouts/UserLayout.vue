@@ -3,6 +3,7 @@ import { Icon } from '@iconify/vue';
 import { useRoute, useRouter } from 'vue-router';
 import Logout from 'src/components/LogoutBtn.vue';
 import Setting from 'src/components/SettingBtn.vue';
+import api from 'src/AxiosInterceptors';
 export default {
   setup() {
     return {
@@ -13,11 +14,28 @@ export default {
   data() {
     return {
       nav: false,
+      name: '',
+      leave: '',
     };
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
     showNav() {
       this.nav = !this.nav;
+    },
+    async getData() {
+      await api
+        .get('/employee/me', { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+          this.name = resp.data.data.employee.name;
+          this.leave = resp.data.data.employee.amountOfLeave;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
   components: {
@@ -61,12 +79,12 @@ export default {
     </q-header>
 
     <div class="flex items-center flex-col gap-6">
-      <h1 class="text-3xl font-bold text-center mt-44">Welcome, Mang Jack</h1>
+      <h1 class="text-3xl font-bold text-center mt-44">Welcome, {{ name }}</h1>
 
       <div
         class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
       >
-        <h1 class="text-center font-bold text-5xl">5</h1>
+        <h1 class="text-center font-bold text-5xl">{{ leave }}</h1>
         <p class="text-center">Is your remaining leave</p>
       </div>
 
