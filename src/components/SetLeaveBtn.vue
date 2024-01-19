@@ -69,6 +69,7 @@
             label="Confirm"
             color="primary"
             unelevated
+            @click="setLeave(id)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -81,6 +82,7 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
 export default {
   data() {
     return {
@@ -98,8 +100,29 @@ export default {
   },
 
   methods: {
-    acc(id) {
-      console.log(id);
+    async setLeave(id) {
+      await api
+        .post(
+          `/leave/personal/${id}`,
+          {
+            reason: this.reason,
+            startLeave: this.startLeave,
+            endLeave: this.endLeave,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          this.reason = '';
+          this.startLeave = '';
+          this.endLeave = '';
+          this.dialog = false;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };

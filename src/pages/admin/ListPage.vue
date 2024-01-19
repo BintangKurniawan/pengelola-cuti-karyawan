@@ -12,9 +12,10 @@
         <q-input
           borderless
           dense
-          v-model="filter"
+          v-model="search"
           debounce="300"
           input-class="placeholder-color text-black"
+          @update:model-value="getData(pagination.page)"
           placeholder="Search"
         >
           <template v-slot:append>
@@ -179,7 +180,7 @@ export default {
   },
   data() {
     return {
-      filter: '',
+      search: '',
       data: [],
       pagination: {
         rowsPerPage: 10,
@@ -194,7 +195,10 @@ export default {
   methods: {
     async getData(page) {
       await api
-        .get(`/leave/all?page=${page}&perPage=10`, { withCredentials: true })
+        .get(`/leave/all?page=${page}&perPage=10`, {
+          params: { search: this.search },
+          withCredentials: true,
+        })
         .then((resp) => {
           this.data = resp.data.data;
           this.pagination.rowsNumber = resp.data.meta.lastPage;

@@ -130,8 +130,8 @@ export default {
           localStorage.setItem('role', this.role);
           console.log(this.role);
           const role = localStorage.getItem('role');
+          this.$router.push('/');
           this.successNotif();
-          this.route.push('/');
           // setTimeout(() => {
           //   if (role !== '2' && role !== '1') {
           //   } else {

@@ -57,7 +57,7 @@
           label="Set"
           class="capitalize rounded-3xl"
           :onClick="() => tes(props.row.nik)" /> -->
-        <SetLeave />
+        <SetLeave :id="props.row.nik" />
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
