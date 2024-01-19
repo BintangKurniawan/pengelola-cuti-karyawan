@@ -60,13 +60,36 @@ import { Icon } from '@iconify/vue';
 import { Cookies } from 'quasar';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 export default {
   components: {
     Icon,
   },
   setup() {
+    const $q = useQuasar();
+    const route = useRouter();
     return {
+      route,
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Login success',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
       loading: ref(false),
       showPw: ref(false),
     };
@@ -83,41 +106,42 @@ export default {
   methods: {
     async login() {
       this.loading = true;
-      try {
-        await api
-          .post(
-            '/auth/login',
-            { email: this.email, password: this.password },
-            { withCredentials: true }
-          )
-          .then((resp) => {
-            this.response = resp.data.data;
-            this.role = resp.data.data.user.roleId;
-            const token = resp.data.data.accessToken;
-            this.email = '';
-            this.password = '';
-            localStorage.setItem('nik', resp.data.data.user.id);
-            // const refreshToken = Cookies.get('refreshToken');
-            console.log(resp.headers['set-cookie']);
-            // const refreshToken = resp.data.data.encryptedRefreshToken;
 
-            // Cookies.set('refreshToken', refreshToken);
-            Cookies.set('accessToken', token);
-            localStorage.setItem('token', token);
-            localStorage.setItem('role', this.role);
-            console.log(this.role);
-            const role = localStorage.getItem('role');
-            setTimeout(() => {
-              if (role !== '2' && role !== '1') {
-                this.$router.push('/');
-              } else {
-                this.$router.push('/admin/dashboard');
-              }
-            }, 2000);
-          });
-      } catch (error) {
-        console.error(error);
-      }
+      await api
+        .post(
+          '/auth/login',
+          { email: this.email, password: this.password },
+          { withCredentials: true }
+        )
+        .then((resp) => {
+          this.response = resp.data.data;
+          this.role = resp.data.data.user.roleId;
+          const token = resp.data.data.accessToken;
+          this.email = '';
+          this.password = '';
+          localStorage.setItem('nik', resp.data.data.user.id);
+          // const refreshToken = Cookies.get('refreshToken');
+          console.log(resp.headers['set-cookie']);
+          // const refreshToken = resp.data.data.encryptedRefreshToken;
+
+          // Cookies.set('refreshToken', refreshToken);
+          Cookies.set('accessToken', token);
+          localStorage.setItem('token', token);
+          localStorage.setItem('role', this.role);
+          console.log(this.role);
+          const role = localStorage.getItem('role');
+          this.successNotif();
+          this.route.push('/');
+          // setTimeout(() => {
+          //   if (role !== '2' && role !== '1') {
+          //   } else {
+          //     this.$router.push('/admin/dashboard');
+          //   }
+          // }, 2000);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       this.loading = false;
     },

@@ -97,9 +97,9 @@ export default {
       },
       {
         name: 'amountleave',
-        label: 'Amount of Leave',
+        label: 'Leave Used',
         align: 'center',
-        field: 'amountOfLeave',
+        field: 'leaveUse',
       },
       {
         name: 'status',

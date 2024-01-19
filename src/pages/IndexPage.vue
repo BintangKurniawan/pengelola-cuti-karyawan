@@ -4,8 +4,8 @@
     flat
     :columns="column"
     :rows="data"
-    no-data-label="No data available"
     v-model:pagination="pagination"
+    hide-bottom
   >
     <template v-slot:body-cell-status="props">
       <q-td class="text-center" :props="props">
@@ -13,7 +13,7 @@
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
             'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'Reject',
+            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
             'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
           }"
         >
@@ -41,6 +41,18 @@
           <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
         </div>
       </q-td>
+    </template>
+
+    <template v-slot:bottom-row>
+      <q-pagination
+        v-model="current"
+        color="primary"
+        :max="pagination.rowsNumber"
+        :max-pages="5"
+        :ellipses="false"
+        @update:model-value="getData(current)"
+        :boundary-numbers="false"
+      />
     </template>
   </q-table>
 </template>
@@ -86,10 +98,10 @@ export default {
         style: 'width: 100px;',
       },
       {
-        name: 'amountleave',
-        label: 'Amount of Leave',
+        name: 'leaveUse',
+        label: 'Leave Used',
         align: 'center',
-        field: 'amountOfLeave',
+        field: 'leaveUse',
       },
 
       {
@@ -101,34 +113,36 @@ export default {
       },
     ];
 
-    const pagination = ref({
-      sortBy: 'start',
-      descending: false,
-      page: 1,
-      rowsPerPage: 5,
-    });
     return {
       column,
-      pagination,
+      current: ref(1),
     };
   },
   data() {
     return {
       filter: '',
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
       data: [],
     };
   },
-  mounted() {
-    this.getData();
+  async mounted() {
+    await this.getData(this.pagination.page);
   },
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getData() {
+    async getData(page: number | undefined) {
       try {
         await api
-          .get('/leave/history/me', { withCredentials: true })
+          .get(`/leave/history/me?page=${page}&perPage=10`, {
+            withCredentials: true,
+          })
           .then((resp) => {
             this.data = resp.data.data.employee.leaves;
+            this.pagination.rowsNumber = resp.data.meta.lastPage;
             console.log(this.data);
           });
       } catch (err) {

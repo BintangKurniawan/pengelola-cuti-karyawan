@@ -3,7 +3,9 @@
     class="my-table table-rounded"
     flat
     :columns="column"
-    :rows="filteredData"
+    :rows="data"
+    hide-pagination
+    v-model:pagination="pagination"
   >
     <template v-slot:top-left>
       <div class="px-2 rounded-lg border-2 border-secondary">
@@ -21,15 +23,35 @@
         </q-input>
       </div>
     </template>
-
+    <template v-slot:body-cell-type="props">
+      <q-td :props="props" class="text-center">
+        <div class="w-fill px-3 py-2">
+          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-start="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-end="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
+        </div>
+      </q-td>
+    </template>
     <template v-slot:body-cell-status="props">
       <q-td class="text-center" :props="props">
         <div
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'Approved',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'Reject',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'Waiting',
+            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
+            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
+            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
           }"
         >
           <p class="font-semibold">{{ props.row.status }}</p>
@@ -37,20 +59,38 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props" class="flex gap-1 justify-center items-center">
+      <q-td
+        :props="props"
+        class="flex gap-1 justify-center items-center text-center"
+      >
         <div
-          v-if="props.row.status === 'Reject' || props.row.status === 'Waiting'"
+          v-if="props.row.status === 'REJECT' || props.row.status === 'WAITING'"
         >
-          <Approve status1="Reject" status2="Waiting" />
+          <Approve :id="props.row.leaveEmployeeId" />
         </div>
         <div
           v-if="
-            props.row.status === 'Approved' || props.row.status === 'Waiting'
+            props.row.status === 'APPROVE' || props.row.status === 'WAITING'
           "
         >
-          <Reject status1="Approved" status2="Waiting" />
+          <Reject
+            :type="props.row.typeOfLeave.name"
+            :id="props.row.leaveEmployeeId"
+          />
         </div>
       </q-td>
+    </template>
+
+    <template v-slot:bottom>
+      <q-pagination
+        v-model="current"
+        color="primary"
+        :max="pagination.rowsNumber"
+        :max-pages="5"
+        :ellipses="false"
+        @update:model-value="getData(current)"
+        :boundary-numbers="false"
+      />
     </template>
   </q-table>
 </template>
@@ -59,6 +99,9 @@
 // import { Icon } from '@iconify/vue'
 import Reject from 'src/components/RejectBtn.vue';
 import Approve from 'src/components/ApproveBtn.vue';
+import api from 'src/AxiosInterceptors';
+import { ref } from 'vue';
+
 export default {
   components: {
     // Icon,
@@ -72,22 +115,22 @@ export default {
         label: 'ID',
         align: 'center',
         field: 'id',
-        style: 'width: 160px;',
+        style: 'width: 80px;',
       },
       {
         name: 'name',
         label: 'Name',
         align: 'center',
         field: 'name',
-        sortable: true,
-        style: 'width: 300px;',
+
+        style: 'width: 150px;',
       },
       {
         name: 'type',
         label: 'Type',
         align: 'center',
         field: 'type',
-        style: 'width: 300px;',
+        style: 'width: 150px;',
       },
       {
         name: 'start',
@@ -107,7 +150,7 @@ export default {
         name: 'amountleave',
         label: 'Amount of Leave',
         align: 'center',
-        field: 'amountleave',
+        field: 'leaveUse',
       },
       {
         name: 'status',
@@ -126,97 +169,47 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 100px',
       },
     ];
 
-    const rows = [
-      {
-        id: '#12345',
-        name: 'Cristiano',
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        id: '#12346',
-        name: 'Alexis',
-        type: 'Personal',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        id: '#12345',
-        name: 'Dominic',
-        type: 'Mandatory',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Approved',
-      },
-      {
-        id: '#12345',
-        name: 'Dominic',
-        type: 'Personal',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Reject',
-      },
-      {
-        id: '#12345',
-        name: 'Fernando',
-        type: 'Optional',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-      {
-        id: '#12345',
-        name: 'Higuain',
-        type: 'Optional',
-        amountleave: 1,
-        start: '13 May 2022',
-        end: '13 May 2022',
-        reason: 'vacation',
-        status: 'Waiting',
-      },
-    ];
     return {
       column,
-      rows,
+      current: ref(1),
     };
   },
   data() {
     return {
       filter: '',
+      data: [],
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
+  mounted() {
+    this.getData(this.pagination.page);
+  },
   methods: {
-    tes(nik) {
-      console.log(nik);
+    async getData(page) {
+      await api
+        .get(`/leave/all?page=${page}&perPage=10`, { withCredentials: true })
+        .then((resp) => {
+          this.data = resp.data.data;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    formatDate(dateString) {
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-UK', options);
     },
   },
-  computed: {
-    filteredData() {
-      const lowCase = this.filter.toLowerCase();
-      return this.rows.filter(
-        (item) =>
-          item.name.toLowerCase().includes(lowCase) ||
-          item.type.toLowerCase().includes(lowCase)
-      );
-    },
-  },
+  computed: {},
 };
 </script>
 

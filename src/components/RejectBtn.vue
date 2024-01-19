@@ -27,6 +27,7 @@
           <q-btn
             label="Reject"
             unelevated
+            @click="reject(type.toLowerCase(), id)"
             text-color="negative"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -39,7 +40,50 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Leave has been successfully rejected',
+          color: 'primary',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Failed to reject leave',
+          color: 'negative',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
@@ -49,9 +93,28 @@ export default {
   components: {
     Icon,
   },
+  props: {
+    type: String,
+    id: Number,
+  },
   methods: {
-    acc(id) {
+    acc(id, type) {
       console.log(id);
+      console.log(type);
+    },
+
+    async reject(type, id) {
+      await api
+        .patch(`/leave/${type}/${id}/reject`, {}, { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+          this.dialog = false;
+          this.successNotif();
+        })
+        .catch((err) => {
+          this.failedNotif();
+          console.error(err);
+        });
     },
   },
 };

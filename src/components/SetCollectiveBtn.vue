@@ -26,6 +26,7 @@
               label-color="Primary"
               v-model="typeLeave"
               :options="typeLeaveOptions"
+              @update:model-value="updateLeaveId"
               label="Collective Leave"
             >
             </q-select>
@@ -84,6 +85,7 @@
             label="Confirm"
             color="primary"
             unelevated
+            @click="setCollectiveLeave"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -96,6 +98,7 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
 export default {
   data() {
     return {
@@ -108,18 +111,38 @@ export default {
         { value: 1, label: 'Mandatory' },
         { value: 2, label: 'Optional' },
       ],
+      leaveId: 1,
     };
   },
-  props: {
-    id: Number,
-  },
+
   components: {
     Icon,
   },
 
   methods: {
-    acc(id) {
-      console.log(id);
+    async setCollectiveLeave() {
+      await api
+        .post(
+          '/leave/collective',
+          {
+            typeOfLeaveId: this.leaveId,
+            reason: this.reason,
+            startLeave: this.startLeave,
+            endLeave: this.endLeave,
+          },
+          { withCredentials: true }
+        )
+        .then((resp) => {
+          console.log(resp);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    updateLeaveId() {
+      this.leaveId = this.typeLeave.value;
+
+      console.log(this.leaveId);
     },
   },
 };

@@ -11,38 +11,61 @@
           <p class="px-4 text-xs">
             {{ formatDate(data.startLeave) }} - {{ formatDate(data.endLeave) }}
           </p>
-          <RejcBtn :id="data.id" />
+          <RejcBtn :id="data.leaveEmployeeId" />
         </div>
       </q-expansion-item>
     </div>
+
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      :ellipses="false"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+    />
   </div>
 </template>
 
 <script>
-// import { defineProps, ref } from 'vue'
+import { ref } from 'vue';
 // import { Icon } from '@iconify/vue'
 import api from 'src/AxiosInterceptors';
 // import Rejc from 'src/components/RejcBtn.vue';
 import RejcBtn from 'src/components/RejcBtn.vue';
 export default {
   setup() {
-    return {};
+    return { current: ref(1) };
   },
   data() {
     return {
       data: [],
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
   mounted() {
-    this.getData();
+    this.getData(this.pagination.page);
   },
   methods: {
-    async getData() {
+    async getData(page) {
       try {
         await api
-          .get('/leave/optional', { withCredentials: true })
+          .get(`/leave/optional?page=${page}&perPage=10`, {
+            withCredentials: true,
+          })
           .then((resp) => {
-            this.data = resp.data.data;
+            const allLeave = resp.data.data.employee.leaves;
+            const approve = allLeave.filter(
+              (leave) => leave.status === 'APPROVE'
+            );
+
+            this.data = approve;
+            this.pagination.rowsNumber = resp.data.meta.lastPage;
           });
       } catch (err) {
         console.error(err);

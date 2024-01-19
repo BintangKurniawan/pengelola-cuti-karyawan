@@ -3,7 +3,7 @@ import router from './router';
 import { Cookies } from 'quasar';
 
 const api = axios.create({
-  baseURL: 'https://10.10.101.153:8080/api',
+  baseURL: 'https://10.10.101.158:8080/api',
 });
 
 api.interceptors.request.use(

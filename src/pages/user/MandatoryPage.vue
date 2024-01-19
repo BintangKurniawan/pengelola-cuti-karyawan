@@ -15,31 +15,49 @@
         </p>
       </q-expansion-item>
     </div>
+
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      :ellipses="false"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+    />
   </div>
 </template>
 
 <script>
 import api from 'src/AxiosInterceptors';
+import { ref } from 'vue';
 export default {
   setup() {
-    return {};
+    return { current: ref(1) };
   },
   data() {
     return {
       data: [],
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
   mounted() {
-    this.getData();
+    this.getData(this.pagination.page);
   },
   methods: {
-    async getData() {
+    async getData(page) {
       try {
         await api
-          .get('/leave/mandatory', { withCredentials: true })
+          .get(`/leave/mandatory?page=${page}&perPage=10`, {
+            withCredentials: true,
+          })
           .then((resp) => {
-            this.data = resp.data.data.leaves;
-
+            this.data = resp.data.data;
+            this.pagination.rowsNumber = resp.data.meta.lastPage;
             console.log(this.data);
           });
       } catch (err) {

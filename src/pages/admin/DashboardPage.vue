@@ -210,16 +210,6 @@ export default {
       return status ? 'Active' : 'Resign';
     },
   },
-  computed: {
-    filteredData() {
-      const lowCase = this.filter.toLowerCase();
-      return this.rows.filter(
-        (item) =>
-          item.name.toLowerCase().includes(lowCase) ||
-          item.position.toLowerCase().includes(lowCase)
-      );
-    },
-  },
 };
 </script>
 

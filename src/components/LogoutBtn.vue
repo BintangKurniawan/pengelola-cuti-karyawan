@@ -48,7 +48,22 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { Cookies } from 'quasar';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Logout success',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
@@ -59,19 +74,6 @@ export default {
   },
 
   methods: {
-    async refresh() {
-      try {
-        await api
-          .get('/auth/refresh', {
-            withCredentials: true,
-          })
-          .then((res) => {
-            console.log(res);
-          });
-      } catch (err) {
-        console.error(err);
-      }
-    },
     async logout() {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const refreshToken = Cookies.get('refreshToken');
@@ -84,6 +86,7 @@ export default {
             localStorage.removeItem('role');
             localStorage.removeItem('nik');
             localStorage.removeItem('token');
+            this.successNotif();
             this.$router.push('/login');
           });
       } catch (err) {

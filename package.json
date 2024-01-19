@@ -1,8 +1,8 @@
 {
   "name": "wgs-e-cuti",
   "version": "0.0.1",
-  "description": "WGS E-Cuti",
-  "productName": "E-Cuti",
+  "description": "WGS",
+  "productName": "WGS",
   "author": "Bintang Kurniawan <bintang.kurniawannn.98@gmail.com>",
   "private": true,
   "scripts": {

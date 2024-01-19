@@ -30,7 +30,7 @@
 
           <q-btn
             label="Reject"
-            @click="acc(id)"
+            @click="reject(id)"
             unelevated
             text-color="negative"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -44,7 +44,33 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+
+    return {
+      rejectNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Optional leave rejected',
+          color: 'primary',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
@@ -57,8 +83,17 @@ export default {
     Icon,
   },
   methods: {
-    acc(id) {
-      console.log(id);
+    async reject(id) {
+      await api
+        .patch(`/leave/optional/${id}/reject`, {}, { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+          this.dialog = false;
+          this.rejectNotif();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };

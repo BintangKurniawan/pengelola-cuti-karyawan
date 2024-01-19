@@ -20,8 +20,8 @@ export default {
       leave: '',
     };
   },
-  mounted() {
-    this.getData();
+  async mounted() {
+    await this.getData();
   },
   methods: {
     showNav() {
@@ -101,12 +101,14 @@ export default {
     </q-header>
 
     <div class="flex items-center flex-col gap-6">
-      <h1 class="text-3xl font-bold text-center mt-44">Welcome, {{ name }}</h1>
+      <h1 class="text-3xl font-bold text-center mt-44">
+        Welcome, {{ name || 'User' }}
+      </h1>
 
       <div
         class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
       >
-        <h1 class="text-center font-bold text-5xl">{{ leave }}</h1>
+        <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
         <p class="text-center">Is your remaining leave</p>
       </div>
 

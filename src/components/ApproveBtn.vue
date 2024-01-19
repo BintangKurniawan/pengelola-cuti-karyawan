@@ -27,6 +27,7 @@
           <q-btn
             label="Accept"
             unelevated
+            @click="approve(id)"
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -39,7 +40,50 @@
 <script>
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Leave has been successfully approved',
+          color: 'primary',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Failed to approve leave',
+          color: 'negative',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
@@ -49,9 +93,22 @@ export default {
   components: {
     Icon,
   },
+  props: {
+    id: Number,
+  },
   methods: {
-    acc(id) {
-      console.log(id);
+    async approve(id) {
+      await api
+        .patch(`/leave/personal/${id}/approve`, {}, { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+          this.dialog = false;
+          this.successNotif();
+        })
+        .catch((err) => {
+          console.error(err);
+          this.failedNotif();
+        });
     },
   },
 };
