@@ -81,11 +81,6 @@ export default {
     };
   },
   methods: {
-    togglePasswordVisibility() {
-      this.passwordFieldType =
-        this.passwordFieldType === 'password' ? 'text' : 'password';
-    },
-
     async login() {
       this.loading = true;
       try {
@@ -99,6 +94,9 @@ export default {
             this.response = resp.data.data;
             this.role = resp.data.data.user.roleId;
             const token = resp.data.data.accessToken;
+            this.email = '';
+            this.password = '';
+            localStorage.setItem('nik', resp.data.data.user.id);
             // const refreshToken = Cookies.get('refreshToken');
             console.log(resp.headers['set-cookie']);
             // const refreshToken = resp.data.data.encryptedRefreshToken;

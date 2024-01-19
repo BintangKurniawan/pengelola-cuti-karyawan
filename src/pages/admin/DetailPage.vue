@@ -99,6 +99,20 @@
       </div>
 
       <div class="flex flex-col gap-4">
+        <h5 class="font-semibold text-2xl">Role</h5>
+        <q-input
+          outlined
+          color="dark"
+          bg-color="white"
+          for="role"
+          readonly
+          v-model="role"
+          placeholder="Role"
+          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+        />
+      </div>
+
+      <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-2xl">Email</h5>
         <q-input
           outlined
@@ -186,6 +200,7 @@ export default {
       historicalName: '',
       historicalNik: '',
       type: '',
+      role: '',
       expDate: false,
     };
   },
@@ -204,6 +219,7 @@ export default {
             this.start = this.formatDate(
               resp.data.data[0].typeOfEmployee.startContract
             );
+            this.role = resp.data.data[0].user.role.name;
             if (
               resp.data.data[0].typeOfEmployee &&
               resp.data.data[0].typeOfEmployee.endContract

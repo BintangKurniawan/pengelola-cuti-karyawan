@@ -81,7 +81,7 @@
             </div>
           </div>
 
-          <div class="flex justify-around items-end gap-1 w-full">
+          <div class="flex justify-around items-end gap-1 w-full flex-wrap">
             <div class="flex flex-col items-start gap-1 w-[45%]">
               <p class="text-primary font-semibold">Start Working</p>
               <q-input
@@ -109,9 +109,6 @@
                 v-model="endContract"
               />
             </div>
-          </div>
-
-          <div class="flex justify-around items-end gap-1 w-full">
             <div class="flex flex-col items-start gap-1 w-[45%]">
               <p class="text-primary font-semibold">Position</p>
               <q-select
@@ -139,6 +136,10 @@
               </q-select>
             </div>
           </div>
+
+          <!-- <div class="flex justify-around items-end gap-1 w-full">
+            
+          </div> -->
 
           <q-card-section
             class="flex items-center gap-4 w-full justify-between"
@@ -169,7 +170,40 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      addNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Employee added successfully',
+          color: 'primary',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Employee failed to add',
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
     return {
       nik: '',
@@ -267,6 +301,7 @@ export default {
           }
         )
         .then((resp) => {
+          this.addNotif();
           console.log(resp);
           this.dialog = false;
           this.nik = '';
@@ -279,6 +314,7 @@ export default {
           this.contract = false;
         })
         .catch((err) => {
+          this.failedNotif();
           console.error(err);
         });
     },

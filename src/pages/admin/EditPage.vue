@@ -8,7 +8,7 @@
           color="dark"
           bg-color="grey-2"
           for="nik"
-          disable=""
+          :disable="roleId === '1'"
           v-model="nik"
           placeholder="NIK"
           class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
@@ -20,7 +20,8 @@
         <q-input
           outlined
           color="dark"
-          bg-color="white"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
           for="name"
           v-model="name"
           placeholder="Name"
@@ -34,6 +35,8 @@
           outlined
           class="w-[270px]"
           label-color="Primary"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
           v-model="typePosition"
           :options="typePositionOptions"
           @update:model-value="updatePositionId"
@@ -74,7 +77,8 @@
           outlined
           for="date"
           color="dark"
-          bg-color="white"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
           class="w-[270px]"
           v-model="exp"
         >
@@ -98,12 +102,27 @@
         <q-select
           outlined
           class="w-[270px]"
-          label-color="Primary"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
           v-model="typeContract"
           :options="typeContractOptions"
           @update:model-value="updateContractId"
           label="Type Employee"
         ></q-select>
+      </div>
+
+      <div class="flex flex-col gap-4" v-if="contractBoolean">
+        <h5 class="font-semibold text-2xl">Type of Contract</h5>
+        <q-select
+          outlined
+          class="w-[270px]"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
+          v-model="contractType"
+          :options="contractTypeOptions"
+          @update:model-value="contractTypeUpdate"
+          label="Type Contract"
+        />
       </div>
 
       <div class="flex flex-col gap-4">
@@ -117,6 +136,18 @@
           v-model="email"
           placeholder="Email"
           class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+        />
+      </div>
+
+      <div class="flex flex-col gap-4" v-if="roleId === '1'">
+        <h5 class="font-semibold text-2xl">Role</h5>
+        <q-select
+          outlined
+          class="w-[270px]"
+          v-model="roleType"
+          :options="roleTypeOptions"
+          @update:model-value="updateRole"
+          label="Role"
         />
       </div>
       <div class="flex flex-col gap-4 h-[104px] justify-end">
@@ -157,7 +188,7 @@ export default {
     const id = route.params.id;
     const $q = useQuasar();
     let timer: string | number | NodeJS.Timeout | undefined;
-
+    const roleId = localStorage.getItem('role');
     onBeforeUnmount(() => {
       if (timer !== void 0) {
         clearTimeout(timer);
@@ -165,6 +196,7 @@ export default {
       }
     });
     return {
+      roleId,
       id,
       showLoading() {
         $q.loading.show();
@@ -181,6 +213,15 @@ export default {
           position: 'bottom-right',
           message: 'Profile edited successfully',
           color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Profile failed to edit',
+          color: 'negative',
           multiLine: true,
         });
       },
@@ -212,6 +253,20 @@ export default {
       typePosition: {} as { value: number; label: string },
       typePositionOptions: [],
       positionId: '',
+
+      contractType: null,
+      contractTypeOptions: [
+        { value: false, label: 'Old Employee' },
+        { value: true, label: 'New Employee' },
+      ],
+      contract: false,
+
+      roleType: null,
+      roleTypeOptions: [
+        { value: 2, label: 'Admin' },
+        { value: 3, label: 'User' },
+      ],
+      role: 3,
     };
   },
   // eslint-disable-next-line vue/no-unused-components
@@ -264,14 +319,22 @@ export default {
             this.typeContract = this.getContractText(
               resp.data.data[0].typeOfEmployee.isContract
             );
+
             this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-            this.exp = this.formatDate2(
-              resp.data.data[0].typeOfEmployee.endContract
-            );
+            this.role = this.getRoleId(resp.data.data[0].user.role.name);
+            this.roleType = this.getRoleText(resp.data.data[0].user.role.name);
+            console.log(this.role);
+
+            if (resp.data.data[0].typeOfEmployee.endContract) {
+              this.exp = this.formatDate(
+                resp.data.data[0].typeOfEmployee.endContract
+              );
+            }
             this.typePosition = this.getPositionText(
               resp.data.data[0].positions.name
             );
             this.positionId = this.getId(resp.data.data[0].positions.name);
+
             console.log(this.status);
             console.log(resp.data.data);
           });
@@ -279,7 +342,10 @@ export default {
         console.error(err);
       }
     },
-
+    contractTypeUpdate() {
+      this.contract = this.contractType.value;
+      console.log(this.contract);
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {
       return status ? 'Active' : 'Resign';
@@ -299,13 +365,27 @@ export default {
       return statusOption ? statusOption.label : null;
       // return status ? 'Active' : 'Resign';
     },
+    getRoleText(role: any) {
+      const roleType = this.roleTypeOptions.find(
+        (option) => option.label === role
+      );
+
+      return roleType ? roleType.label : null;
+    },
     updateContractId() {
       this.contractBoolean = this.typeContract.status;
+      if (this.contractBoolean === false) {
+        this.exp = '';
+      }
       console.log(this.contractBoolean);
     },
     updatePositionId() {
       this.positionId = this.typePosition.value;
       console.log(this.positionId);
+    },
+    updateRole() {
+      this.role = this.roleType.value;
+      console.log(this.role);
     },
     formatDate(dateString: {
       split: (arg0: string) => {
@@ -323,18 +403,20 @@ export default {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       return date.toLocaleDateString('en-UK', options);
     },
-    formatDate2(dateString) {
-      moment.locale('en-ca');
 
-      return moment(dateString).format('L');
-    },
     getId(name: any) {
       const typePosition = this.typePositionOptions.find(
         (option) => option.label === name
       );
       return typePosition ? typePosition.value : null;
     },
+    getRoleId(role: any) {
+      const roleTypeOptions = this.roleTypeOptions.find(
+        (option) => option.label === role
+      );
 
+      return roleTypeOptions ? roleTypeOptions.value : null;
+    },
     async edit() {
       this.showLoading();
       await api
@@ -346,7 +428,9 @@ export default {
             typeOfEmployee: {
               isContract: this.contractBoolean,
               endContract: this.exp,
+              newContract: this.contract,
             },
+            roleId: this.role,
           },
           {
             withCredentials: true,
@@ -363,6 +447,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          this.failedNotif();
         });
     },
   },

@@ -24,7 +24,7 @@
       </div>
     </template>
     <template v-slot:top-right>
-      <div class="flex items-center justify-center gap-2 md:mt-0 mt-4">
+      <div class="flex items-center md:justify-center gap-2 md:mt-0 mt-4">
         <SetCollective />
         <AddEmployee />
       </div>
@@ -119,14 +119,13 @@ export default {
         align: 'center',
         field: 'nik',
         style: 'width: 160px;',
-        sortable: true,
       },
       {
         name: 'name',
         label: 'Name',
         align: 'center',
         field: 'name',
-        sortable: true,
+
         style: 'width: 300px;',
       },
       {

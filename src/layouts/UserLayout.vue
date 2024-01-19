@@ -6,7 +6,9 @@ import Setting from 'src/components/SettingBtn.vue';
 import api from 'src/AxiosInterceptors';
 export default {
   setup() {
+    const role = localStorage.getItem('role');
     return {
+      role,
       route: useRoute(),
       router: useRouter(),
     };
@@ -62,16 +64,36 @@ export default {
         </div>
 
         <div class="md:flex hid">
+          <q-btn
+            dense
+            flat
+            href="/admin/dashboard"
+            class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
+          >
+            <div class="flex items-center gap-4">
+              <Icon icon="mdi:view-dashboard-outline" width="24" />
+              <p class="capitalize">Dashboard</p>
+            </div>
+          </q-btn>
           <Setting />
           <Logout />
         </div>
       </q-toolbar>
 
-      <q-toolbar
-        class="transition-all absolute"
-        v-if="$route.path !== '/admin/*' && nav"
-      >
+      <q-toolbar class="transition-all absolute" v-if="nav">
         <div class="w-full bg-white h-[150x]">
+          <q-btn
+            v-if="role !== 3"
+            dense
+            flat
+            href="/admin/dashboard"
+            class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
+          >
+            <div class="flex items-center gap-4">
+              <Icon icon="mdi:view-dashboard-outline" width="24" />
+              <p class="capitalize">Dashboard</p>
+            </div>
+          </q-btn>
           <Setting />
           <Logout />
         </div>

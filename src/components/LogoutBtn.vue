@@ -82,6 +82,8 @@ export default {
           .then((resp) => {
             console.log(resp);
             localStorage.removeItem('role');
+            localStorage.removeItem('nik');
+            localStorage.removeItem('token');
             this.$router.push('/login');
           });
       } catch (err) {

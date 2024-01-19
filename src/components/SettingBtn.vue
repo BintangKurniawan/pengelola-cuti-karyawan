@@ -27,7 +27,7 @@
                 color="dark"
                 bg-color="white"
                 for="name"
-                placeholder="Name"
+                label="Name"
                 class="drop-shadow-sm w-44 outline-none focus:bg-transparent active:bg-transparent"
               />
             </div>
@@ -35,6 +35,7 @@
             <q-btn
               label="Save Change"
               unelevated
+              @click="editName"
               text-color="positive"
               class="font-bold round text-center capitalize px-4 py-2"
             />
@@ -48,19 +49,15 @@
                 color="dark"
                 bg-color="white"
                 label="Password"
-                :type="passwordFieldType"
+                :type="showPw ? 'text' : 'password'"
                 for="password"
                 placeholder="Password"
                 class="w-44 drop-shadow-sm outline-none focus:bg-transparent active:bg-transparent"
               >
                 <template v-slot:append>
                   <Icon
-                    :icon="
-                      passwordFieldType === 'password'
-                        ? 'mdi:eye-outline'
-                        : 'mdi:eye-off-outline'
-                    "
-                    @click="togglePasswordVisibility"
+                    :icon="showPw ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
+                    @click="showPw = !showPw"
                     class="cursor-pointer text-secondary"
                   /> </template
               ></q-input>
@@ -112,6 +109,7 @@
           </div>
           <q-btn
             label="Yes"
+            @click="changePassword"
             unelevated
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -122,27 +120,198 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      showPw: ref(false),
+      changePwNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Password changed successfully',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Password failed to change',
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+      saveNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Name changed successfully',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      saveFailedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Name failed to change',
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
+    const nik = localStorage.getItem('nik');
+
     return {
       dialog: ref(false),
       modal: ref(false),
       name: '',
       password: '',
-      passwordFieldType: 'password',
+      nik,
+      exp: '',
+
+      typeContract: {} as { status: boolean; label: string },
+      typeContractOptions: [
+        { status: false, label: 'Permanent' },
+        { status: true, label: 'Contract' },
+      ],
+      contractBoolean: false,
+
+      typePosition: {} as { value: number; label: string },
+      typePositionOptions: [],
+      positionId: '',
+
+      contractType: null,
+      contractTypeOptions: [
+        { value: false, label: 'Old Employee' },
+        { value: true, label: 'New Employee' },
+      ],
+
+      roleType: null,
+      roleTypeOptions: [
+        { value: 2, label: 'Admin' },
+        { value: 3, label: 'User' },
+      ],
+      role: 3,
     };
   },
   components: {
     Icon,
   },
-
+  async mounted() {
+    await this.getPosition();
+    await this.getData();
+  },
   methods: {
-    togglePasswordVisibility() {
-      this.passwordFieldType =
-        this.passwordFieldType === 'password' ? 'text' : 'password';
+    getId(name: any) {
+      const typePosition = this.typePositionOptions.find(
+        (option) => option.label === name
+      );
+      return typePosition ? typePosition.value : null;
+    },
+    getRoleId(role: any) {
+      const roleTypeOptions = this.roleTypeOptions.find(
+        (option) => option.label === role
+      );
+
+      return roleTypeOptions ? roleTypeOptions.value : null;
+    },
+    async getPosition() {
+      await api
+        .get('/employee/positions', { withCredentials: true })
+        .then((resp) => {
+          const positions = resp.data.data;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedPositions = positions.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (position: { id: any; name: any }) => {
+              return {
+                value: position.id,
+                label: position.name,
+              };
+            }
+          );
+
+          this.typePositionOptions = mappedPositions;
+          console.log(this.typePositionOptions);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    async getData() {
+      await api
+        .get(`/employee/detail/${this.nik}`, { withCredentials: true })
+        .then((resp) => {
+          console.log(resp);
+          this.name = resp.data.data[0].name;
+          this.positionId = this.getId(resp.data.data[0].positions.name);
+          this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
+
+          this.role = this.getRoleId(resp.data.data[0].user.role.name);
+          if (resp.data.data[0].typeOfEmployee.endContract) {
+            this.exp = resp.data.data[0].typeOfEmployee.endContract;
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+
+    async changePassword() {
+      await api
+        .post(
+          '/employee/change-password',
+          { newPassword: this.password },
+          { withCredentials: true }
+        )
+        .then((resp) => {
+          console.log(resp);
+          this.changePwNotif();
+        })
+        .catch((err) => {
+          console.error(err);
+          this.failedNotif();
+        });
+    },
+    async editName() {
+      await api
+        .put(
+          `/employee/update/${this.nik}`,
+          {
+            name: this.name,
+            positionId: this.positionId,
+            typeOfEmployee: {
+              isContract: this.contractBoolean,
+              endContract: this.exp,
+            },
+            roleId: this.role,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((resp) => {
+          console.log(resp);
+          this.saveNotif();
+        })
+        .catch((err) => {
+          console.error(err);
+          this.saveFailedNotif();
+        });
     },
   },
 };
