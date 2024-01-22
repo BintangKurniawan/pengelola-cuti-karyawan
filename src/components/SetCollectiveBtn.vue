@@ -99,7 +99,31 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Collective leave created',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Failed to create collective leave',
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
@@ -133,6 +157,12 @@ export default {
           { withCredentials: true }
         )
         .then((resp) => {
+          this.successNotif();
+          this.dialog = false;
+          this.leaveId = 1;
+          this.reason = '';
+          this.startLeave = '';
+          this.endLeave = '';
           console.log(resp);
         })
         .catch((err) => {

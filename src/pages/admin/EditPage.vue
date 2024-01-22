@@ -278,7 +278,7 @@ export default {
   methods: {
     async getPosition() {
       await api
-        .get('/employee/positions', { withCredentials: true })
+        .get('/position', { withCredentials: true })
         .then((resp) => {
           const positions = resp.data.data;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

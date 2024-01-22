@@ -23,6 +23,23 @@
           </template>
         </q-input>
       </div>
+      <div class="flex items-center">
+        <q-select
+          class="px-2 rounded-lg w-[150px]"
+          outlined
+          v-model="status"
+          :options="statusOptions"
+          @update:model-value="getData(pagination.page)"
+          label="Filter"
+        ></q-select>
+        <Icon
+          @click="reset"
+          v-if="status"
+          icon="mdi:close-outline"
+          width="24"
+          class="text-negative cursor-pointer"
+        />
+      </div>
     </template>
     <template v-slot:body-cell-type="props">
       <q-td :props="props" class="text-center">
@@ -102,10 +119,10 @@ import Reject from 'src/components/RejectBtn.vue';
 import Approve from 'src/components/ApproveBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-
+import { Icon } from '@iconify/vue';
 export default {
   components: {
-    // Icon,
+    Icon,
     Reject,
     Approve,
   },
@@ -113,7 +130,7 @@ export default {
     const column = [
       {
         name: 'id',
-        label: 'ID',
+        label: 'NIK',
         align: 'center',
         field: 'id',
         style: 'width: 80px;',
@@ -187,16 +204,22 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      status: '',
+      statusOptions: ['Approve', 'Waiting', 'Reject'],
     };
   },
   mounted() {
     this.getData(this.pagination.page);
   },
   methods: {
+    reset() {
+      this.status = '';
+      this.getData(this.pagination.page);
+    },
     async getData(page) {
       await api
         .get(`/leave/all?page=${page}&perPage=10`, {
-          params: { search: this.search },
+          params: { search: this.search, status: this.status },
           withCredentials: true,
         })
         .then((resp) => {

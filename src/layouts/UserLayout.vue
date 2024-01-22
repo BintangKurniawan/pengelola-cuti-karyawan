@@ -70,7 +70,7 @@ export default {
             href="/admin/dashboard"
             class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
           >
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4" v-if="role !== '3'">
               <Icon icon="mdi:view-dashboard-outline" width="24" />
               <p class="capitalize">Dashboard</p>
             </div>
@@ -83,7 +83,7 @@ export default {
       <q-toolbar class="transition-all absolute" v-if="nav">
         <div class="w-full bg-white h-[150x]">
           <q-btn
-            v-if="role !== 3"
+            v-if="role !== '3'"
             dense
             flat
             href="/admin/dashboard"

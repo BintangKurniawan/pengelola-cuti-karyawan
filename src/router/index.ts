@@ -18,11 +18,10 @@ import { authStore } from 'src/stores/auth';
  * with the Router instance.
  */
 
-const isAuthenticated = () => {
-  const token = authStore().getAccessToken();
-  return !!token;
-};
-const role = localStorage.getItem('role');
+// const isAuthenticated = () => {
+//   const token = authStore().getAccessToken();
+//   return !!token;
+// };
 
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -63,13 +62,17 @@ export default route(function (/* { store, ssrContext } */) {
   //   document.title = to.meta.title + ' - WGS';
   // });
 
-  const adminRoles = [1, 2];
+  // const adminRoles = [1, 2];
 
   Router.beforeEach((to, from, next) => {
+    const role = localStorage.getItem('role');
+
     if (!role && to.path != '/login') {
       next('/login');
     } else if (role === '3' && to.path.includes('/admin')) {
       next('/forbidden');
+    } else if (role && to.path === '/login') {
+      next('/');
     } else {
       next();
     }

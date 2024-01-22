@@ -17,6 +17,7 @@
     </div>
 
     <q-pagination
+      v-if="data && data.length > 0"
       v-model="current"
       color="primary"
       :max="pagination.rowsNumber"
@@ -25,6 +26,10 @@
       @update:model-value="getData(current)"
       :boundary-numbers="false"
     />
+
+    <div v-else>
+      <h3 class="text-center">No Data Available</h3>
+    </div>
   </div>
 </template>
 

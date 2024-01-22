@@ -1,5 +1,6 @@
 <template>
   <q-table
+    v-if="data && data.length > 0"
     class="my-table table-rounded"
     flat
     :columns="column"
@@ -55,6 +56,10 @@
       />
     </template>
   </q-table>
+
+  <div v-else>
+    <h3 class="text-center">No Data Available</h3>
+  </div>
 </template>
 
 <script lang="ts">

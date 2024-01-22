@@ -86,7 +86,7 @@ export default {
           progress: true,
           position: 'bottom-right',
           message: `${msg}`,
-          color: 'primary',
+          color: 'negative',
           multiLine: true,
         });
       },
@@ -121,16 +121,18 @@ export default {
           this.password = '';
           localStorage.setItem('nik', resp.data.data.user.id);
           // const refreshToken = Cookies.get('refreshToken');
-          console.log(resp.headers['set-cookie']);
           // const refreshToken = resp.data.data.encryptedRefreshToken;
 
           // Cookies.set('refreshToken', refreshToken);
-          Cookies.set('accessToken', token);
+          // Cookies.set('accessToken', token);
           localStorage.setItem('token', token);
           localStorage.setItem('role', this.role);
           console.log(this.role);
-          const role = localStorage.getItem('role');
-          this.$router.push('/');
+          if (this.role !== '2' && this.role !== '1') {
+            this.$router.push('/');
+          } else {
+            this.$router.push('/admin/dashboard');
+          }
           this.successNotif();
           // setTimeout(() => {
           //   if (role !== '2' && role !== '1') {
@@ -140,7 +142,11 @@ export default {
           // }, 2000);
         })
         .catch((error) => {
-          console.error(error);
+          if (error.response) {
+            const status = error.response.status;
+            const msg = error.response.message;
+            console.log(msg, status);
+          }
         });
 
       this.loading = false;

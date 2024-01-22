@@ -83,7 +83,31 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      successNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Leave created, go to List of Leave page to accept it',
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif() {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: 'Failed to create leave',
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
+  },
   data() {
     return {
       dialog: ref(false),
