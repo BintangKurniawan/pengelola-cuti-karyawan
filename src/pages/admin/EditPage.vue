@@ -207,20 +207,22 @@ export default {
         }, 500);
       },
       date: ref('2023-11-20'),
-      saveNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      saveNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Profile edited successfully',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
         });
       },
-      failedNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Profile failed to edit',
+          message: `${msg}`,
           color: 'negative',
           multiLine: true,
         });
@@ -443,11 +445,14 @@ export default {
         .then((resp) => {
           console.log(resp);
 
-          this.saveNotif();
+          this.saveNotif(resp.data.message);
         })
         .catch((err) => {
           console.error(err);
-          this.failedNotif();
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

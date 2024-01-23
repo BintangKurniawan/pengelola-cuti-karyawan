@@ -97,11 +97,11 @@ export default {
           multiLine: true,
         });
       },
-      failedNotif() {
+      failedNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Failed to create leave',
+          message: `${msg}`,
           color: 'negative',
           multiLine: true,
         });
@@ -117,7 +117,7 @@ export default {
     };
   },
   props: {
-    id: Number,
+    id: String,
   },
   components: {
     Icon,
@@ -139,13 +139,17 @@ export default {
         )
         .then((res) => {
           console.log(res);
+          this.successNotif();
           this.reason = '';
           this.startLeave = '';
           this.endLeave = '';
           this.dialog = false;
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

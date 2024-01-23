@@ -130,40 +130,33 @@ export default {
     const $q = useQuasar();
     return {
       showPw: ref(false),
-      changePwNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      successNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Password changed successfully',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
         });
       },
-      failedNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Password failed to change',
+          message: `${msg}`,
           color: 'negative',
           multiLine: true,
-        });
-      },
-      saveNotif() {
-        $q.notify({
-          progress: true,
-          position: 'bottom-right',
-          message: 'Name changed successfully',
-          color: 'primary',
-          multiLine: true,
-        });
-      },
-      saveFailedNotif() {
-        $q.notify({
-          progress: true,
-          position: 'bottom-right',
-          message: 'Name failed to change',
-          color: 'negative',
-          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
         });
       },
     };
@@ -245,7 +238,10 @@ export default {
           console.log(this.typePositionOptions);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
     async getData() {
@@ -263,7 +259,10 @@ export default {
           }
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
 
@@ -276,13 +275,17 @@ export default {
         )
         .then((resp) => {
           console.log(resp);
-          this.changePwNotif();
+          const msg = resp.data.message;
+          this.successNotif(msg);
           this.dialog = false;
           this.modal = false;
+          localStorage.setItem('firstLogin', 'false');
         })
         .catch((err) => {
-          console.error(err);
-          this.failedNotif();
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
     async editName() {
@@ -308,11 +311,14 @@ export default {
         )
         .then((resp) => {
           console.log(resp);
-          this.saveNotif();
+          const msg = resp.data.message;
+          this.successNotif(msg);
         })
         .catch((err) => {
-          console.error(err);
-          this.saveFailedNotif();
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

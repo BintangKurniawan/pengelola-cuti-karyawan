@@ -16,6 +16,14 @@ const admin_routes = [
     },
   },
   {
+    path: '/admin/positions',
+    component: () => import('pages/admin/PositionPage.vue'),
+    meta: {
+      title: 'List of Position',
+      protected: true,
+    },
+  },
+  {
     path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),
     meta: {

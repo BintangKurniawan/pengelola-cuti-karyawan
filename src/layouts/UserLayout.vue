@@ -4,24 +4,49 @@ import { useRoute, useRouter } from 'vue-router';
 import Logout from 'src/components/LogoutBtn.vue';
 import Setting from 'src/components/SettingBtn.vue';
 import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
   setup() {
     const role = localStorage.getItem('role');
+    const $q = useQuasar();
     return {
       role,
       route: useRoute(),
       router: useRouter(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      successNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
     };
   },
   data() {
+    const isFirst = localStorage.getItem('firstLogin');
     return {
       nav: false,
       name: '',
       leave: '',
+      isFirst,
     };
   },
   async mounted() {
     await this.getData();
+    console.log(this.isFirst);
   },
   methods: {
     showNav() {
@@ -34,9 +59,14 @@ export default {
           console.log(resp);
           this.name = resp.data.data.employee.name;
           this.leave = resp.data.data.employee.amountOfLeave;
+
+          localStorage.setItem('nik', resp.data.data.employee.nik);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },
@@ -100,8 +130,14 @@ export default {
       </q-toolbar>
     </q-header>
 
-    <div class="flex items-center flex-col gap-6">
-      <h1 class="text-3xl font-bold text-center mt-44">
+    <div class="flex items-center flex-col gap-6 mt-28">
+      <div
+        class="w-full bg-warning text-netral font-bold px-4"
+        v-if="isFirst === 'true'"
+      >
+        <h3>Password has not been change, change it now.</h3>
+      </div>
+      <h1 class="text-3xl font-bold text-center">
         Welcome, {{ name || 'User' }}
       </h1>
 
@@ -188,7 +224,7 @@ export default {
     <q-page-container class="px-4 md:hidden">
       <router-view />
     </q-page-container>
-    <div class="hid md:flex justify-center">
+    <div class="hid md:flex justify-center flex-col">
       <router-view />
     </div>
   </q-layout>

@@ -5,6 +5,7 @@
     :columns="column"
     :rows="data"
     v-model:pagination="pagination"
+    hide-pagination
   >
     <template v-slot:top-left>
       <div class="px-2 rounded-lg border-2 border-secondary">
@@ -13,7 +14,7 @@
           dense
           v-model="searchQuery"
           debounce="400"
-          @update:model-value="getData(pagination.page)"
+          @update:model-value="getData(pagination.page, sort)"
           input-class="placeholder-color text-black"
           placeholder="Search"
         >
@@ -22,12 +23,36 @@
           </template>
         </q-input>
       </div>
+      <div class="flex items-center">
+        <q-select
+          class="px-2 rounded-lg w-[150px]"
+          outlined
+          v-model="status"
+          :options="statusOptions"
+          @update:model-value="updateStatus"
+          label="Filter"
+        ></q-select>
+        <Icon
+          @click="reset"
+          v-if="status"
+          icon="mdi:close-outline"
+          width="24"
+          class="text-negative cursor-pointer"
+        />
+      </div>
     </template>
     <template v-slot:top-right>
       <div class="flex items-center md:justify-center gap-2 md:mt-0 mt-4">
         <SetCollective />
         <AddEmployee />
       </div>
+    </template>
+    <template v-slot:header-cell-name="props">
+      <q-th :props="props">
+        <p @click="toggleSort" class="cursor-pointer">
+          {{ props.col.label }}
+        </p>
+      </q-th>
     </template>
     <template v-slot:body-cell-position="props">
       <q-td class="text-center" :props="props">
@@ -81,18 +106,20 @@
         <Delete :id="props.row.nik" />
       </q-td>
     </template>
-    <template v-slot:bottom>
-      <q-pagination
-        v-model="current"
-        color="primary"
-        :max="pagination.rowsNumber"
-        :max-pages="5"
-        :ellipses="false"
-        @update:model-value="getData(current)"
-        :boundary-numbers="false"
-      />
-    </template>
   </q-table>
+  <div class="row justify-center">
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      @update:model-value="getData(current, sort)"
+      :boundary-numbers="false"
+      direction-links
+      boundary-links
+    />
+    <!-- :ellipses="false" -->
+  </div>
 </template>
 
 <script lang="ts">
@@ -103,6 +130,7 @@ import AddEmployee from 'src/components/AddEmployee.vue';
 import SetLeave from 'src/components/SetLeaveBtn.vue';
 import Delete from 'src/components/DeleteBtn.vue';
 import api from 'src/AxiosInterceptors';
+import { useQuasar } from 'quasar';
 export default {
   components: {
     SetCollective,
@@ -125,7 +153,6 @@ export default {
         label: 'Name',
         align: 'center',
         field: 'name',
-
         style: 'width: 300px;',
       },
       {
@@ -164,9 +191,29 @@ export default {
       },
     ];
 
+    const $q = useQuasar();
     return {
       column,
       current: ref(1),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+          actions: [
+            {
+              label: 'Refresh',
+              color: 'white',
+              handler: () => {
+                document.location.reload();
+              },
+            },
+          ],
+        });
+      },
     };
   },
   data() {
@@ -179,31 +226,60 @@ export default {
         rowsNumber: 0,
       },
       data: [],
+      sort: ref(false),
+      status: null,
+      statusOptions: [
+        { value: true, label: 'Active' },
+        { value: false, label: 'Resign' },
+      ],
+      statusWork: null,
     };
   },
   mounted() {
-    this.getData(this.pagination.page);
+    this.getData(this.pagination.page, this.sort);
   },
   methods: {
-    async getData(page: number | undefined) {
-      try {
-        await api
-          .get(`/employee?page=${page}&perPage=10`, {
-            params: { search: this.searchQuery },
-            withCredentials: true,
-          })
-          .then((res) => {
-            this.data = res.data.data;
-            this.pagination.rowsNumber = res.data.meta.lastPage;
-            console.log(this.data);
-          });
-      } catch (err) {
-        console.error(err);
-      }
+    reset() {
+      this.statusWork = null;
+      this.status = null;
+      this.getData(this.pagination.page, this.sort);
+    },
+    toggleSort() {
+      this.sort = !this.sort;
+      this.getData(this.pagination.page, this.sort);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async getData(page: number | undefined, sort: any) {
+      const orderBy = `name_${sort ? 'desc' : 'asc'}`;
+      await api
+        .get(`/employee?page=${page}&perPage=10&orderBy=${orderBy}`, {
+          params: {
+            search: this.searchQuery,
+            isWorking: this.statusWork,
+          },
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.data = res.data.data;
+          this.pagination.rowsNumber = res.data.meta.lastPage;
+          console.log(this.data);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tes(nik: any) {
       console.log(nik);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updateStatus() {
+      this.statusWork = this.status.value;
+      this.getData(this.pagination.page, this.sort);
+      console.log(this.statusWork);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {

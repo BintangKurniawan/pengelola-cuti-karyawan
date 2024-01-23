@@ -43,19 +43,18 @@
         </div>
       </q-td>
     </template>
-
-    <template v-slot:bottom-row>
-      <q-pagination
-        v-model="current"
-        color="primary"
-        :max="pagination.rowsNumber"
-        :max-pages="5"
-        :ellipses="false"
-        @update:model-value="getData(current)"
-        :boundary-numbers="false"
-      />
-    </template>
   </q-table>
+  <div class="row justify-center" v-if="data && data.length > 0">
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      :ellipses="false"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+    />
+  </div>
 
   <div v-else>
     <h3 class="text-center">No Data Available</h3>
@@ -63,11 +62,12 @@
 </template>
 
 <script lang="ts">
-import { Icon } from '@iconify/vue';
+// import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
-import moment from 'moment';
-import { date } from 'quasar';
+import { useQuasar } from 'quasar';
+// import moment from 'moment';
+// import { date } from 'quasar';
 export default {
   components: {
     // Icon,
@@ -117,10 +117,30 @@ export default {
         style: 'width: 400px',
       },
     ];
-
+    const $q = useQuasar();
     return {
       column,
       current: ref(1),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      successNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
     };
   },
   data() {
@@ -132,6 +152,7 @@ export default {
         rowsNumber: 0,
       },
       data: [],
+      isFirst: localStorage.getItem('firstLogin'),
     };
   },
   async mounted() {
@@ -140,19 +161,23 @@ export default {
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getData(page: number | undefined) {
-      try {
-        await api
-          .get(`/leave/history/me?page=${page}&perPage=10`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            this.data = resp.data.data.employee.leaves;
-            this.pagination.rowsNumber = resp.data.meta.lastPage;
-            console.log(this.data);
-          });
-      } catch (err) {
-        console.error(err);
-      }
+      await api
+        .get(`/leave/history/me?page=${page}&perPage=10`, {
+          withCredentials: true,
+        })
+        .then((resp) => {
+          this.data = resp.data.data.employee.leaves;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
+          const msg = resp.data.message;
+          // this.successNotif(msg);
+          console.log(this.data);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formatDate(dateString: any) {

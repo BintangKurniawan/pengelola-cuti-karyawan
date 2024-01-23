@@ -46,11 +46,11 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      successNotif() {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Leave has been successfully rejected',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
           actions: [
@@ -64,11 +64,11 @@ export default {
           ],
         });
       },
-      failedNotif() {
+      failedNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Failed to reject leave',
+          message: `${msg}`,
           color: 'negative',
           multiLine: true,
           actions: [
@@ -109,11 +109,13 @@ export default {
         .then((resp) => {
           console.log(resp);
           this.dialog = false;
-          this.successNotif();
+          this.successNotif(resp.data.message);
         })
         .catch((err) => {
-          this.failedNotif();
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

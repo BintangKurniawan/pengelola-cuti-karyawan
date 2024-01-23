@@ -64,6 +64,15 @@ export default {
           multiLine: true,
         });
       },
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
     };
   },
   data() {
@@ -88,7 +97,10 @@ export default {
           this.resetNotif();
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

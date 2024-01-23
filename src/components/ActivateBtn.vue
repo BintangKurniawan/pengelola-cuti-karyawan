@@ -52,11 +52,11 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      deleteNotif() {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Employee status has been successfully changed',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
           actions: [
@@ -68,6 +68,15 @@ export default {
               },
             },
           ],
+        });
+      },
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
         });
       },
     };
@@ -85,16 +94,19 @@ export default {
   },
   methods: {
     activate(id) {
-      try {
-        api
-          .post(`/employee/enable/${id}`, { withCredentials: true })
-          .then((resp) => {
-            this.deleteNotif();
-            this.dialog = false;
-          });
-      } catch (err) {
-        console.error(err);
-      }
+      api
+        .post(`/employee/enable/${id}`, { withCredentials: true })
+        .then((resp) => {
+          const msg = resp.data.message;
+          this.successNotif(msg);
+          this.dialog = false;
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
     acc(id) {
       console.log(id);

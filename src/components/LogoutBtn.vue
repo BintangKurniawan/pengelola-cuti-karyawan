@@ -53,12 +53,23 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      successNotif() {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Logout success',
+          message: `${msg}`,
           color: 'primary',
+          multiLine: true,
+        });
+      },
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
           multiLine: true,
         });
       },
@@ -86,11 +97,15 @@ export default {
             localStorage.removeItem('role');
             localStorage.removeItem('nik');
             localStorage.removeItem('token');
-            this.successNotif();
+            const msg = resp.data.message;
+            this.successNotif(msg);
             this.$router.push('/login');
           });
       } catch (err) {
-        console.error(err);
+        if (err.response) {
+          const msg = err.response.data.message;
+          this.failedNotif(msg);
+        }
       }
     },
   },

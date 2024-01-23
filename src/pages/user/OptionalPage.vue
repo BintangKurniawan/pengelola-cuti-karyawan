@@ -1,9 +1,6 @@
 <template>
   <div class="flex justify-center items-center w-full">
-    <div
-      v-if="data && data.length > 0"
-      class="flex flex-wrap items-center w-full"
-    >
+    <div class="flex flex-wrap items-center w-full">
       <q-expansion-item
         v-for="(data, i) in data"
         :label="data.reason"
@@ -18,9 +15,7 @@
         </div>
       </q-expansion-item>
     </div>
-
     <q-pagination
-      v-if="data && data.length > 0"
       v-model="current"
       color="primary"
       :max="pagination.rowsNumber"
@@ -30,9 +25,9 @@
       :boundary-numbers="false"
     />
 
-    <div v-else>
+    <!-- <div v-else>
       <h3 class="text-center">No Data Available</h3>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -42,9 +37,22 @@ import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 // import Rejc from 'src/components/RejcBtn.vue';
 import RejcBtn from 'src/components/RejcBtn.vue';
+import { useQuasar } from 'quasar';
 export default {
   setup() {
-    return { current: ref(1) };
+    const $q = useQuasar;
+    return {
+      current: ref(1),
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
   },
   data() {
     return {
@@ -61,23 +69,22 @@ export default {
   },
   methods: {
     async getData(page) {
-      try {
-        await api
-          .get(`/leave/optional?page=${page}&perPage=10`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            const allLeave = resp.data.data.employee.leaves;
-            const approve = allLeave.filter(
-              (leave) => leave.status === 'APPROVE'
-            );
+      await api
+        .get(`/leave/optional?page=${page}&perPage=10`, {
+          withCredentials: true,
+        })
+        .then((resp) => {
+          const allLeave = resp.data.data.employee.leaves;
 
-            this.data = approve;
-            this.pagination.rowsNumber = resp.data.meta.lastPage;
-          });
-      } catch (err) {
-        console.error(err);
-      }
+          this.data = allLeave;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
     formatDate(dateString) {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };

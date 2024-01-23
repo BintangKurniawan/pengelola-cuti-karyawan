@@ -72,6 +72,19 @@ export default {
             <Icon icon="mdi:list-box-outline" width="24" />
             <p class="capitalize">List of Leave</p>
           </q-btn>
+          <q-btn
+            dense
+            flat
+            href="/admin/positions"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] rounded-xl transition-all hover:bg-transparent pb-2"
+            :class="{
+              ' border-b-4 border-b-[#0021ED] text-primary font-semibold':
+                $route.path === '/admin/positions',
+            }"
+          >
+            <Icon icon="mdi:family-tree" width="24" />
+            <p class="capitalize">List of Position</p>
+          </q-btn>
         </div>
 
         <div v-if="$route.path !== '/'" class="md:flex hid">
@@ -100,7 +113,7 @@ export default {
             dense
             flat
             href="/"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[33%] flex items-start"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[20%] flex items-start"
             :class="{
               ' border-b-4 border-b-[#0021ED]': $route.path === '/',
             }"
@@ -112,7 +125,7 @@ export default {
             dense
             flat
             href="/admin/dashboard"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[33%] flex items-start"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[30%] flex items-start"
             :class="{
               ' border-b-4 border-b-[#0021ED]':
                 $route.path === '/admin/dashboard',
@@ -125,13 +138,26 @@ export default {
             dense
             flat
             href="/admin/list"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[20%] pb-2"
             :class="{
               ' border-b-4 border-b-[#0021ED] ': $route.path === '/admin/list',
             }"
           >
             <Icon icon="mdi:list-box-outline" width="24" />
-            <p class="capitalize">List of Leave</p>
+            <p class="capitalize">Leave</p>
+          </q-btn>
+          <q-btn
+            dense
+            flat
+            href="/admin/positions"
+            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[30%] pb-2"
+            :class="{
+              ' border-b-4 border-b-[#0021ED] ':
+                $route.path === '/admin/positions',
+            }"
+          >
+            <Icon icon="mdi:list-box-outline" width="24" />
+            <p class="capitalize">Position</p>
           </q-btn>
         </div>
       </q-toolbar>

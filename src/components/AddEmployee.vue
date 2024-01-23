@@ -193,11 +193,12 @@ export default {
           ],
         });
       },
-      failedNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      failedNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Employee failed to add',
+          message: `${msg}`,
           color: 'negative',
           multiLine: true,
         });
@@ -314,8 +315,10 @@ export default {
           this.contract = false;
         })
         .catch((err) => {
-          this.failedNotif();
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

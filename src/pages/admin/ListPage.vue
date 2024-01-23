@@ -98,19 +98,19 @@
         </div>
       </q-td>
     </template>
-
-    <template v-slot:bottom>
-      <q-pagination
-        v-model="current"
-        color="primary"
-        :max="pagination.rowsNumber"
-        :max-pages="5"
-        :ellipses="false"
-        @update:model-value="getData(current)"
-        :boundary-numbers="false"
-      />
-    </template>
   </q-table>
+  <div class="row justify-center">
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+      direction-links
+      boundary-links
+    />
+  </div>
 </template>
 
 <script>

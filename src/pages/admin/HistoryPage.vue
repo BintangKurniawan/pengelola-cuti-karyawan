@@ -6,7 +6,14 @@
     NIK: {{ nik }}
   </h3>
 
-  <q-table class="my-table table-rounded" flat :columns="column" :rows="data">
+  <q-table
+    class="my-table table-rounded"
+    flat
+    :columns="column"
+    :rows="data"
+    v-model:pagination="pagination"
+    hide-bottom
+  >
     <template v-slot:top-left>
       <div class="px-2 rounded-lg border-2 border-secondary">
         <q-input
@@ -50,7 +57,7 @@
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
             'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'Reject',
+            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
             'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
           }"
         >
@@ -59,14 +66,24 @@
       </q-td>
     </template>
   </q-table>
+  <div class="row justify-center" v-if="data && data.length > 0">
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      :ellipses="false"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 // import { Icon } from '@iconify/vue'
-import Reject from 'src/components/RejectBtn.vue';
-import Approve from 'src/components/ApproveBtn.vue';
+import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
-import moment from 'moment';
+// import moment from 'moment';
 import { useRoute } from 'vue-router';
 export default {
   components: {
@@ -122,10 +139,11 @@ export default {
     return {
       column,
       id,
+      current: ref(1),
     };
   },
   mounted() {
-    this.getData();
+    this.getData(this.pagination.page);
   },
   data() {
     return {
@@ -133,16 +151,24 @@ export default {
       name: '',
       nik: '',
       data: [],
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
   methods: {
-    async getData() {
+    async getData(page: number | undefined) {
       await api
-        .get(`/leave/history/${this.id}`, { withCredentials: true })
+        .get(`/leave/history/${this.id}?page=${page}&perPage=10`, {
+          withCredentials: true,
+        })
         .then((resp) => {
           this.data = resp.data.data;
-          this.name = resp.data.data[0].employee.name;
-          this.nik = resp.data.data[0].employee.nik;
+          this.name = resp.data.data[0].name;
+          this.nik = resp.data.data[0].nik;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
           console.log(resp);
         })
         .catch((err) => {

@@ -104,20 +104,21 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      successNotif() {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Collective leave created',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
         });
       },
-      failedNotif() {
+      failedNotif(msg1) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Failed to create collective leave',
+          message: `${msg1}`,
+
           color: 'negative',
           multiLine: true,
         });
@@ -135,7 +136,7 @@ export default {
         { value: 1, label: 'Mandatory' },
         { value: 2, label: 'Optional' },
       ],
-      leaveId: 1,
+      leaveId: '',
     };
   },
 
@@ -157,16 +158,25 @@ export default {
           { withCredentials: true }
         )
         .then((resp) => {
-          this.successNotif();
           this.dialog = false;
-          this.leaveId = 1;
+          this.leaveId = '';
           this.reason = '';
           this.startLeave = '';
           this.endLeave = '';
           console.log(resp);
+          this.successNotif(resp.data.message);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            // if (err.response.data.data[0].code) {
+            //   const msg = err.response.data.data[0].code;
+            //   const msg2 = err.response.data.message;
+            //   this.failedNotif(msg, msg2);
+            // }
+            const msg = err.response.data.message;
+
+            this.failedNotif(msg);
+          }
         });
     },
     updateLeaveId() {

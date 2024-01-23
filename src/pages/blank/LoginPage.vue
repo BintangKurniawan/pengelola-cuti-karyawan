@@ -119,7 +119,10 @@ export default {
           const token = resp.data.data.accessToken;
           this.email = '';
           this.password = '';
-          localStorage.setItem('nik', resp.data.data.user.id);
+          console.log(resp.status);
+
+          localStorage.setItem('firstLogin', resp.data.data.user.isFirst);
+          localStorage.setItem('nik', resp.data.data.employee.nik);
           // const refreshToken = Cookies.get('refreshToken');
           // const refreshToken = resp.data.data.encryptedRefreshToken;
 
@@ -134,18 +137,11 @@ export default {
             this.$router.push('/admin/dashboard');
           }
           this.successNotif();
-          // setTimeout(() => {
-          //   if (role !== '2' && role !== '1') {
-          //   } else {
-          //     this.$router.push('/admin/dashboard');
-          //   }
-          // }, 2000);
         })
         .catch((error) => {
           if (error.response) {
-            const status = error.response.status;
-            const msg = error.response.message;
-            console.log(msg, status);
+            const msg = error.response.data.message;
+            this.failedNotif(msg);
           }
         });
 

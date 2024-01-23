@@ -1,11 +1,11 @@
 import axios from 'axios';
 import router from './router';
 import { Cookies } from 'quasar';
-
+import { useQuasar } from 'quasar';
 const api = axios.create({
   baseURL: 'https://10.10.101.43:8080/api',
 });
-
+const $q = useQuasar();
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -28,7 +28,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 408 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {

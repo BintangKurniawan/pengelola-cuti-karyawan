@@ -36,9 +36,23 @@
 <script>
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
+import { useQuasar } from 'quasar';
 export default {
   setup() {
-    return { current: ref(1) };
+    const $q = useQuasar;
+    return {
+      current: ref(1),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
   },
   data() {
     return {
@@ -50,24 +64,26 @@ export default {
       },
     };
   },
-  mounted() {
-    this.getData(this.pagination.page);
+  async mounted() {
+    await this.getData(this.pagination.page);
   },
   methods: {
     async getData(page) {
-      try {
-        await api
-          .get(`/leave/mandatory?page=${page}&perPage=10`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            this.data = resp.data.data;
-            this.pagination.rowsNumber = resp.data.meta.lastPage;
-            console.log(this.data);
-          });
-      } catch (err) {
-        console.error(err);
-      }
+      await api
+        .get(`/leave/mandatory?page=${page}&perPage=10`, {
+          withCredentials: true,
+        })
+        .then((resp) => {
+          this.data = resp.data.data;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
+          console.log(this.data);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
     formatDate(dateString) {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
