@@ -7,7 +7,6 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-import { authStore } from 'src/stores/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -64,6 +63,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   // const adminRoles = [1, 2];
 
+  // FOR PROTECT ROUTE
   Router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('role');
 

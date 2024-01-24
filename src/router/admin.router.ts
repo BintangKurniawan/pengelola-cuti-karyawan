@@ -1,3 +1,4 @@
+// FOR ADMIN PAGE ROUTE
 const admin_routes = [
   {
     path: '/admin/dashboard',

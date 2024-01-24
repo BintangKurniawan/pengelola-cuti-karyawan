@@ -185,9 +185,12 @@ import 'moment/locale/en-ca';
 export default {
   setup() {
     const route = useRoute();
+    // TO GET ID FROM ROUTE
     const id = route.params.id;
     const $q = useQuasar();
     let timer: string | number | NodeJS.Timeout | undefined;
+
+    // TO GET ROLE
     const roleId = localStorage.getItem('role');
     onBeforeUnmount(() => {
       if (timer !== void 0) {
@@ -238,42 +241,59 @@ export default {
       email: '',
       start: '',
       expires: '',
+
+      // FOR END CONTRACT
       exp: '',
       status: '',
       mask: 'YYYY-MM-DD',
+
+      // TO GET STATUS WORK, IS ACTIVE OR RESIGN, CAUSE IF EMPLOYEE IS RESIGN, THE POSITION CAN'T BE EDITED
       statusBoolean: false,
       historicalName: '',
       historicalNik: '',
 
+      // TO RECEIVED TYPE CONTRACT FROM Q-SELECT
       typeContract: {} as { status: boolean; label: string },
+      // TYPE CONTRACT OPTIONS FOR Q-SELECT
       typeContractOptions: [
         { status: false, label: 'Permanent' },
         { status: true, label: 'Contract' },
       ],
+      // TO GET STATUS IS FALSE OR TRUE FROM SELECTED TYPE CONTRACT
       contractBoolean: false,
 
+      // TO RECEIVED POSITION FROM Q-SELECT
       typePosition: {} as { value: number; label: string },
+      // FOR POSITION DATA FROM API
       typePositionOptions: [],
+      // TO GET POSITION ID FROM SELECTED POSITION
       positionId: '',
 
+      // TO RECEIVED CONTRACT TYPE, IS OLD OR NEW FROM Q-SELECT
       contractType: null,
+      // CONTRACT TYPE FOR Q-SELECT
       contractTypeOptions: [
         { value: false, label: 'Old Employee' },
         { value: true, label: 'New Employee' },
       ],
+      // TO GET CONTRACT IS FALSE OR TRUE FROM SELECTED contractType
       contract: false,
 
+      // TO RECEIVED ROLE FROM Q-SELECT
       roleType: null,
+      // ROLE OPTIONS FOR Q-SELECT
       roleTypeOptions: [
         { value: 2, label: 'Admin' },
         { value: 3, label: 'User' },
       ],
+      // TO GET ROLE FROM SELECTED roleType
       role: 3,
     };
   },
   // eslint-disable-next-line vue/no-unused-components
   components: { Reset, Icon },
   async mounted() {
+    // TO GET POSITION AND EMPLOYEE DATA
     await this.getPosition();
     await this.getData();
   },
@@ -344,14 +364,19 @@ export default {
         console.error(err);
       }
     },
+
+    // TO UPDATE THE RECEIVED CONTRACT TYPE IS NEW OR OLD, THE this.contract WILL BE USED TO UPDATE DATA
     contractTypeUpdate() {
       this.contract = this.contractType.value;
       console.log(this.contract);
     },
+    // TO GET STATUS TEXT IS ACTIVE OR RESIGN
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {
       return status ? 'Active' : 'Resign';
     },
+
+    // TO GET POSITION TEXT GAINED FROM API getData AND COMPARE IT WITH POSITIONS DATA, IF TRUE RETURN THE POSITION NAME
     getPositionText(name: any) {
       const typePosition = this.typePositionOptions.find(
         (option) => option.label === name
@@ -359,6 +384,8 @@ export default {
 
       return typePosition ? typePosition.label : null;
     },
+
+    // TO GET TYPE CONTRACT TEXT, IS PERMANENT OR NOT
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getContractText(status: any) {
       const statusOption = this.typeContractOptions.find(
@@ -367,6 +394,8 @@ export default {
       return statusOption ? statusOption.label : null;
       // return status ? 'Active' : 'Resign';
     },
+
+    // TO GET ROLE TEXT
     getRoleText(role: any) {
       const roleType = this.roleTypeOptions.find(
         (option) => option.label === role
@@ -374,6 +403,8 @@ export default {
 
       return roleType ? roleType.label : null;
     },
+
+    // TO UPDATE TYPE CONTRACT, IS PERMANENT OR NOT. AND IF PERMANENT, THE END CONTRACT IS NULL
     updateContractId() {
       this.contractBoolean = this.typeContract.status;
       if (this.contractBoolean === false) {
@@ -381,14 +412,18 @@ export default {
       }
       console.log(this.contractBoolean);
     },
+    // TO SET POSITION ID FROM SELECTED POSITION IN Q-SELECT
     updatePositionId() {
       this.positionId = this.typePosition.value;
       console.log(this.positionId);
     },
+    // TO SET ROLE ID FROM SELECTED ROLE IN Q-SELECT
     updateRole() {
       this.role = this.roleType.value;
       console.log(this.role);
     },
+
+    // TO FORMAT DATE
     formatDate(dateString: {
       split: (arg0: string) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -406,12 +441,14 @@ export default {
       return date.toLocaleDateString('en-UK', options);
     },
 
+    // TO GET POSITION NAME
     getId(name: any) {
       const typePosition = this.typePositionOptions.find(
         (option) => option.label === name
       );
       return typePosition ? typePosition.value : null;
     },
+    // TO GET ROLE NAME
     getRoleId(role: any) {
       const roleTypeOptions = this.roleTypeOptions.find(
         (option) => option.label === role
@@ -419,6 +456,7 @@ export default {
 
       return roleTypeOptions ? roleTypeOptions.value : null;
     },
+    // TO EDIT
     async edit() {
       this.showLoading();
       await api

@@ -180,12 +180,14 @@ import ActivateBtn from 'src/components/ActivateBtn.vue';
 export default {
   setup() {
     const route = useRoute();
+    //  TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
       id,
     };
   },
   mounted() {
+    // TO GET DATA
     this.getData();
   },
   data() {
@@ -201,10 +203,13 @@ export default {
       historicalNik: '',
       type: '',
       role: '',
+
+      // FOR NEW CONTRACT, IS NEW OR FALSE
       expDate: false,
     };
   },
   methods: {
+    // TO GET DATA
     async getData() {
       try {
         await api
@@ -243,15 +248,18 @@ export default {
         console.error(err);
       }
     },
+    // TO FORMAT THE DATE GAINED FROM API
     formatDate(dateString) {
       const [day, month, year] = dateString.split('-').map(Number);
       const date = new Date(year, month - 1, day);
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       return date.toLocaleDateString('en-UK', options);
     },
+    // TO GET STATUS TEXT IS ACTIVE OR RESIGN
     getStatusText(status) {
       return status ? 'Active' : 'Resign';
     },
+    // TO GET STATUS CONTRACT TEXT
     getContractText(status) {
       return status ? 'Contract' : 'Permanent';
     },

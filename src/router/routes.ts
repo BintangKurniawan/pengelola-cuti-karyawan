@@ -1,6 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 import admin_routes from './admin.router';
 import user_routes from './user.router';
+
+// FOR MAKE ROUTE
 const routes: RouteRecordRaw[] = [
   {
     path: '/',

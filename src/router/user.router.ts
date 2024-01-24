@@ -1,3 +1,5 @@
+// FOR USER PAGE ROUTE
+
 const user_routes = [
   {
     path: '/',

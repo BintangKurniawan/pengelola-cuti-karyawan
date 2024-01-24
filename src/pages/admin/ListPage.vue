@@ -204,18 +204,23 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      // TO RECEIVED FILTER DATA FROM Q-SELECT
       status: '',
+      // FOR FILTER DATA
       statusOptions: ['Approve', 'Waiting', 'Reject'],
     };
   },
   mounted() {
+    // TO GET DATA
     this.getData(this.pagination.page);
   },
   methods: {
+    // TO REMOVE FILTER
     reset() {
       this.status = '';
       this.getData(this.pagination.page);
     },
+    // TO GETD ATA
     async getData(page) {
       await api
         .get(`/leave/all?page=${page}&perPage=10`, {
@@ -230,6 +235,7 @@ export default {
           console.error(err);
         });
     },
+    // TO FORMAT DATE
     formatDate(dateString) {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       const date = new Date(dateString);

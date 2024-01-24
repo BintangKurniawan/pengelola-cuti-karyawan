@@ -87,6 +87,7 @@ export default {
     await this.getData();
   },
   methods: {
+    // TO GET DATA
     async getData() {
       await api
         .get('/position', { withCredentials: true })

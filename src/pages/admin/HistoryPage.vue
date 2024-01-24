@@ -134,7 +134,7 @@ export default {
     ];
 
     const route = useRoute();
-
+    // TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
       column,
@@ -143,6 +143,7 @@ export default {
     };
   },
   mounted() {
+    // TO GET DATA
     this.getData(this.pagination.page);
   },
   data() {
@@ -150,7 +151,9 @@ export default {
       filter: '',
       name: '',
       nik: '',
+      // FOR DATA FROM API
       data: [],
+      // FOR PAGINATION
       pagination: {
         rowsPerPage: 10,
         page: 1,
@@ -159,6 +162,7 @@ export default {
     };
   },
   methods: {
+    // TO GET DATA
     async getData(page: number | undefined) {
       await api
         .get(`/leave/history/${this.id}?page=${page}&perPage=10`, {
@@ -175,6 +179,7 @@ export default {
           console.error(err);
         });
     },
+    // TO FORMAT DATE
     formatDate(dateString: string | number | Date) {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       const date = new Date(dateString);

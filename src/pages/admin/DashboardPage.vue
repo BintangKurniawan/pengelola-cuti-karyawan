@@ -9,6 +9,7 @@
   >
     <template v-slot:top-left>
       <div class="px-2 rounded-lg border-2 border-secondary">
+        <!-- SEARCH -->
         <q-input
           borderless
           dense
@@ -24,6 +25,7 @@
         </q-input>
       </div>
       <div class="flex items-center">
+        <!-- FILTER -->
         <q-select
           class="px-2 rounded-lg w-[150px]"
           outlined
@@ -47,6 +49,7 @@
         <AddEmployee />
       </div>
     </template>
+    <!-- ASC DESC NAME -->
     <template v-slot:header-cell-name="props">
       <q-th :props="props">
         <p @click="toggleSort" class="cursor-pointer">
@@ -218,36 +221,53 @@ export default {
   },
   data() {
     return {
+      // FOR SEARCH
       searchQuery: '',
-      filter: '',
+      // FOR FILTER
+      // filter: '',
+
+      // FOR PAGINATION
       pagination: {
         rowsPerPage: 10,
         page: 1,
         rowsNumber: 0,
       },
+
+      // TO RECEIVED DATA FROM API
       data: [],
+
+      // FOR SORT ASC DESC
       sort: ref(false),
+
+      // TO RECEIVE SELECTED DATA FROM Q-SELECT
       status: null,
+      // STATUS FOR SELECT
       statusOptions: [
         { value: true, label: 'Active' },
         { value: false, label: 'Resign' },
       ],
+      // TO GET TRUE OR FALSE FROM SELECTED STATUS
       statusWork: null,
     };
   },
   mounted() {
+    // TO GET DATA
     this.getData(this.pagination.page, this.sort);
   },
   methods: {
+    // TO REMOVE FILTER
     reset() {
       this.statusWork = null;
       this.status = null;
       this.getData(this.pagination.page, this.sort);
     },
+    // FOR ASC DESC
     toggleSort() {
       this.sort = !this.sort;
       this.getData(this.pagination.page, this.sort);
     },
+
+    // TO GET DATA
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getData(page: number | undefined, sort: any) {
       const orderBy = `name_${sort ? 'desc' : 'asc'}`;
@@ -271,16 +291,16 @@ export default {
           }
         });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    tes(nik: any) {
-      console.log(nik);
-    },
+
+    // TO FILTER BY STATUS, IS ACTIVE OR RESIGN
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateStatus() {
       this.statusWork = this.status.value;
       this.getData(this.pagination.page, this.sort);
       console.log(this.statusWork);
     },
+
+    // TO GET ACTIVE/ RESIGN TEXT FROM API
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {
       return status ? 'Active' : 'Resign';

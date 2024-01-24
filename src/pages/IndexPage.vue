@@ -152,6 +152,7 @@ export default {
         rowsNumber: 0,
       },
       data: [],
+      // TO GET FIRST LOGIN STATUS
       isFirst: localStorage.getItem('firstLogin'),
     };
   },
@@ -189,10 +190,6 @@ export default {
       const date = new Date(dateString);
       return date.toLocaleDateString('en-UK', options);
       // return moment(dateString).local(true).format('ll');
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    tes(nik: any) {
-      console.log(nik);
     },
   },
   computed: {},
