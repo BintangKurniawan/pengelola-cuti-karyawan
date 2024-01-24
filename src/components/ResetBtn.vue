@@ -87,6 +87,7 @@ export default {
     Icon,
   },
   methods: {
+    // TO RESET PASSWORD
     async reset(id) {
       await api
         .post(`/employee/reset-password/${id}`, { withCredentials: true })

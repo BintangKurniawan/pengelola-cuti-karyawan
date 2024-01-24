@@ -97,6 +97,7 @@ export default {
     id: Number,
   },
   methods: {
+    // TO APPROVE LEAVE IN LIST PAGE
     async approve(id) {
       await api
         .patch(`/leave/personal/${id}/approve`, {}, { withCredentials: true })

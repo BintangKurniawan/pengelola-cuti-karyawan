@@ -131,11 +131,14 @@ export default {
       reason: '',
       startLeave: '',
       endLeave: '',
+      // FOR SELECTED typeLeave IN Q-SELECT
       typeLeave: null,
+      //  FOR Q-SELECT
       typeLeaveOptions: [
         { value: 1, label: 'Mandatory' },
         { value: 2, label: 'Optional' },
       ],
+      // TO RECEIVE typeLeave ID
       leaveId: '',
     };
   },
@@ -145,6 +148,7 @@ export default {
   },
 
   methods: {
+    // SET COLLECTIVE LEAVE
     async setCollectiveLeave() {
       await api
         .post(
@@ -179,6 +183,8 @@ export default {
           }
         });
     },
+
+    // TO RECEIVE typeLeave ID
     updateLeaveId() {
       this.leaveId = this.typeLeave.value;
 

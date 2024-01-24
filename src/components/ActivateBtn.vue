@@ -93,6 +93,7 @@ export default {
     Icon,
   },
   methods: {
+    // FOR ACTIVATE ACCOUNT
     activate(id) {
       api
         .post(`/employee/enable/${id}`, { withCredentials: true })
@@ -107,9 +108,6 @@ export default {
             this.failedNotif(msg);
           }
         });
-    },
-    acc(id) {
-      console.log(id);
     },
   },
 };

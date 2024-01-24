@@ -212,21 +212,33 @@ export default {
       email: '',
       startWorking: '',
       endContract: '',
-      type: false,
       dialog: ref(false),
+
+      // FOR SELECTED TYPE CONTRACT FROM Q-SELECT
       typeEmployee: null,
+      // FOR SELECT IN Q-SELECT
       typeEmployeeOptions: [
         { value: false, label: 'Permanent' },
         { value: true, label: 'Contract' },
       ],
+      // FOR RECEIVED SELECTED typeEmployee VALUE
+      type: false,
+
+      // FOR CONTRACT TYPE FROM Q-SELECT
       typeContract: null,
+      // FOR SELECT IN Q-SELECT
       typeContractOptions: [
         { value: false, label: 'Old Employee' },
         { value: true, label: 'New Employee' },
       ],
+      // TO RECEIVED VALUE FROM SELECTED typeContract
       contract: false,
+
+      // FOR SELECTED POSITION FROM Q-SELECT
       typePosition: null,
+      // FOR SELECT IN Q-SELECT, THE DATA IS GAINED FROM API
       typePositionOptions: [],
+      // TO RECEIVED POSITION ID FROM SELECTED typePosition
       positionId: '',
     };
   },
@@ -237,9 +249,11 @@ export default {
     Icon,
   },
   async mounted() {
+    // TO GET POSITION DATA
     await this.getPosition();
   },
   methods: {
+    // TO RECEIVE SELECTED typeEmployee VALUE. IF FALSE (PERMANENT), THE contract IS FALSE (OLD EMPLOYEE) AND NOT HAVE END CONTRACT
     employeeTypeUpdate() {
       this.type = this.typeEmployee.value;
       if (this.type === false) {
@@ -248,14 +262,17 @@ export default {
       }
       console.log(this.type);
     },
+    // TO RECCEIVE SELECTED typeContract VALUE. IS OLD OR NEW
     contractTypeUpdate() {
       this.contract = this.typeContract.value;
       console.log(this.contract);
     },
+    // TO RECEIVE SELECTED typePosition VALUE
     positionIdUpdate() {
       this.positionId = this.typePosition.value;
       console.log(this.positionId);
     },
+    // TO GET POSITION
     async getPosition() {
       await api
         .get('/position', { withCredentials: true })
@@ -279,6 +296,7 @@ export default {
           console.error(err);
         });
     },
+    // TO ADD EMPLOYEE
     async addEmployee() {
       await api
         .post(
@@ -304,6 +322,7 @@ export default {
         .then((resp) => {
           this.addNotif();
           console.log(resp);
+          // CLEAR DATA
           this.dialog = false;
           this.nik = '';
           this.name = '';

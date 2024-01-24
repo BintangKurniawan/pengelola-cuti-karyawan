@@ -83,6 +83,7 @@ export default {
     Icon,
   },
   methods: {
+    // TO REJECT OPTIONAL LEAVE
     async reject(id) {
       await api
         .patch(`/leave/optional/${id}/reject`, {}, { withCredentials: true })

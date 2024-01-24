@@ -89,6 +89,7 @@ export default {
     Icon,
   },
   methods: {
+    // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
     remove(id) {
       api
         .post(`/employee/disable/${id}`, { withCredentials: true })

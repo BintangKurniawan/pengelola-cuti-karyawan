@@ -172,24 +172,26 @@ export default {
       nik,
       exp: '',
 
-      typeContract: {} as { status: boolean; label: string },
-      typeContractOptions: [
-        { status: false, label: 'Permanent' },
-        { status: true, label: 'Contract' },
-      ],
+      // typeContract: {} as { status: boolean; label: string },
+      // typeContractOptions: [
+      //   { status: false, label: 'Permanent' },
+      //   { status: true, label: 'Contract' },
+      // ],
       contractBoolean: false,
 
-      typePosition: {} as { value: number; label: string },
+      // typePosition: {} as { value: number; label: string },
+      // FOR POSITION DATA
       typePositionOptions: [],
+      // FOR POSITION ID
       positionId: '',
 
-      contractType: null,
-      contractTypeOptions: [
-        { value: false, label: 'Old Employee' },
-        { value: true, label: 'New Employee' },
-      ],
+      // contractType: null,
+      // contractTypeOptions: [
+      //   { value: false, label: 'Old Employee' },
+      //   { value: true, label: 'New Employee' },
+      // ],
 
-      roleType: null,
+      // roleType: null,
       roleTypeOptions: [
         { value: 2, label: 'Admin' },
         { value: 3, label: 'User' },
@@ -205,12 +207,14 @@ export default {
     await this.getData();
   },
   methods: {
+    //  TO GET POSITION ID
     getId(name: any) {
       const typePosition = this.typePositionOptions.find(
         (option) => option.label === name
       );
       return typePosition ? typePosition.value : null;
     },
+    // TO GET ROLE ID
     getRoleId(role: any) {
       const roleTypeOptions = this.roleTypeOptions.find(
         (option) => option.label === role
@@ -218,6 +222,7 @@ export default {
 
       return roleTypeOptions ? roleTypeOptions.value : null;
     },
+    // TO GET POSITION
     async getPosition() {
       await api
         .get('/position', { withCredentials: true })
@@ -244,6 +249,7 @@ export default {
           }
         });
     },
+    //  TO GET LOGGED IN USER DATA
     async getData() {
       await api
         .get(`/employee/detail/${this.nik}`, { withCredentials: true })
@@ -266,6 +272,7 @@ export default {
         });
     },
 
+    // FOR CHANGE PASSWORD
     async changePassword() {
       await api
         .post(
@@ -288,6 +295,7 @@ export default {
           }
         });
     },
+    // FOR EDIT NAME
     async editName() {
       await api
         .put(

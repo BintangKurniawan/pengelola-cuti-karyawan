@@ -111,6 +111,7 @@ export default {
     await this.getData(this.id);
   },
   methods: {
+    // TO GET POSITION BY ID
     async getData(id) {
       await api
         .get(`/position/${id}`, { withCredentials: true })
@@ -122,6 +123,7 @@ export default {
           console.error(err);
         });
     },
+    // TO UPDATE THE POSITION
     async update(id) {
       await api
         .put(

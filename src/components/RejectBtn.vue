@@ -103,6 +103,7 @@ export default {
       console.log(type);
     },
 
+    // TO REJECT LEAVE IN LISTPAGE
     async reject(type, id) {
       await api
         .patch(`/leave/${type}/${id}/reject`, {}, { withCredentials: true })

@@ -124,6 +124,7 @@ export default {
   },
 
   methods: {
+    // TO SET PERSONAL LEAVEE
     async setLeave(id) {
       await api
         .post(

@@ -88,6 +88,7 @@ export default {
     Icon,
   },
   methods: {
+    // TO DELETE POSITION
     remove(id) {
       api
         .delete(`/position/delete/${id}`, { withCredentials: true })

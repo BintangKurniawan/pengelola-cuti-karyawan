@@ -85,6 +85,7 @@ export default {
   },
 
   methods: {
+    // LOGOUT
     async logout() {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const refreshToken = Cookies.get('refreshToken');
