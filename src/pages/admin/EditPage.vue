@@ -277,7 +277,7 @@ export default {
         { value: true, label: 'New Employee' },
       ],
       // TO GET CONTRACT IS FALSE OR TRUE FROM SELECTED contractType
-      contract: false,
+      contract: null,
 
       // TO RECEIVED ROLE FROM Q-SELECT
       roleType: null,
@@ -335,6 +335,10 @@ export default {
             this.start = this.formatDate(
               resp.data.data[0].typeOfEmployee.startContract
             );
+            this.contractType = this.getContractTypeText(
+              resp.data.data[0].typeOfEmployee.newContract
+            );
+            this.contract = resp.data.data[0].typeOfEmployee.newContract;
             this.expires = resp.data.data[0].typeOfEmployee.endContract;
             this.status = this.getStatusText(resp.data.data[0].isWorking);
             this.statusBoolean = resp.data.data[0].isWorking;
@@ -384,7 +388,12 @@ export default {
 
       return typePosition ? typePosition.label : null;
     },
-
+    getContractTypeText(name: any) {
+      const contractOption = this.contractTypeOptions.find(
+        (option) => option.value === name
+      );
+      return contractOption ? contractOption.label : null;
+    },
     // TO GET TYPE CONTRACT TEXT, IS PERMANENT OR NOT
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getContractText(status: any) {

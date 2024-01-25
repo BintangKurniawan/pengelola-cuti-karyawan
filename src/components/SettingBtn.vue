@@ -171,7 +171,8 @@ export default {
       password: '',
       nik,
       exp: '',
-
+      pwErr: '',
+      shadow: true,
       // typeContract: {} as { status: boolean; label: string },
       // typeContractOptions: [
       //   { status: false, label: 'Permanent' },
@@ -271,7 +272,16 @@ export default {
           }
         });
     },
-
+    // VALIDATE PW
+    validatePw() {
+      if (this.password.length < 6) {
+        this.pwErr = 'Password must be 6 characters';
+        this.shadow = true;
+      } else {
+        this.pwErr = '';
+        this.shadow = false;
+      }
+    },
     // FOR CHANGE PASSWORD
     async changePassword() {
       await api
@@ -330,6 +340,9 @@ export default {
         });
     },
   },
+  watch: {
+    password: 'validatePw',
+  },
 };
 </script>
 
@@ -337,5 +350,10 @@ export default {
 .round {
   background-color: #ebf9f1;
   border-radius: 8px;
+}
+.notallow {
+  pointer-events: none;
+
+  cursor: not-allowed;
 }
 </style>

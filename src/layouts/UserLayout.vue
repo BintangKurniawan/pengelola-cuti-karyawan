@@ -95,12 +95,13 @@ export default {
 
         <div class="md:flex hid">
           <q-btn
+            v-if="role != '3'"
             dense
             flat
             href="/admin/dashboard"
             class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
           >
-            <div class="flex items-center gap-4" v-if="role !== '3'">
+            <div class="flex items-center gap-4">
               <Icon icon="mdi:view-dashboard-outline" width="24" />
               <p class="capitalize">Dashboard</p>
             </div>

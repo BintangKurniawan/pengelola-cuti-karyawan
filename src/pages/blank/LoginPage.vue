@@ -28,6 +28,7 @@
         :type="showPw ? 'text' : 'password'"
         for="password"
         placeholder="Password"
+        @keydown.enter.prevent="login"
         class="md:w-80 w-60 drop-shadow-sm outline-none focus:bg-transparent active:bg-transparent"
       >
         <template v-slot:append>

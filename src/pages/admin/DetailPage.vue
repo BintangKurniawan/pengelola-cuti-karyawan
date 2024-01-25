@@ -127,7 +127,7 @@
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Admin who Added</h5>
+        <h5 class="font-semibold text-2xl">Added by</h5>
         <q-input
           outlined
           color="dark"
