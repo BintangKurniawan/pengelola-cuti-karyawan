@@ -2,7 +2,7 @@
   <div>
     <q-btn
       @click="dialog = true"
-      label="Reject"
+      label="Reject Leave"
       unelevated
       text-color="negative"
       class="font-bold round text-center capitalize px-4 mx-4 my-0 py-0 h-[21px]"
