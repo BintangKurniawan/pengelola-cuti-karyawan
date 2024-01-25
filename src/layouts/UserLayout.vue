@@ -131,57 +131,97 @@ export default {
       </q-toolbar>
     </q-header>
 
-    <div class="flex items-center flex-col gap-6 mt-28">
-      <div
-        class="w-full bg-warning text-netral font-bold px-4"
-        v-if="isFirst === 'true'"
-      >
-        <h3>Password has not been change, change it now.</h3>
-      </div>
-      <h1 class="text-3xl font-bold text-center">
+    <div
+      class="w-full bg-warning text-netral font-bold px-4"
+      v-if="isFirst === 'true'"
+    >
+      <h3>Password has not been change, change it now.</h3>
+    </div>
+    <div class="flex items-start flex-col gap-6"></div>
+
+    <q-page-container class="px-4 md:hidden max-w-full">
+      <h1 class="text-2xl font-bold text-center">
         Welcome, {{ name || 'User' }}
       </h1>
-
-      <div
-        class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
-      >
-        <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
-        <p class="text-center">Is your remaining leave</p>
+      <div class="w-full flex items-center justify-center gap-4">
+        <div
+          class="bg-[#EBF9F1] w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center"
+        >
+          <h1 class="text-center font-bold text-3xl">{{ leave || 0 }}</h1>
+          <p class="text-center">Is your remaining leave</p>
+        </div>
+        <div
+          class="bg-info w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center text-white"
+        >
+          <h1 class="text-center font-bold text-3xl">{{ leave || 0 }}</h1>
+          <p class="text-center">
+            Is your remaining leave from
+            <span class="underline">last year</span>
+          </p>
+        </div>
       </div>
+      <router-view />
+    </q-page-container>
+    <q-page-container
+      class="hid md:flex justify-between gap-4 flex-row min-h-screen px-4 w-full"
+    >
+      <div class="flex flex-col items-center justify-evenly">
+        <h1 class="text-3xl font-bold text-center">
+          Welcome, {{ name || 'User' }}
+        </h1>
 
-      <div
-        class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
-      >
-        <a
-          href="/"
-          :class="{
-            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-              $route.path === '/',
-          }"
-          class=""
-          >History</a
+        <div
+          class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
         >
-        <a
-          href="/mandatory"
-          :class="{
-            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-              $route.path === '/mandatory',
-          }"
-          >Mandatory</a
+          <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
+          <p class="text-center">Is your remaining leave</p>
+        </div>
+        <div
+          class="bg-info w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center text-white"
         >
-        <a
-          href="/optional"
-          :class="{
-            'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-              $route.path === '/optional',
-          }"
-          >Optional</a
-        >
+          <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
+          <p class="text-center">
+            Is your remaining leave from
+            <span class="underline">last year</span>
+          </p>
+        </div>
       </div>
-    </div>
+      <div class="w-full">
+        <div
+          class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
+        >
+          <a
+            href="/"
+            :class="{
+              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+                $route.path === '/',
+            }"
+            class=""
+            >History</a
+          >
+          <a
+            href="/mandatory"
+            :class="{
+              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+                $route.path === '/mandatory',
+            }"
+            >Mandatory</a
+          >
+          <a
+            href="/optional"
+            :class="{
+              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
+                $route.path === '/optional',
+            }"
+            >Optional</a
+          >
+        </div>
+        <router-view />
+      </div>
+    </q-page-container>
 
-    <q-footer reveal class="bg-white text-black">
-      <q-toolbar class="md:hidden">
+    <q-footer reveal class="bg-white text-black md:hidden">
+      <q-toolbar class="">
         <div class="flex justify-start items-start flex-row w-full">
           <q-btn
             dense
@@ -222,12 +262,6 @@ export default {
         </div>
       </q-toolbar>
     </q-footer>
-    <q-page-container class="px-4 md:hidden">
-      <router-view />
-    </q-page-container>
-    <div class="hid md:flex justify-center flex-col">
-      <router-view />
-    </div>
   </q-layout>
 </template>
 

@@ -2,43 +2,47 @@
   <q-table
     class="my-table table-rounded"
     flat
+    :loading="load"
     :columns="column"
     :rows="data"
     hide-pagination
     v-model:pagination="pagination"
   >
     <template v-slot:top-left>
-      <div class="px-2 rounded-lg border-2 border-secondary">
-        <q-input
-          borderless
-          dense
-          v-model="search"
-          debounce="300"
-          input-class="placeholder-color text-black"
-          @update:model-value="getData(pagination.page)"
-          placeholder="Search"
-        >
-          <template v-slot:append>
-            <q-icon name="search" class="text-black" />
-          </template>
-        </q-input>
-      </div>
-      <div class="flex items-center">
-        <q-select
-          class="px-2 rounded-lg w-[150px]"
-          outlined
-          v-model="status"
-          :options="statusOptions"
-          @update:model-value="getData(pagination.page)"
-          label="Filter"
-        ></q-select>
-        <Icon
-          @click="reset"
-          v-if="status"
-          icon="mdi:close-outline"
-          width="24"
-          class="text-negative cursor-pointer"
-        />
+      <div class="flex items-center gap-2">
+        <div class="px-2 rounded-lg border-2 border-secondary">
+          <q-input
+            borderless
+            dense
+            class="w-[160px]"
+            v-model="search"
+            debounce="300"
+            input-class="placeholder-color text-black"
+            @update:model-value="getData(pagination.page)"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" class="text-black" />
+            </template>
+          </q-input>
+        </div>
+        <div class="flex items-center">
+          <q-select
+            class="rounded-lg w-[110px]"
+            outlined
+            v-model="status"
+            :options="statusOptions"
+            @update:model-value="getData(pagination.page)"
+            label="Filter"
+          ></q-select>
+          <Icon
+            @click="reset"
+            v-if="status"
+            icon="mdi:close-outline"
+            width="24"
+            class="text-negative cursor-pointer"
+          />
+        </div>
       </div>
     </template>
     <template v-slot:body-cell-type="props">
@@ -79,7 +83,7 @@
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
-        class="flex gap-1 justify-center items-center text-center"
+        class="flex gap-1 justify-center items-center text-center w-custom"
       >
         <div
           v-if="props.row.status === 'REJECT' || props.row.status === 'WAITING'"
@@ -99,7 +103,7 @@
       </q-td>
     </template>
   </q-table>
-  <div class="row justify-center">
+  <div class="row justify-center" v-if="pagination.rowsNumber > 1">
     <q-pagination
       v-model="current"
       color="primary"
@@ -166,7 +170,7 @@ export default {
       },
       {
         name: 'amountleave',
-        label: 'Amount of Leave',
+        label: 'Leave Used',
         align: 'center',
         field: 'leaveUse',
       },
@@ -197,6 +201,7 @@ export default {
   },
   data() {
     return {
+      load: false,
       search: '',
       data: [],
       pagination: {
@@ -222,8 +227,10 @@ export default {
     },
     // TO GETD ATA
     async getData(page) {
+      const perPage = window.innerWidth >= 768 ? 10 : 9;
+      this.load = true;
       await api
-        .get(`/leave/all?page=${page}&perPage=10`, {
+        .get(`/leave/all?page=${page}&perPage=${perPage}`, {
           params: { search: this.search, status: this.status },
           withCredentials: true,
         })
@@ -234,6 +241,7 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+      this.load = false;
     },
     // TO FORMAT DATE
     formatDate(dateString) {
@@ -280,5 +288,11 @@ export default {
 }
 .q-table tbody tr:margin {
   margin: 10px 0 !important;
+}
+
+@media (max-width: 768px) {
+  .w-custom {
+    width: 100px;
+  }
 }
 </style>

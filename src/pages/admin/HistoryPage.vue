@@ -7,6 +7,7 @@
   </h3>
 
   <q-table
+    v-if="data && data.length > 0"
     class="my-table table-rounded"
     flat
     :columns="column"
@@ -66,7 +67,10 @@
       </q-td>
     </template>
   </q-table>
-  <div class="row justify-center" v-if="data && data.length > 0">
+  <div v-else>
+    <h1 class="text-center">No Data Available</h1>
+  </div>
+  <div class="row justify-center" v-if="pagination.rowsNumber > 1">
     <q-pagination
       v-model="current"
       color="primary"

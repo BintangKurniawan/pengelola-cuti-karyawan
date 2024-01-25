@@ -2,49 +2,55 @@
   <q-table
     class="my-table table-rounded"
     flat
+    :loading="load"
     :columns="column"
     :rows="data"
     v-model:pagination="pagination"
     hide-pagination
   >
     <template v-slot:top-left>
-      <div class="px-2 rounded-lg border-2 border-secondary">
-        <!-- SEARCH -->
-        <q-input
-          borderless
-          dense
-          v-model="searchQuery"
-          debounce="400"
-          @update:model-value="getData(pagination.page, sort)"
-          input-class="placeholder-color text-black"
-          placeholder="Search"
-        >
-          <template v-slot:append>
-            <q-icon name="search" class="text-black" />
-          </template>
-        </q-input>
-      </div>
-      <div class="flex items-center">
-        <!-- FILTER -->
-        <q-select
-          class="px-2 rounded-lg w-[150px]"
-          outlined
-          v-model="status"
-          :options="statusOptions"
-          @update:model-value="updateStatus"
-          label="Filter"
-        ></q-select>
-        <Icon
-          @click="reset"
-          v-if="status"
-          icon="mdi:close-outline"
-          width="24"
-          class="text-negative cursor-pointer"
-        />
+      <div class="flex items-center gap-2">
+        <div class="px-2 rounded-lg border-2 border-secondary">
+          <!-- SEARCH -->
+          <q-input
+            borderless
+            dense
+            class="w-[160px]"
+            v-model="searchQuery"
+            debounce="700"
+            @update:model-value="getData(pagination.page, sort)"
+            input-class="placeholder-color text-black"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" class="text-black" />
+            </template>
+          </q-input>
+        </div>
+        <div class="flex items-center">
+          <!-- FILTER -->
+          <q-select
+            class="rounded-lg w-[110px]"
+            outlined
+            v-model="status"
+            :options="statusOptions"
+            @update:model-value="updateStatus"
+            label="Filter"
+          ></q-select>
+          <Icon
+            @click="reset"
+            v-if="status"
+            icon="mdi:close-outline"
+            width="24"
+            class="text-negative cursor-pointer"
+          />
+        </div>
       </div>
     </template>
     <template v-slot:top-right>
-      <div class="flex items-center md:justify-center gap-2 md:mt-0 mt-4">
+      <div
+        class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
+      >
         <SetCollective />
         <AddEmployee />
       </div>
@@ -110,7 +116,7 @@
       </q-td>
     </template>
   </q-table>
-  <div class="row justify-center">
+  <div class="row justify-center" v-if="pagination.rowsNumber > 1">
     <q-pagination
       v-model="current"
       color="primary"
@@ -225,7 +231,7 @@ export default {
       searchQuery: '',
       // FOR FILTER
       // filter: '',
-
+      load: false,
       // FOR PAGINATION
       pagination: {
         rowsPerPage: 10,
@@ -270,9 +276,11 @@ export default {
     // TO GET DATA
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getData(page: number | undefined, sort: any) {
+      this.load = true;
+      const perPage = window.innerWidth >= 768 ? 10 : 8;
       const orderBy = `name_${sort ? 'desc' : 'asc'}`;
       await api
-        .get(`/employee?page=${page}&perPage=10&orderBy=${orderBy}`, {
+        .get(`/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}`, {
           params: {
             search: this.searchQuery,
             isWorking: this.statusWork,
@@ -290,6 +298,8 @@ export default {
             this.failedNotif(msg);
           }
         });
+
+      this.load = false;
     },
 
     // TO FILTER BY STATUS, IS ACTIVE OR RESIGN

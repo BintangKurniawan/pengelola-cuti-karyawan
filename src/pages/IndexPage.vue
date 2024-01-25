@@ -1,63 +1,64 @@
 <template>
-  <q-table
-    v-if="data && data.length > 0"
-    class="my-table table-rounded"
-    flat
-    :columns="column"
-    :rows="data"
-    v-model:pagination="pagination"
-    hide-bottom
-  >
-    <template v-slot:body-cell-status="props">
-      <q-td class="text-center" :props="props">
-        <div
-          class="w-fill rounded-3xl px-3 py-2"
-          :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
-          }"
-        >
-          <p class="font-semibold">{{ props.row.status }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-type="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-start="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-end="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-  </q-table>
-  <div class="row justify-center" v-if="data && data.length > 0">
-    <q-pagination
-      v-model="current"
-      color="primary"
-      :max="pagination.rowsNumber"
-      :max-pages="5"
-      :ellipses="false"
-      @update:model-value="getData(current)"
-      :boundary-numbers="false"
-    />
-  </div>
-
-  <div v-else>
-    <h3 class="text-center">No Data Available</h3>
+  <div class="flex flex-col overflow-x-scroll w-full hide-scroll">
+    <q-table
+      v-if="data && data.length > 0"
+      class="my-table table-rounded"
+      flat
+      :columns="column"
+      :rows="data"
+      v-model:pagination="pagination"
+      hide-bottom
+    >
+      <template v-slot:body-cell-status="props">
+        <q-td class="text-center" :props="props">
+          <div
+            class="w-fill rounded-3xl px-3 py-2"
+            :class="{
+              'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
+              'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
+              'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
+            }"
+          >
+            <p class="font-semibold">{{ props.row.status }}</p>
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-type="props">
+        <q-td class="text-center" :props="props">
+          <div class="w-fill rounded-3xl px-3 py-2">
+            <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-start="props">
+        <q-td class="text-center" :props="props">
+          <div class="w-fill rounded-3xl px-3 py-2">
+            <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
+          </div>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-end="props">
+        <q-td class="text-center" :props="props">
+          <div class="w-fill rounded-3xl px-3 py-2">
+            <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
+          </div>
+        </q-td>
+      </template>
+    </q-table>
+    <div v-else>
+      <h3 class="text-center">No Data Available</h3>
+    </div>
+    <div class="row justify-center" v-if="pagination.rowsNumber > 1">
+      <q-pagination
+        v-model="current"
+        color="primary"
+        :max="pagination.rowsNumber"
+        :max-pages="5"
+        :ellipses="false"
+        @update:model-value="getData(current)"
+        :boundary-numbers="false"
+      />
+    </div>
   </div>
 </template>
 
@@ -93,7 +94,6 @@ export default {
         align: 'center',
         field: 'startLeave',
         style: 'width: 250px;',
-        sortable: true,
       },
       {
         name: 'end',
@@ -162,8 +162,9 @@ export default {
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getData(page: number | undefined) {
+      const perPage = window.innerWidth >= 768 ? 10 : 6;
       await api
-        .get(`/leave/history/me?page=${page}&perPage=10`, {
+        .get(`/leave/history/me?page=${page}&perPage=${perPage}`, {
           withCredentials: true,
         })
         .then((resp) => {
@@ -230,5 +231,8 @@ export default {
 }
 .q-table tbody tr:margin {
   margin: 10px 0 !important;
+}
+.hide-scroll::-webkit-scrollbar {
+  width: 0px;
 }
 </style>

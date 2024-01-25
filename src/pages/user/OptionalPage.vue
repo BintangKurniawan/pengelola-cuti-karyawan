@@ -1,6 +1,9 @@
 <template>
   <div class="flex justify-center items-center w-full">
-    <div class="flex flex-wrap items-center w-full">
+    <div
+      class="flex flex-wrap items-center w-full"
+      v-if="data && data.length > 0"
+    >
       <q-expansion-item
         v-for="(data, i) in data"
         :label="data.reason"
@@ -15,7 +18,11 @@
         </div>
       </q-expansion-item>
     </div>
+    <div v-else>
+      <h3 class="text-center">No Data Available</h3>
+    </div>
     <q-pagination
+      v-if="pagination.rowsNumber > 1"
       v-model="current"
       color="primary"
       :max="pagination.rowsNumber"
@@ -24,10 +31,6 @@
       @update:model-value="getData(current)"
       :boundary-numbers="false"
     />
-
-    <!-- <div v-else>
-      <h3 class="text-center">No Data Available</h3>
-    </div> -->
   </div>
 </template>
 
