@@ -85,6 +85,19 @@
       </div>
 
       <div class="flex flex-col gap-4">
+        <h5 class="font-semibold text-2xl">Employee Status</h5>
+        <q-input
+          outlined
+          color="dark"
+          bg-color="white"
+          for="employeestatus"
+          readonly
+          v-model="employeeStstus"
+          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+        />
+      </div>
+
+      <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-2xl">Type of Employee</h5>
         <q-input
           outlined
@@ -141,7 +154,7 @@
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Admin's NIK</h5>
+        <h5 class="font-semibold text-2xl">Adder's NIK</h5>
         <q-input
           outlined
           color="dark"
@@ -203,7 +216,7 @@ export default {
       historicalNik: '',
       type: '',
       role: '',
-
+      employeeStstus: '',
       // FOR NEW CONTRACT, IS NEW OR FALSE
       expDate: false,
     };
@@ -233,6 +246,9 @@ export default {
                 resp.data.data[0].typeOfEmployee.endContract
               );
             }
+            this.employeeStstus = this.getStatusEmployeeText(
+              resp.data.data[0].typeOfEmployee.newContract
+            );
             this.status = this.getStatusText(resp.data.data[0].isWorking);
             this.type = this.getContractText(
               resp.data.data[0].typeOfEmployee.isContract
@@ -262,6 +278,10 @@ export default {
     // TO GET STATUS CONTRACT TEXT
     getContractText(status) {
       return status ? 'Contract' : 'Permanent';
+    },
+    // TO GET STATUS EMPLOYEE TEXT
+    getStatusEmployeeText(status) {
+      return status ? 'New Employee' : 'Old Employee';
     },
   },
   components: { ActivateBtn },

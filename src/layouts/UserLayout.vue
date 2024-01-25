@@ -131,15 +131,13 @@ export default {
       </q-toolbar>
     </q-header>
 
-    <div
-      class="w-full bg-warning text-netral font-bold px-4"
-      v-if="isFirst === 'true'"
-    >
-      <h3>Password has not been change, change it now.</h3>
-    </div>
-    <div class="flex items-start flex-col gap-6"></div>
-
     <q-page-container class="px-4 md:hidden max-w-full">
+      <div
+        class="w-full bg-warning text-netral font-bold px-4"
+        v-if="isFirst === 'true'"
+      >
+        <h3>Password has not been change, change it now.</h3>
+      </div>
       <h1 class="text-2xl font-bold text-center">
         Welcome, {{ name || 'User' }}
       </h1>

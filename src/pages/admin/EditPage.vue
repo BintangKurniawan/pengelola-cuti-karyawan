@@ -40,7 +40,7 @@
           v-model="typePosition"
           :options="typePositionOptions"
           @update:model-value="updatePositionId"
-          label="Type Employee"
+          label="Position"
         ></q-select>
       </div>
 
@@ -97,6 +97,20 @@
         </q-input>
       </div>
 
+      <div class="flex flex-col gap-4" v-if="contractBoolean">
+        <h5 class="font-semibold text-2xl">Employee Status</h5>
+        <q-select
+          outlined
+          class="w-[270px]"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
+          v-model="contractType"
+          :options="contractTypeOptions"
+          @update:model-value="contractTypeUpdate"
+          label="Employee Status"
+        />
+      </div>
+
       <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-2xl">Type of Employee</h5>
         <q-select
@@ -109,20 +123,6 @@
           @update:model-value="updateContractId"
           label="Type Employee"
         ></q-select>
-      </div>
-
-      <div class="flex flex-col gap-4" v-if="contractBoolean">
-        <h5 class="font-semibold text-2xl">Type of Contract</h5>
-        <q-select
-          outlined
-          class="w-[270px]"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
-          v-model="contractType"
-          :options="contractTypeOptions"
-          @update:model-value="contractTypeUpdate"
-          label="Type Contract"
-        />
       </div>
 
       <div class="flex flex-col gap-4">
