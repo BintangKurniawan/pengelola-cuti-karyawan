@@ -1,8 +1,14 @@
 <template>
-  <h1 class="mx-4 md:text-3xl text-xl font-bold text-start">
+  <h1
+    class="mx-4 md:text-3xl text-xl font-bold text-start"
+    v-if="data && data.length > 0"
+  >
     Name: {{ name }}
   </h1>
-  <h3 class="mx-4 md:text-2xl text-lg font-semibold text-start">
+  <h3
+    class="mx-4 md:text-2xl text-lg font-semibold text-start"
+    v-if="data && data.length > 0"
+  >
     NIK: {{ nik }}
   </h3>
 

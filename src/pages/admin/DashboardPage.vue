@@ -47,7 +47,7 @@
         </div>
       </div>
     </template>
-    <template v-slot:top-right>
+    <template v-slot:top-right v-if="roleId !== '1'">
       <div
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
@@ -61,6 +61,11 @@
         <p @click="toggleSort" class="cursor-pointer">
           {{ props.col.label }}
         </p>
+      </q-th>
+    </template>
+    <template v-slot:header-cell-setleave="props">
+      <q-th :props="props" v-if="roleId !== '1'">
+        <p>{{ props.col.label }}</p>
       </q-th>
     </template>
     <template v-slot:body-cell-position="props">
@@ -84,7 +89,7 @@
       </q-td>
     </template>
     <template v-slot:body-cell-setleave="props">
-      <q-td :props="props">
+      <q-td :props="props" v-if="roleId !== '1'">
         <!-- <q-btn
           color="primary"
           text-color="white"
@@ -105,6 +110,7 @@
           <Icon icon="mdi:information-outline" width="24" class="text-info" />
         </q-btn>
         <q-btn
+          v-if="roleId !== '1'"
           flat
           text-color="white"
           class=""
@@ -112,7 +118,7 @@
         >
           <Icon icon="mdi:history" width="24" class="text-dark" />
         </q-btn>
-        <Delete :id="props.row.nik" />
+        <Delete :id="props.row.nik" v-if="roleId !== '1'" />
       </q-td>
     </template>
   </q-table>
@@ -199,9 +205,10 @@ export default {
         style: 'width: 100px',
       },
     ];
-
+    const roleId = localStorage.getItem('role');
     const $q = useQuasar();
     return {
+      roleId,
       column,
       current: ref(1),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

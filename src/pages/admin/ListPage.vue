@@ -115,6 +115,10 @@
       boundary-links
     />
   </div>
+
+  <div v-if="roleId === '1'">
+    <h1 class="text-center">You're not allowed to access this page</h1>
+  </div>
 </template>
 
 <script>
@@ -131,12 +135,13 @@ export default {
     Approve,
   },
   setup() {
+    const roleId = localStorage.getItem('role');
     const column = [
       {
         name: 'id',
         label: 'NIK',
         align: 'center',
-        field: 'id',
+        field: 'nik',
         style: 'width: 80px;',
       },
       {
@@ -195,6 +200,7 @@ export default {
     ];
 
     return {
+      roleId,
       column,
       current: ref(1),
     };

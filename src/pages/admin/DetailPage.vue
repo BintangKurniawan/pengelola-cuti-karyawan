@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center">
     <div class="flex flex-wrap items-center gap-4 w-[1128px]">
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">NIK</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">NIK</h5>
         <q-input
           outlined
           color="dark"
@@ -11,12 +11,12 @@
           readonly
           v-model="nik"
           placeholder="NIK"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Name</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Name</h5>
         <q-input
           outlined
           color="dark"
@@ -25,12 +25,12 @@
           v-model="name"
           readonly
           placeholder="Name"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Position</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Position</h5>
         <q-input
           outlined
           color="dark"
@@ -39,14 +39,14 @@
           readonly
           v-model="position"
           placeholder="Position"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Status</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Status</h5>
         <div
-          class="w-[270px] px-3 py-4 rounded-[4px]"
+          class="md:w-[270px] w-[100px] custom-text-size px-3 py-4 rounded-[4px] md:text-start text-center"
           :class="{
             'bg-[#EBF9F1] text-[#1F9254] ': status === 'Active',
             'bg-[#FBE7E8] text-[#A30D11] ': status === 'Resign',
@@ -57,7 +57,7 @@
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Start Working</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Start Working</h5>
         <q-input
           outlined
           color="dark"
@@ -66,12 +66,12 @@
           v-model="start"
           readonly
           placeholder="Start Working"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4" v-if="expDate">
-        <h5 class="font-semibold text-2xl">Contract Expires</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Contract Expires</h5>
         <q-input
           outlined
           color="dark"
@@ -80,12 +80,12 @@
           v-model="expires"
           readonly
           placeholder="Contract Expires"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Employee Status</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Employee Status</h5>
         <q-input
           outlined
           color="dark"
@@ -93,12 +93,12 @@
           for="employeestatus"
           readonly
           v-model="employeeStstus"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Type of Employee</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Type of Employee</h5>
         <q-input
           outlined
           color="dark"
@@ -107,12 +107,12 @@
           readonly
           v-model="type"
           placeholder="Type of Employee"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Role</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Role</h5>
         <q-input
           outlined
           color="dark"
@@ -121,12 +121,12 @@
           readonly
           v-model="role"
           placeholder="Role"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Email</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Email</h5>
         <q-input
           outlined
           color="dark"
@@ -135,12 +135,12 @@
           readonly
           v-model="email"
           placeholder="Email"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Added by</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Added by</h5>
         <q-input
           outlined
           color="dark"
@@ -149,12 +149,12 @@
           readonly
           v-model="historicalName"
           placeholder="Admin"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
       <div class="flex flex-col gap-4">
-        <h5 class="font-semibold text-2xl">Adder's NIK</h5>
+        <h5 class="font-semibold text-xs md:text-2xl">Adder's NIK</h5>
         <q-input
           outlined
           color="dark"
@@ -163,21 +163,24 @@
           readonly
           v-model="historicalNik"
           placeholder="NIK"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
-      <div class="flex flex-col gap-4 h-[104px] justify-end">
+      <div class="flex flex-col gap-4 justify-end">
+        <h5 class="font-semibold text-xs md:text-2xl opacity-0 cursor-default">
+          Adder's NIK
+        </h5>
         <q-btn
           color="primary"
           text-color="white"
           label="Edit Profile"
-          class="w-[270px] h-[56px] rounded-3xl"
+          class="md:w-[270px] h-[56px] rounded-3xl"
           @click="$router.push(`/admin/detail/${id}/edit`)"
         />
       </div>
 
-      <div class="flex flex-col h-[104px] justify-end">
+      <div class="flex flex-col h-[104px] justify-end" v-if="roleId !== '1'">
         <ActivateBtn :id="id" />
       </div>
     </div>
@@ -192,10 +195,14 @@ import moment from 'moment';
 import ActivateBtn from 'src/components/ActivateBtn.vue';
 export default {
   setup() {
+    const maxLengthMobile = 12;
+    const roleId = localStorage.getItem('role');
     const route = useRoute();
     //  TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
+      roleId,
+      maxLengthMobile,
       id,
     };
   },
@@ -222,6 +229,14 @@ export default {
     };
   },
   methods: {
+    limitStringMobile(str) {
+      if (str.length <= this.maxLengthMobile) {
+        return str;
+      } else {
+        return str.substring(0, this.maxLengthMobile) + '...';
+      }
+    },
+
     // TO GET DATA
     async getData() {
       try {
@@ -288,4 +303,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media (max-width: 768px) {
+  .custom-text-size {
+    font-size: 10px;
+    text-wrap: wrap;
+  }
+}
+</style>

@@ -6,7 +6,9 @@ import Logout from 'src/components/LogoutBtn.vue';
 import SettingBtn from 'src/components/SettingBtn.vue';
 export default {
   setup() {
+    const roleId = localStorage.getItem('role');
     return {
+      roleId,
       route: useRoute(),
       router: useRouter(),
     };
@@ -60,6 +62,7 @@ export default {
             <p class="capitalize">Dashboard</p>
           </q-btn>
           <q-btn
+            v-if="roleId !== '1'"
             dense
             flat
             href="/admin/list"
@@ -108,7 +111,7 @@ export default {
     </q-header>
     <q-footer reveal class="bg-white text-black">
       <q-toolbar class="md:hidden">
-        <div class="flex justify-start items-start flex-row w-full">
+        <div class="flex justify-center items-start flex-row w-full">
           <q-btn
             dense
             flat
@@ -135,6 +138,7 @@ export default {
             <p class="capitalize">Dashboard</p>
           </q-btn>
           <q-btn
+            v-if="roleId !== '1'"
             dense
             flat
             href="/admin/list"

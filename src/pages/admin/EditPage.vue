@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center">
-    <div class="flex flex-wrap items-center gap-4 w-[1128px]">
-      <div class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-center gap-4 w-[1128px] md:p-0 px-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">NIK</h5>
         <q-input
           outlined
@@ -11,11 +11,11 @@
           :disable="roleId === '1'"
           v-model="nik"
           placeholder="NIK"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Name</h5>
         <q-input
           outlined
@@ -25,15 +25,15 @@
           for="name"
           v-model="name"
           placeholder="Name"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
-      <div class="flex flex-col gap-4" v-if="statusBoolean">
+      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="statusBoolean">
         <h5 class="font-semibold text-2xl">Position</h5>
         <q-select
           outlined
-          class="w-[270px]"
+          class="md:w-[270px] w-full"
           label-color="Primary"
           :bg-color="roleId === '1' ? 'grey-2' : 'white'"
           :disable="roleId === '1'"
@@ -44,10 +44,10 @@
         ></q-select>
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Status</h5>
         <div
-          class="w-[270px] px-3 py-4 rounded-[4px]"
+          class="md:w-[270px] w-full px-3 py-4 rounded-[4px]"
           :class="{
             'bg-[#EBF9F1] text-[#1F9254] ': status === 'Active',
             'bg-[#FBE7E8] text-[#A30D11] ': status === 'Resign',
@@ -57,7 +57,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Start Working</h5>
         <q-input
           outlined
@@ -67,11 +67,11 @@
           v-model="start"
           disable
           placeholder="Start Working"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
-      <div class="flex flex-col gap-4" v-if="contractBoolean">
+      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="contractBoolean">
         <h5 class="font-semibold text-2xl">Contract Expires</h5>
         <q-input
           outlined
@@ -79,7 +79,7 @@
           color="dark"
           :bg-color="roleId === '1' ? 'grey-2' : 'white'"
           :disable="roleId === '1'"
-          class="w-[270px]"
+          class="md:w-[270px] w-full"
           v-model="exp"
         >
           <template v-slot:append>
@@ -97,11 +97,11 @@
         </q-input>
       </div>
 
-      <div class="flex flex-col gap-4" v-if="contractBoolean">
+      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="contractBoolean">
         <h5 class="font-semibold text-2xl">Employee Status</h5>
         <q-select
           outlined
-          class="w-[270px]"
+          class="md:w-[270px] w-full"
           :bg-color="roleId === '1' ? 'grey-2' : 'white'"
           :disable="roleId === '1'"
           v-model="contractType"
@@ -111,11 +111,11 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Type of Employee</h5>
         <q-select
           outlined
-          class="w-[270px]"
+          class="md:w-[270px] w-full"
           :bg-color="roleId === '1' ? 'grey-2' : 'white'"
           :disable="roleId === '1'"
           v-model="typeContract"
@@ -125,7 +125,7 @@
         ></q-select>
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Email</h5>
         <q-input
           outlined
@@ -135,31 +135,31 @@
           readonly
           v-model="email"
           placeholder="Email"
-          class="drop-shadow-sm w-[270px] outline-none focus:bg-transparent active:bg-transparent"
+          class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
 
-      <div class="flex flex-col gap-4" v-if="roleId === '1'">
+      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="roleId === '1'">
         <h5 class="font-semibold text-2xl">Role</h5>
         <q-select
           outlined
-          class="w-[270px]"
+          class="md:w-[270px] w-full"
           v-model="roleType"
           :options="roleTypeOptions"
           @update:model-value="updateRole"
           label="Role"
         />
       </div>
-      <div class="flex flex-col gap-4 h-[104px] justify-end">
+      <div class="flex flex-col gap-4 md:w-fit w-full h-[104px] justify-end">
         <q-btn
           color="primary"
           @click="edit"
           text-color="white"
           label="Save Changes"
-          class="w-[270px] h-[56px] capitalize rounded-3xl"
+          class="md:w-[270px] h-[56px] capitalize rounded-3xl"
         />
       </div>
-      <div class="flex flex-col h-[104px] justify-end">
+      <div class="flex flex-col h-[104px] justify-end" v-if="roleId !== '1'">
         <Reset :id="id" />
       </div>
     </div>
