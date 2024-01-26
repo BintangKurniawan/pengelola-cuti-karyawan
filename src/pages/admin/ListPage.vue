@@ -86,7 +86,10 @@
         class="flex gap-1 justify-center items-center text-center w-custom"
       >
         <div
-          v-if="props.row.status === 'REJECT' || props.row.status === 'WAITING'"
+          v-if="
+            (props.row.status === 'REJECT' || props.row.status === 'WAITING') &&
+            props.row.typeOfLeave.name !== 'Optional'
+          "
         >
           <Approve :id="props.row.leaveEmployeeId" />
         </div>

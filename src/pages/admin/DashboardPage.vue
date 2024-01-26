@@ -1,6 +1,6 @@
 <template>
   <q-table
-    class="my-table table-rounded"
+    class="my-table table-rounded hide-scroll"
     flat
     :loading="load"
     :columns="column"
@@ -386,5 +386,8 @@ export default {
 }
 .q-table tbody tr:margin {
   margin: 10px 0 !important;
+}
+.hide-scroll::-webkit-scrollbar-track {
+  box-shadow: none !important;
 }
 </style>

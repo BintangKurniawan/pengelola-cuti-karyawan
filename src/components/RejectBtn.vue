@@ -100,7 +100,11 @@ export default {
     // TO REJECT LEAVE IN LISTPAGE
     async reject(type, id) {
       await api
-        .patch(`/leave/${type}/${id}/reject`, {}, { withCredentials: true })
+        .patch(
+          `/leave/${type}/${id}/reject`,
+          { note: this.note },
+          { withCredentials: true }
+        )
         .then((resp) => {
           console.log(resp);
           this.dialog = false;

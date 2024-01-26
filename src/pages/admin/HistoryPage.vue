@@ -72,6 +72,25 @@
         </div>
       </q-td>
     </template>
+    <template v-slot:body-cell-note="props">
+      <q-td class="text-center" :props="props">
+        <div
+          class="w-fill rounded-3xl px-3 py-2"
+          v-if="props.row.note && props.row.status === 'REJECT'"
+        >
+          <q-btn color="primary" label="Note" class="rounded-xl capitalize">
+            <q-popup-proxy class="text-wrap">
+              <q-banner class="max-w-[300px] text-wrap">
+                <p class="max-w[300px] text-wrap">{{ props.row.note }}</p>
+              </q-banner>
+            </q-popup-proxy>
+          </q-btn>
+        </div>
+        <div v-else>
+          <p>Note not found</p>
+        </div>
+      </q-td>
+    </template>
   </q-table>
   <div v-else>
     <h1 class="text-center">No Data Available</h1>
@@ -140,6 +159,12 @@ export default {
         label: 'Reason',
         align: 'center',
         field: 'reason',
+      },
+      {
+        name: 'note',
+        label: 'Reject Note',
+        align: 'center',
+        field: 'note',
       },
     ];
 

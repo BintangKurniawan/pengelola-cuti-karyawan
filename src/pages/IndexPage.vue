@@ -44,6 +44,25 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-note="props">
+        <q-td class="text-center" :props="props">
+          <div
+            class="w-fill rounded-3xl px-3 py-2"
+            v-if="props.row.note && props.row.status === 'REJECT'"
+          >
+            <q-btn color="primary" label="Note" class="rounded-xl capitalize">
+              <q-popup-proxy class="text-wrap">
+                <q-banner class="max-w-[300px] text-wrap">
+                  <p class="max-w[300px] text-wrap">{{ props.row.note }}</p>
+                </q-banner>
+              </q-popup-proxy>
+            </q-btn>
+          </div>
+          <div v-else>
+            <p>Note not found</p>
+          </div>
+        </q-td>
+      </template>
     </q-table>
     <div v-else>
       <h3 class="text-center">No Data Available</h3>
@@ -116,6 +135,12 @@ export default {
         field: 'reason',
         style: 'width: 400px',
       },
+      {
+        name: 'note',
+        label: 'Reject Note',
+        align: 'center',
+        field: 'note',
+      },
     ];
     const $q = useQuasar();
     return {
@@ -162,7 +187,7 @@ export default {
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getData(page: number | undefined) {
-      const perPage = window.innerWidth >= 768 ? 10 : 6;
+      const perPage = window.innerWidth >= 768 ? 8 : 5;
       await api
         .get(`/leave/history/me?page=${page}&perPage=${perPage}`, {
           withCredentials: true,
@@ -232,7 +257,8 @@ export default {
 .q-table tbody tr:margin {
   margin: 10px 0 !important;
 }
-.hide-scroll::-webkit-scrollbar {
-  width: 0px;
+
+.hide-scroll::-webkit-scrollbar-track {
+  box-shadow: none !important;
 }
 </style>

@@ -76,6 +76,7 @@ export default {
   data() {
     return {
       dialog: ref(false),
+      note: '',
     };
   },
   props: {
@@ -88,7 +89,11 @@ export default {
     // TO REJECT OPTIONAL LEAVE
     async reject(id) {
       await api
-        .patch(`/leave/optional/${id}/reject`, {}, { withCredentials: true })
+        .patch(
+          `/leave/optional/${id}/reject`,
+          { note: this.note },
+          { withCredentials: true }
+        )
         .then((resp) => {
           console.log(resp);
           this.dialog = false;
