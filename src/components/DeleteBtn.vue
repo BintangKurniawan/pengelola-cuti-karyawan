@@ -55,15 +55,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {
@@ -96,6 +87,9 @@ export default {
         .then((resp) => {
           this.deleteNotif(resp.data.message);
           this.dialog = false;
+          setInterval(() => {
+            document.location.reload();
+          }, 1500);
         })
         .catch((err) => {
           if (err.response) {

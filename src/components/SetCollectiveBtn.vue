@@ -70,6 +70,11 @@
               v-model="endLeave"
             />
           </div>
+
+          <p class="text-secondary font-semibold">
+            Amount of leave is
+            {{ calculateLeaveAmount(startLeave, endLeave) }} day(s)
+          </p>
         </div>
 
         <q-card-section class="flex items-center gap-4 w-full justify-between">
@@ -189,6 +194,27 @@ export default {
       this.leaveId = this.typeLeave.value;
 
       console.log(this.leaveId);
+    },
+
+    calculateLeaveAmount(startLeave, endLeave) {
+      const startDate = new Date(startLeave);
+      const endDate = new Date(endLeave);
+
+      let totalDays = 0;
+
+      while (startDate <= endDate) {
+        const dayOfWeek = startDate.getDay();
+
+        // Jika bukan Sabtu (6) atau Minggu (0), tambahkan ke totalDays
+        if (dayOfWeek !== 6 && dayOfWeek !== 0) {
+          totalDays++;
+        }
+
+        // Tambah satu hari ke startDate
+        startDate.setDate(startDate.getDate() + 1);
+      }
+
+      return totalDays;
     },
   },
 };

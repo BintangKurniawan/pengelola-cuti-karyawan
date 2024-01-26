@@ -92,7 +92,9 @@
         </div>
         <div
           v-if="
-            props.row.status === 'APPROVE' || props.row.status === 'WAITING'
+            (props.row.status === 'APPROVE' ||
+              props.row.status === 'WAITING') &&
+            props.row.typeOfLeave.name !== 'Mandatory'
           "
         >
           <Reject
@@ -246,6 +248,9 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          setInterval(() => {
+            document.location.reload();
+          }, 1000);
         });
       this.load = false;
     },

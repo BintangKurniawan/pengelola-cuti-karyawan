@@ -53,15 +53,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {
@@ -71,15 +62,6 @@ export default {
           message: `${msg}`,
           color: 'negative',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -111,6 +93,9 @@ export default {
           console.log(resp);
           this.dialog = false;
           this.successNotif(resp.data.message);
+          setInterval(() => {
+            document.location.reload();
+          }, 3000);
         })
         .catch((err) => {
           if (err.response) {

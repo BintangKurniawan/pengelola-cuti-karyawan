@@ -92,12 +92,15 @@ import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
+
     return {
       successNotif() {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Leave created, go to List of Leave page to accept it',
+          message:
+            'Leave created, redirected to the list of leave page in 3 seconds',
+          timeout: 3000,
           color: 'primary',
           multiLine: true,
         });
@@ -150,6 +153,10 @@ export default {
           this.startLeave = '';
           this.endLeave = '';
           this.dialog = false;
+
+          setInterval(() => {
+            this.$router.push('/admin/list');
+          }, 3000);
         })
         .catch((err) => {
           if (err.response) {

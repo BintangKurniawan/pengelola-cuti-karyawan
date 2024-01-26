@@ -18,7 +18,7 @@
             class="w-[160px]"
             v-model="searchQuery"
             debounce="700"
-            @update:model-value="getData(pagination.page, sort)"
+            @update:model-value="getData(pagination.page, sort, sortLabel)"
             input-class="placeholder-color text-black"
             placeholder="Search"
           >
@@ -55,14 +55,29 @@
         <AddEmployee />
       </div>
     </template>
-    <!-- ASC DESC NAME -->
-    <template v-slot:header-cell-name="props">
+    <template v-slot:header-cell-nik="props">
       <q-th :props="props">
-        <p @click="toggleSort" class="cursor-pointer">
+        <p @click="toggleSort('nik')" class="cursor-pointer">
           {{ props.col.label }}
         </p>
       </q-th>
     </template>
+    <!-- ASC DESC NAME -->
+    <template v-slot:header-cell-name="props">
+      <q-th :props="props">
+        <p @click="toggleSort('name')" class="cursor-pointer">
+          {{ props.col.label }}
+        </p>
+      </q-th>
+    </template>
+    <!-- <template v-slot:header-cell-position="props">
+      <q-th :props="props">
+        <p @click="toggleSort('positionId')" class="cursor-pointer">
+          {{ props.col.label }}
+        </p>
+      </q-th>
+    </template> -->
+
     <template v-slot:header-cell-setleave="props">
       <q-th :props="props" v-if="roleId !== '1'">
         <p>{{ props.col.label }}</p>
@@ -128,7 +143,7 @@
       color="primary"
       :max="pagination.rowsNumber"
       :max-pages="5"
-      @update:model-value="getData(current, sort)"
+      @update:model-value="getData(current, sort, sortLabel)"
       :boundary-numbers="false"
       direction-links
       boundary-links
@@ -178,6 +193,12 @@ export default {
         style: 'width: 300px;',
       },
       {
+        name: 'gender',
+        label: 'Gender',
+        align: 'center',
+        field: 'gender',
+      },
+      {
         name: 'amountOfLeave',
         label: 'Remaining Leave',
         align: 'center',
@@ -219,15 +240,6 @@ export default {
           message: `${msg}`,
           color: 'negative',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -251,6 +263,7 @@ export default {
 
       // FOR SORT ASC DESC
       sort: ref(false),
+      sortLabel: 'name',
 
       // TO RECEIVE SELECTED DATA FROM Q-SELECT
       status: null,
@@ -265,55 +278,68 @@ export default {
   },
   mounted() {
     // TO GET DATA
-    this.getData(this.pagination.page, this.sort);
+    this.getData(this.pagination.page, this.sort, this.sortLabel);
+
+    // setInterval(() => {
+    //   this.getData(this.pagination.page, this.sort);
+    // }, 3000);
   },
   methods: {
     // TO REMOVE FILTER
     reset() {
       this.statusWork = null;
       this.status = null;
-      this.getData(this.pagination.page, this.sort);
+      this.current = 1;
+      this.getData(this.pagination.page, this.sort, this.sortLabel);
     },
     // FOR ASC DESC
-    toggleSort() {
+    toggleSort(label: any) {
+      this.sortLabel = label;
       this.sort = !this.sort;
-      this.getData(this.pagination.page, this.sort);
+      this.current = 1;
+      this.getData(this.pagination.page, this.sort, this.sortLabel);
     },
 
     // TO GET DATA
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getData(page: number | undefined, sort: any) {
+    async getData(page: number | undefined, sort: any, label: any) {
       this.load = true;
       const perPage = window.innerWidth >= 768 ? 10 : 8;
-      const orderBy = `name_${sort ? 'desc' : 'asc'}`;
+      const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
-        .get(`/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}`, {
-          params: {
-            search: this.searchQuery,
-            isWorking: this.statusWork,
-          },
-          withCredentials: true,
-        })
+        .get(
+          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}`,
+          {
+            params: {
+              search: this.searchQuery,
+              isWorking: this.statusWork,
+            },
+            withCredentials: true,
+          }
+        )
         .then((res) => {
           this.data = res.data.data;
           this.pagination.rowsNumber = res.data.meta.lastPage;
           console.log(this.data);
+          this.load = false;
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            // setInterval(() => {
+            //   document.location.reload();
+            // }, 1000);
           }
         });
-
-      this.load = false;
     },
 
     // TO FILTER BY STATUS, IS ACTIVE OR RESIGN
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateStatus() {
       this.statusWork = this.status.value;
-      this.getData(this.pagination.page, this.sort);
+      this.current = 1;
+      this.getData(this.pagination.page, this.sort, this.sortLabel);
       console.log(this.statusWork);
     },
 

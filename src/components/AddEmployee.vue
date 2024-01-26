@@ -182,15 +182,6 @@ export default {
           message: 'Employee added successfully',
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -332,11 +323,15 @@ export default {
           this.endContract = '';
           this.positionId = '';
           this.contract = false;
+          setInterval(() => {
+            document.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            document.location.reload();
           }
         });
     },
