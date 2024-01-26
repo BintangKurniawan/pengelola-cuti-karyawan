@@ -26,6 +26,7 @@
               outlined
               color="dark"
               bg-color="white"
+              @keydown.enter.prevent="create"
               for="position"
               placeholder="Position"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
@@ -71,15 +72,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {
@@ -90,15 +82,6 @@ export default {
           color: 'negative',
 
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -132,11 +115,15 @@ export default {
           this.successNotif(res.data.message);
           this.name = '';
           this.dialog = false;
+          setInterval(() => {
+            window.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            window.location.reload();
           }
         });
     },

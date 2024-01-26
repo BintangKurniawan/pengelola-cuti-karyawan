@@ -8,15 +8,26 @@
       class="font-bold round text-center capitalize px-4 mx-4 my-0 py-0 h-[21px]"
     />
     <q-dialog v-model="dialog">
-      <q-card class="bg-white">
+      <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
-          <h6 class="font-bold text-center">Reject Optional Leave</h6>
+          <h6 class="font-bold text-center text-xl">Reject Optional Leave</h6>
         </q-card-section>
 
         <q-card-section>
-          <p class="text-center text-[#a0a0a0]">
+          <p class="text-center text-[#a0a0a0] font-semibold text-base">
             Are you sure want to reject this optional leave?
           </p>
+          <div class="flex flex-col items-start mt-2 w-full">
+            <q-input
+              v-model="note"
+              outlined
+              color="dark"
+              bg-color="white"
+              for="note"
+              placeholder="Note"
+              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+            />
+          </div>
         </q-card-section>
 
         <q-card-section class="flex items-center gap-4 w-full justify-between">
@@ -58,15 +69,6 @@ export default {
           message: 'Optional leave rejected',
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -91,6 +93,9 @@ export default {
           console.log(resp);
           this.dialog = false;
           this.rejectNotif();
+          setInterval(() => {
+            document.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           console.error(err);

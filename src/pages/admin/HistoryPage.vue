@@ -13,7 +13,7 @@
   </h3>
 
   <q-table
-    v-if="data && data.length > 0"
+    v-if="data && data.length > 1"
     class="my-table table-rounded"
     flat
     :columns="column"

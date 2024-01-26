@@ -74,6 +74,7 @@
             label="Confirm"
             color="primary"
             unelevated
+            :disable="totalDays > 8"
             @click="setLeave(id)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -122,6 +123,7 @@ export default {
       reason: '',
       startLeave: '',
       endLeave: '',
+      totalDays: '',
     };
   },
   props: {
@@ -184,6 +186,7 @@ export default {
         startDate.setDate(startDate.getDate() + 1);
       }
 
+      this.totalDays = totalDays;
       return totalDays;
     },
   },
