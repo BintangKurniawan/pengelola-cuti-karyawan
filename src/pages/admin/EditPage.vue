@@ -58,6 +58,20 @@
       </div>
 
       <div class="flex flex-col gap-4 md:w-fit w-full">
+        <h5 class="font-semibold text-2xl">Gender</h5>
+        <q-select
+          outlined
+          class="md:w-[270px] w-full"
+          label-color="Primary"
+          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
+          :disable="roleId === '1'"
+          v-model="gender"
+          :options="genderOptions"
+          label="Position"
+        ></q-select>
+      </div>
+
+      <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">Start Working</h5>
         <q-input
           outlined
@@ -288,6 +302,9 @@ export default {
       ],
       // TO GET ROLE FROM SELECTED roleType
       role: 3,
+
+      gender: null,
+      genderOptions: ['L', 'P'],
     };
   },
   // eslint-disable-next-line vue/no-unused-components
@@ -338,6 +355,7 @@ export default {
             this.contractType = this.getContractTypeText(
               resp.data.data[0].typeOfEmployee.newContract
             );
+            this.gender = resp.data.data[0].gender;
             this.contract = resp.data.data[0].typeOfEmployee.newContract;
             this.expires = resp.data.data[0].typeOfEmployee.endContract;
             this.status = this.getStatusText(resp.data.data[0].isWorking);
@@ -474,6 +492,7 @@ export default {
           {
             name: this.name,
             positionId: this.positionId,
+            gender: this.gender,
             typeOfEmployee: {
               isContract: this.contractBoolean,
               endContract: this.exp,
@@ -491,8 +510,10 @@ export default {
         )
         .then((resp) => {
           console.log(resp);
-
           this.saveNotif(resp.data.message);
+          setInterval(() => {
+            document.location.reload();
+          }, 3000);
         })
         .catch((err) => {
           console.error(err);

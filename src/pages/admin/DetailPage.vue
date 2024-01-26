@@ -57,6 +57,20 @@
       </div>
 
       <div class="flex flex-col gap-4">
+        <h5 class="font-semibold text-xs md:text-2xl">Gender</h5>
+        <q-input
+          outlined
+          color="dark"
+          bg-color="white"
+          for="gender"
+          readonly
+          v-model="gender"
+          placeholder="Gender"
+          class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
+        />
+      </div>
+
+      <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl">Start Working</h5>
         <q-input
           outlined
@@ -214,6 +228,7 @@ export default {
     return {
       name: '',
       nik: '',
+      gender: '',
       position: '',
       email: '',
       start: '',
@@ -239,45 +254,49 @@ export default {
 
     // TO GET DATA
     async getData() {
-      try {
-        await api
-          .get(`/employee/detail/${this.id}`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            this.nik = resp.data.data[0].nik;
-            this.name = resp.data.data[0].name;
-            this.position = resp.data.data[0].positions.name;
-            this.email = resp.data.data[0].user.email;
-            this.start = this.formatDate(
-              resp.data.data[0].typeOfEmployee.startContract
-            );
-            this.role = resp.data.data[0].user.role.name;
-            if (
-              resp.data.data[0].typeOfEmployee &&
+      await api
+        .get(`/employee/detail/${this.id}`, {
+          withCredentials: true,
+        })
+        .then((resp) => {
+          this.nik = resp.data.data[0].nik;
+          this.name = resp.data.data[0].name;
+          this.position = resp.data.data[0].positions.name;
+          this.gender = resp.data.data[0].gender;
+          this.email = resp.data.data[0].user.email;
+          this.start = this.formatDate(
+            resp.data.data[0].typeOfEmployee.startContract
+          );
+          this.role = resp.data.data[0].user.role.name;
+          if (
+            resp.data.data[0].typeOfEmployee &&
+            resp.data.data[0].typeOfEmployee.endContract
+          ) {
+            this.expires = this.formatDate(
               resp.data.data[0].typeOfEmployee.endContract
-            ) {
-              this.expires = this.formatDate(
-                resp.data.data[0].typeOfEmployee.endContract
-              );
-            }
-            this.employeeStstus = this.getStatusEmployeeText(
-              resp.data.data[0].typeOfEmployee.newContract
             );
-            this.status = this.getStatusText(resp.data.data[0].isWorking);
-            this.type = this.getContractText(
-              resp.data.data[0].typeOfEmployee.isContract
-            );
-            this.expDate = resp.data.data[0].typeOfEmployee.isContract;
-            this.historicalName = resp.data.data[0].historicalName;
-            this.historicalNik = resp.data.data[0].historicalNik;
-            console.log(this.status);
-            console.log(resp.data.data);
-            console.log(this.historicalName);
-          });
-      } catch (err) {
-        console.error(err);
-      }
+          }
+          this.employeeStstus = this.getStatusEmployeeText(
+            resp.data.data[0].typeOfEmployee.newContract
+          );
+          this.status = this.getStatusText(resp.data.data[0].isWorking);
+          this.type = this.getContractText(
+            resp.data.data[0].typeOfEmployee.isContract
+          );
+          this.expDate = resp.data.data[0].typeOfEmployee.isContract;
+          this.historicalName = resp.data.data[0].historicalName;
+          this.historicalNik = resp.data.data[0].historicalNik;
+          console.log(this.status);
+          console.log(resp.data.data);
+          console.log(this.historicalName);
+        })
+        .catch((err) => {
+          if (err.response) {
+            setInterval(() => {
+              document.location.reload();
+            }, 1000);
+          }
+        });
     },
     // TO FORMAT THE DATE GAINED FROM API
     formatDate(dateString) {

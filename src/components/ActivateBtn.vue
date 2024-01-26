@@ -59,15 +59,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {
@@ -101,6 +92,7 @@ export default {
           const msg = resp.data.message;
           this.successNotif(msg);
           this.dialog = false;
+          document.location.reload();
         })
         .catch((err) => {
           if (err.response) {
