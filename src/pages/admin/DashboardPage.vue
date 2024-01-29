@@ -74,7 +74,10 @@
             class="absolute"
           /> -->
 
-          <q-icon name="arrow_downward" size="1.5em" />
+          <q-icon
+            :name="sort ? 'arrow_upward' : 'arrow_downward'"
+            size="1.5em"
+          />
         </p>
       </q-th>
     </template>
@@ -95,6 +98,20 @@
       <q-td class="text-center" :props="props">
         <div class="w-fill rounded-3xl px-3 py-2">
           <p class="font-semibold">{{ props.row.positions.name }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-amountOfLeaveThen="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ props.row.amountOfLeave[0].amount }}</p>
+        </div>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-amountOfLeaveNow="props">
+      <q-td class="text-center" :props="props">
+        <div class="w-fill rounded-3xl px-3 py-2">
+          <p class="font-semibold">{{ props.row.amountOfLeave[1].amount }}</p>
         </div>
       </q-td>
     </template>
@@ -207,10 +224,17 @@ export default {
         field: 'gender',
       },
       {
-        name: 'amountOfLeave',
-        label: 'Remaining Leave',
+        name: 'amountOfLeaveThen',
+        label: 'Last Year Leave',
         align: 'center',
-        field: 'amountOfLeave',
+        field: 'amountOfLeaveThen',
+        style: 'width: 250px;',
+      },
+      {
+        name: 'amountOfLeaveNow',
+        label: 'This Year Leave',
+        align: 'center',
+        field: 'amountOfLeaveNow',
         style: 'width: 250px;',
       },
       {
@@ -316,7 +340,7 @@ export default {
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(
-          `/employee?page=${page}&perPage=10&orderBy=${orderBy}&sortBy=${sort}`,
+          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}`,
           {
             params: {
               search: this.searchQuery,
@@ -337,7 +361,7 @@ export default {
             this.failedNotif(msg);
             setInterval(() => {
               document.location.reload();
-            }, 8000);
+            }, 5000);
           }
         });
     },

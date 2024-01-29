@@ -147,7 +147,8 @@ export default {
       </h1>
       <div class="w-full flex items-center justify-center gap-4">
         <div
-          class="bg-[#EBF9F1] w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center"
+          class="bg-[#EBF9F1] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center"
+          :class="amountLeaveCount === 1 ? 'w-full' : 'w-[45%]'"
         >
           <h1 class="text-center font-bold text-3xl">{{ leaveNow || 0 }}</h1>
           <p class="text-center">Is your remaining leave</p>
