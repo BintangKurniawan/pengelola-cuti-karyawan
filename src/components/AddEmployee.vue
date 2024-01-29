@@ -284,7 +284,11 @@ export default {
           console.log(this.typePositionOptions);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+            document.location.reload();
+          }
         });
     },
     // TO ADD EMPLOYEE

@@ -148,15 +148,6 @@ export default {
           message: `${msg}`,
           color: 'negative',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -247,6 +238,7 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            document.location.reload();
           }
         });
     },
@@ -269,6 +261,7 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            document.location.reload();
           }
         });
     },

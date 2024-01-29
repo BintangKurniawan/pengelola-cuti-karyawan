@@ -40,7 +40,9 @@ export default {
     return {
       nav: false,
       name: '',
-      leave: '',
+      leaveNow: 0,
+      leaveThen: 0,
+      amountLeaveCount: 1,
       isFirst,
     };
   },
@@ -57,8 +59,10 @@ export default {
         .get('/employee/me', { withCredentials: true })
         .then((resp) => {
           console.log(resp);
-          this.name = resp.data.data.employee.name;
-          this.leave = resp.data.data.employee.amountOfLeave;
+          this.name = resp.data.data.name;
+          this.leaveThen = resp.data.data.amountOfLeave[0].amount;
+          this.leaveNow = resp.data.data.amountOfLeave[1].amount;
+          this.amountLeaveCount = resp.data.data.amountOfLeave.length;
 
           localStorage.setItem('nik', resp.data.data.employee.nik);
         })
@@ -145,13 +149,14 @@ export default {
         <div
           class="bg-[#EBF9F1] w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center"
         >
-          <h1 class="text-center font-bold text-3xl">{{ leave || 0 }}</h1>
+          <h1 class="text-center font-bold text-3xl">{{ leaveNow || 0 }}</h1>
           <p class="text-center">Is your remaining leave</p>
         </div>
         <div
+          v-if="amountLeaveCount > 1"
           class="bg-info w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center text-white"
         >
-          <h1 class="text-center font-bold text-3xl">{{ leave || 0 }}</h1>
+          <h1 class="text-center font-bold text-3xl">{{ leaveThen || 0 }}</h1>
           <p class="text-center">
             Is your remaining leave from
             <span class="underline">last year</span>
@@ -163,7 +168,10 @@ export default {
     <q-page-container
       class="hid md:flex justify-between gap-4 flex-row min-h-screen px-4 w-full"
     >
-      <div class="flex flex-col items-center justify-evenly">
+      <div
+        class="flex flex-col items-center"
+        :class="amountLeaveCount === 1 ? 'justify-start' : 'justify-evenly'"
+      >
         <h1 class="text-3xl font-bold text-center">
           Welcome, {{ name || 'User' }}
         </h1>
@@ -171,13 +179,14 @@ export default {
         <div
           class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
         >
-          <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
+          <h1 class="text-center font-bold text-5xl">{{ leaveNow || 0 }}</h1>
           <p class="text-center">Is your remaining leave</p>
         </div>
         <div
+          v-if="amountLeaveCount > 1"
           class="bg-info w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center text-white"
         >
-          <h1 class="text-center font-bold text-5xl">{{ leave || 0 }}</h1>
+          <h1 class="text-center font-bold text-5xl">{{ leaveThen || 0 }}</h1>
           <p class="text-center">
             Is your remaining leave from
             <span class="underline">last year</span>

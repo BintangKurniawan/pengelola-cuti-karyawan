@@ -67,6 +67,14 @@
       <q-th :props="props">
         <p @click="toggleSort('name')" class="cursor-pointer">
           {{ props.col.label }}
+          <!-- <Icon
+            icon="mdi:sort-ascending"
+            width="24"
+            color="text-dark"
+            class="absolute"
+          /> -->
+
+          <q-icon name="arrow_downward" size="1.5em" />
         </p>
       </q-th>
     </template>
@@ -308,7 +316,7 @@ export default {
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(
-          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}`,
+          `/employee?page=${page}&perPage=10&orderBy=${orderBy}&sortBy=${sort}`,
           {
             params: {
               search: this.searchQuery,
@@ -329,7 +337,7 @@ export default {
             this.failedNotif(msg);
             setInterval(() => {
               document.location.reload();
-            }, 1000);
+            }, 8000);
           }
         });
     },
