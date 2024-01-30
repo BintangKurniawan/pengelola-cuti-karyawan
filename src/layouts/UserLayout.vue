@@ -55,13 +55,22 @@ export default {
       this.nav = !this.nav;
     },
     async getData() {
+      const date = new Date();
+      const thisYear = date.getFullYear();
+
       await api
         .get('/employee/me', { withCredentials: true })
         .then((resp) => {
           console.log(resp);
           this.name = resp.data.data.name;
-          this.leaveThen = resp.data.data.amountOfLeave[0].amount;
-          this.leaveNow = resp.data.data.amountOfLeave[1].amount;
+          if (resp.data.data.amountOfLeave[0].year === thisYear) {
+            this.leaveNow = resp.data.data.amountOfLeave[0].amount;
+            this.leaveThen = resp.data.data.amountOfLeave[1].amount;
+          } else {
+            this.leaveNow = resp.data.data.amountOfLeave[1].amount;
+            this.leaveThen = resp.data.data.amountOfLeave[0].amount;
+          }
+
           this.amountLeaveCount = resp.data.data.amountOfLeave.length;
 
           localStorage.setItem('nik', resp.data.data.employee.nik);

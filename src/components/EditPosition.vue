@@ -20,6 +20,7 @@
               bg-color="white"
               for="position"
               placeholder="Position"
+              @keydown.enter.prevent="update(id)"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
           </div>
@@ -63,15 +64,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {
@@ -82,15 +74,6 @@ export default {
           color: 'negative',
 
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
     };
@@ -140,6 +123,9 @@ export default {
           this.successNotif(res.data.message);
           this.name = '';
           this.dialog = false;
+          setInterval(() => {
+            window.location.reload();
+          }, 1000);
         })
         .catch((err) => {
           if (err.response) {

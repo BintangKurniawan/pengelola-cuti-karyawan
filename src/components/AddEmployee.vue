@@ -83,6 +83,16 @@
 
           <div class="flex justify-around items-end gap-1 w-full flex-wrap">
             <div class="flex flex-col items-start gap-1 w-[45%]">
+              <p class="text-primary font-semibold">Gender</p>
+              <q-select
+                outlined
+                class="w-full"
+                label="Gender"
+                v-model="gender"
+                :options="genderOptions"
+              />
+            </div>
+            <div class="flex flex-col items-start gap-1 w-[45%]">
               <p class="text-primary font-semibold">Start Working</p>
               <q-input
                 outlined
@@ -231,6 +241,9 @@ export default {
       typePositionOptions: [],
       // TO RECEIVED POSITION ID FROM SELECTED typePosition
       positionId: '',
+
+      gender: null,
+      genderOptions: ['L', 'P'],
     };
   },
   props: {
@@ -302,6 +315,7 @@ export default {
             email: this.email,
             isContract: this.type,
             startContract: this.startWorking,
+            gender: this.gender,
             endContract: this.endContract,
             positionId: this.positionId,
             newContract: this.contract,
@@ -335,7 +349,6 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            document.location.reload();
           }
         });
     },

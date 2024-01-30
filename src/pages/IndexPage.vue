@@ -50,13 +50,21 @@
             class="w-fill rounded-3xl px-3 py-2"
             v-if="props.row.note && props.row.status === 'REJECT'"
           >
-            <q-btn color="primary" label="Note" class="rounded-xl capitalize">
-              <q-popup-proxy class="text-wrap">
-                <q-banner class="max-w-[300px] text-wrap">
-                  <p class="max-w[300px] text-wrap">{{ props.row.note }}</p>
-                </q-banner>
-              </q-popup-proxy>
+            <!-- <q-btn
+              color="primary"
+              label="Note"
+              class="rounded-xl capitalize"
+              @click="dialog = true"
+            >
             </q-btn>
+            <q-dialog v-model="dialog">
+              <q-card class="bg-white w-full">
+                <q-card-section class="">
+                  <p class="text-center">{{ props.row.note }}</p>
+                </q-card-section>
+              </q-card>
+            </q-dialog> -->
+            <NoteBtn :text="props.row.note" />
           </div>
           <div v-else>
             <p>Note not found</p>
@@ -86,11 +94,13 @@
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
+import NoteBtn from 'src/components/NoteBtn.vue';
 // import moment from 'moment';
 // import { date } from 'quasar';
 export default {
   components: {
     // Icon,
+    NoteBtn,
   },
   setup() {
     const column = [
@@ -170,6 +180,7 @@ export default {
   },
   data() {
     return {
+      dialog: ref(false),
       filter: '',
       pagination: {
         rowsPerPage: 10,

@@ -22,6 +22,7 @@
               bg-color="white"
               for="note"
               placeholder="Note"
+              @keydown.enter.prevent="reject(type.toLowerCase(), id)"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
           </div>
@@ -111,7 +112,7 @@ export default {
           this.successNotif(resp.data.message);
           setInterval(() => {
             document.location.reload();
-          }, 3000);
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {

@@ -101,20 +101,32 @@
         </div>
       </q-td>
     </template>
-    <template v-slot:body-cell-amountOfLeaveThen="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ props.row.amountOfLeave[0].amount }}</p>
-        </div>
-      </q-td>
-    </template>
+
     <template v-slot:body-cell-amountOfLeaveNow="props">
       <q-td class="text-center" :props="props">
         <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ props.row.amountOfLeave[1].amount }}</p>
+          <p class="font-semibold">
+            {{ props.row.amountOfLeave[0].amount }}
+          </p>
         </div>
       </q-td>
     </template>
+
+    <template v-slot:body-cell-amountOfLeaveThen="props">
+      <q-td class="text-center" :props="props">
+        <div
+          class="w-fill rounded-3xl px-3 py-2"
+          v-if="props.row.amountOfLeave.length > 1"
+        >
+          <p class="font-semibold">{{ props.row.amountOfLeave[1].amount }}</p>
+        </div>
+        <div class="w-fill rounded-3xl px-3 py-2" v-else>
+          <p class="font-semibold">0</p>
+        </div>
+        <!-- <p v-else>{{ props.row.amountOfLeave[0].amount }}</p> -->
+      </q-td>
+    </template>
+
     <template v-slot:body-cell-status="props">
       <q-td class="text-center" :props="props">
         <div
@@ -224,19 +236,20 @@ export default {
         field: 'gender',
       },
       {
-        name: 'amountOfLeaveThen',
-        label: 'Last Year Leave',
-        align: 'center',
-        field: 'amountOfLeaveThen',
-        style: 'width: 250px;',
-      },
-      {
         name: 'amountOfLeaveNow',
         label: 'This Year Leave',
         align: 'center',
         field: 'amountOfLeaveNow',
         style: 'width: 250px;',
       },
+      {
+        name: 'amountOfLeaveThen',
+        label: 'Last Year Leave',
+        align: 'center',
+        field: 'amountOfLeaveThen',
+        style: 'width: 250px;',
+      },
+
       {
         name: 'status',
         label: 'Status',
@@ -278,6 +291,7 @@ export default {
   },
   data() {
     return {
+      thisYear: new Date().getFullYear,
       // FOR SEARCH
       searchQuery: '',
       // FOR FILTER
