@@ -56,9 +56,14 @@ export default {
     async getData() {
       const date = new Date();
       const thisYear = date.getFullYear();
-
+      const token = localStorage.getItem('token');
       await api
-        .get('/employee/me', { withCredentials: true })
+        .get('/employee/me', {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((resp) => {
           // console.log(resp);
           this.name = resp.data.data.name;
@@ -75,9 +80,11 @@ export default {
           localStorage.setItem('nik', resp.data.data.employee.nik);
         })
         .catch((err) => {
+          // if (err.response) {
+          //   console.log(err.response.data.status);
+          // }
           if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
+            window.location.reload();
           }
         });
     },
@@ -143,63 +150,38 @@ export default {
       </q-toolbar>
     </q-header>
 
-    <q-page-container class="px-4 md:hidden max-w-full">
-      <div
-        class="w-full bg-warning text-netral font-bold px-4"
-        v-if="isFirst === 'true'"
-      >
-        <h3>Password has not been change, change it now.</h3>
-      </div>
-      <h1 class="text-2xl font-bold text-center">
-        Welcome, {{ name || 'User' }}
-      </h1>
-      <div class="w-full flex items-center justify-center gap-4">
-        <div
-          class="bg-[#EBF9F1] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center"
-          :class="amountLeaveCount === 1 ? 'w-full' : 'w-[45%]'"
-        >
-          <h1 class="text-center font-bold text-3xl">{{ leaveNow || 0 }}</h1>
-          <p class="text-center">Is your remaining leave</p>
-        </div>
-        <div
-          v-if="amountLeaveCount > 1"
-          class="bg-info w-[45%] h-[184px] p-4 rounded-2xl flex flex-col items-center justify-center text-white"
-        >
-          <h1 class="text-center font-bold text-3xl">{{ leaveThen || 0 }}</h1>
-          <p class="text-center">
-            Is your remaining leave from
-            <span class="underline">last year</span>
-          </p>
-        </div>
-      </div>
-      <router-view />
-    </q-page-container>
     <q-page-container
-      class="hid md:flex justify-between gap-4 flex-row min-h-screen px-4 w-full"
+      class="md:flex md:justify-between md:gap-4 md:flex-row md:min-h-screen px-4 max-w-full"
     >
       <div
         class="flex flex-col items-center"
-        :class="amountLeaveCount === 1 ? 'justify-start' : 'justify-evenly'"
+        :class="amountLeaveCount === 1 ? 'justify-start' : ''"
       >
-        <h1 class="text-3xl font-bold text-center">
+        <h1 class="md:text-3xl text-2xl font-bold text-center">
           Welcome, {{ name || 'User' }}
         </h1>
 
-        <div
-          class="bg-[#EBF9F1] w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center"
-        >
-          <h1 class="text-center font-bold text-5xl">{{ leaveNow || 0 }}</h1>
-          <p class="text-center">Is your remaining leave</p>
-        </div>
-        <div
-          v-if="amountLeaveCount > 1"
-          class="bg-info w-[366px] h-[184px] rounded-2xl flex flex-col items-center justify-center text-white"
-        >
-          <h1 class="text-center font-bold text-5xl">{{ leaveThen || 0 }}</h1>
-          <p class="text-center">
-            Is your remaining leave from
-            <span class="underline">last year</span>
-          </p>
+        <div class="flex md:flex-col w-full items-center justify-center gap-4">
+          <div
+            class="bg-[#EBF9F1] h-[184px] md:p-0 p-4 rounded-2xl flex flex-col items-center justify-center"
+            :class="amountLeaveCount === 1 ? 'w-full' : 'w-[45%] md:w-[366px]'"
+          >
+            <h1 class="text-center font-bold md:text-5xl text-3xl">
+              {{ leaveNow || 0 }}
+            </h1>
+            <p class="text-center">Is your remaining leave</p>
+          </div>
+          <div
+            class="bg-info md:w-[366px] w-[45%] md:p-0 p-4 h-[184px] rounded-2xl flex flex-col items-center justify-center text-white"
+          >
+            <h1 class="text-center font-bold md:text-5xl text-3xl">
+              {{ leaveThen || 0 }}
+            </h1>
+            <p class="text-center">
+              Is your remaining leave from
+              <span class="underline">last year</span>
+            </p>
+          </div>
         </div>
       </div>
       <div class="w-full">
