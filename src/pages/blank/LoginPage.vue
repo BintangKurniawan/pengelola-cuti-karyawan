@@ -119,6 +119,17 @@ export default {
           console.error(err);
         });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getLoginData(nik: any) {
+      api
+        .get(`/employee/detail/${nik}`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     async login() {
       this.loading = true;
 
@@ -148,11 +159,15 @@ export default {
           console.log(this.role);
 
           this.getPosition();
-          if (this.role !== '2' && this.role !== '1') {
-            this.$router.push('/');
-          } else {
-            this.$router.push('/admin/dashboard');
-          }
+          this.getLoginData(resp.data.data.employee.nik);
+          // if (this.role !== '2' && this.role !== '1') {
+          //   this.$router.push('/');
+          // } else {
+          //   this.$router.push('/admin/dashboard');
+          // }
+          setInterval(() => {
+            window.location.reload();
+          }, 2000);
           this.successNotif();
         })
         .catch((error) => {

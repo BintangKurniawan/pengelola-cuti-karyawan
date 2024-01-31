@@ -208,7 +208,7 @@ export default {
           this.pagination.rowsNumber = resp.data.meta.lastPage;
           const msg = resp.data.message;
           // this.successNotif(msg);
-          console.log(this.data);
+          // console.log(this.data);
         })
         .catch((err) => {
           if (err.response) {

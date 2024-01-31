@@ -281,7 +281,7 @@ export default {
       await api
         .get(`/employee/detail/${this.nik}`, { withCredentials: true })
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           this.name = resp.data.data[0].name;
           this.positionId = this.getId(resp.data.data[0].positions.name);
           this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;

@@ -61,7 +61,7 @@ export default {
       await api
         .get('/employee/me', { withCredentials: true })
         .then((resp) => {
-          console.log(resp);
+          // console.log(resp);
           this.name = resp.data.data.name;
           if (resp.data.data.amountOfLeave[0].year === thisYear) {
             this.leaveNow = resp.data.data.amountOfLeave[0].amount;
