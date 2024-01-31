@@ -98,6 +98,7 @@ export default {
             localStorage.removeItem('role');
             localStorage.removeItem('nik');
             localStorage.removeItem('token');
+            localStorage.removeItem('position');
             const msg = resp.data.message;
             this.successNotif(msg);
             this.$router.push('/login');

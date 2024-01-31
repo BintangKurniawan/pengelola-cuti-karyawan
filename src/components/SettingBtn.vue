@@ -155,6 +155,18 @@ export default {
   data() {
     const nik = localStorage.getItem('nik');
 
+    const positionData = localStorage.getItem('position');
+    const storedPosition = JSON.parse(positionData);
+    const mapPosition = storedPosition.map(
+      (position: { id: any; name: any }) => {
+        return {
+          value: position.id,
+          label: position.name,
+        };
+      }
+    );
+    // console.log(map);
+
     return {
       dialog: ref(false),
       modal: ref(false),
@@ -163,6 +175,7 @@ export default {
       nik,
       exp: '',
       pwErr: '',
+      mapPosition,
       shadow: true,
       // typeContract: {} as { status: boolean; label: string },
       // typeContractOptions: [
@@ -197,18 +210,21 @@ export default {
     Icon,
   },
   async mounted() {
-    await this.getPosition();
+    // await this.getPosition();
     await this.getData();
   },
   methods: {
     //  TO GET POSITION ID
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getId(name: any) {
-      const typePosition = this.typePositionOptions.find(
-        (option) => option.label === name
+      const typePosition = this.mapPosition.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (option: { label: any }) => option.label === name
       );
       return typePosition ? typePosition.value : null;
     },
     // TO GET ROLE ID
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getRoleId(role: any) {
       const roleTypeOptions = this.roleTypeOptions.find(
         (option) => option.label === role

@@ -91,7 +91,12 @@ export default {
     async getData() {
       await api
         .get('/position', { withCredentials: true })
-        .then((resp) => (this.data = resp.data.data))
+        .then((resp) => {
+          this.data = resp.data.data;
+
+          const positionDataString = JSON.stringify(this.data);
+          localStorage.setItem('position', positionDataString);
+        })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;

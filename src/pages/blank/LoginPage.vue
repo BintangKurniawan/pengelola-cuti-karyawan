@@ -105,6 +105,20 @@ export default {
     };
   },
   methods: {
+    getPosition() {
+      api
+        .get('/position', {
+          withCredentials: true,
+        })
+        .then((res) => {
+          const position = res.data.data;
+          const positionDataString = JSON.stringify(position);
+          localStorage.setItem('position', positionDataString);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     async login() {
       this.loading = true;
 
@@ -132,6 +146,8 @@ export default {
           localStorage.setItem('token', token);
           localStorage.setItem('role', this.role);
           console.log(this.role);
+
+          this.getPosition();
           if (this.role !== '2' && this.role !== '1') {
             this.$router.push('/');
           } else {

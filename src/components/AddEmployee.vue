@@ -126,7 +126,7 @@
                 class="w-full"
                 label="Position"
                 v-model="typePosition"
-                :options="typePositionOptions"
+                :options="mapPosition"
                 @update:model-value="positionIdUpdate"
               />
             </div>
@@ -207,6 +207,16 @@ export default {
     };
   },
   data() {
+    const positionData = localStorage.getItem('position');
+    const storedPosition = JSON.parse(positionData);
+    const mapPosition = storedPosition.map(
+      (position: { id: any; name: any }) => {
+        return {
+          value: position.id,
+          label: position.name,
+        };
+      }
+    );
     return {
       nik: '',
       name: '',
@@ -214,7 +224,7 @@ export default {
       startWorking: '',
       endContract: '',
       dialog: ref(false),
-
+      mapPosition,
       // FOR SELECTED TYPE CONTRACT FROM Q-SELECT
       typeEmployee: null,
       // FOR SELECT IN Q-SELECT
@@ -254,7 +264,7 @@ export default {
   },
   async mounted() {
     // TO GET POSITION DATA
-    await this.getPosition();
+    // await this.getPosition();
   },
   methods: {
     // TO RECEIVE SELECTED typeEmployee VALUE. IF FALSE (PERMANENT), THE contract IS FALSE (OLD EMPLOYEE) AND NOT HAVE END CONTRACT
