@@ -1,7 +1,8 @@
 import axios from 'axios';
-import router from './router';
+// import router from './router';
 import { Cookies } from 'quasar';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 const api = axios.create({
   baseURL: 'https://10.10.101.251:8080/api',
 });
@@ -42,7 +43,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         console.error('Token refresh failed', refreshError);
         localStorage.removeItem('token');
-        router.push('/login');
+        useRouter().push('/login');
         return Promise.reject(refreshError);
       }
     }

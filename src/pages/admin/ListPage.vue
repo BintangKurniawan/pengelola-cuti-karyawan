@@ -234,6 +234,7 @@ export default {
     // TO REMOVE FILTER
     reset() {
       this.status = '';
+      this.current = 1;
       this.getData(this.pagination.page);
     },
     // TO GETD ATA

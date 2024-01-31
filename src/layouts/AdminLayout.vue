@@ -160,7 +160,7 @@ export default {
                 $route.path === '/admin/positions',
             }"
           >
-            <Icon icon="mdi:list-box-outline" width="24" />
+            <Icon icon="mdi:family-tree" width="24" />
             <p class="capitalize">Position</p>
           </q-btn>
         </div>

@@ -174,6 +174,9 @@ export default {
           this.endLeave = '';
           console.log(resp);
           this.successNotif(resp.data.message);
+          setInterval(() => {
+            window.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {

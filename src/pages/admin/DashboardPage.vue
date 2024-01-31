@@ -23,6 +23,12 @@
             placeholder="Search"
           >
             <template v-slot:append>
+              <q-icon
+                v-if="searchQuery !== ''"
+                name="close"
+                @click="clearSearch"
+                class="cursor-pointer"
+              />
               <q-icon name="search" class="text-black" />
             </template>
           </q-input>
@@ -148,7 +154,12 @@
           label="Set"
           class="capitalize rounded-3xl"
           :onClick="() => tes(props.row.nik)" /> -->
-        <SetLeave :id="props.row.nik" />
+        <div v-if="props.row.isWorking === true">
+          <SetLeave :id="props.row.nik" />
+        </div>
+        <div v-else>
+          <p>-</p>
+        </div>
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
@@ -336,6 +347,10 @@ export default {
       this.statusWork = null;
       this.status = null;
       this.current = 1;
+      this.getData(this.pagination.page, this.sort, this.sortLabel);
+    },
+    clearSearch() {
+      this.searchQuery = '';
       this.getData(this.pagination.page, this.sort, this.sortLabel);
     },
     // FOR ASC DESC

@@ -189,6 +189,8 @@ export default {
         { value: 3, label: 'User' },
       ],
       role: 3,
+      contract: null,
+      gender: null,
     };
   },
   components: {
@@ -242,6 +244,22 @@ export default {
           }
         });
     },
+    formatDate(dateString: {
+      split: (arg0: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (): any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new (): any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
+      };
+    }) {
+      const [day, month, year] = dateString.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return date.toLocaleDateString('en-UK', options);
+    },
     //  TO GET LOGGED IN USER DATA
     async getData() {
       await api
@@ -251,10 +269,13 @@ export default {
           this.name = resp.data.data[0].name;
           this.positionId = this.getId(resp.data.data[0].positions.name);
           this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-
+          this.contract = resp.data.data[0].typeOfEmployee.newContract;
+          this.gender = resp.data.data[0].gender;
           this.role = this.getRoleId(resp.data.data[0].user.role.name);
           if (resp.data.data[0].typeOfEmployee.endContract) {
-            this.exp = resp.data.data[0].typeOfEmployee.endContract;
+            this.exp = this.formatDate(
+              resp.data.data[0].typeOfEmployee.endContract
+            );
           }
         })
         .catch((err) => {
@@ -290,6 +311,9 @@ export default {
           this.dialog = false;
           this.modal = false;
           localStorage.setItem('firstLogin', 'false');
+          setInterval(() => {
+            window.location.reload();
+          }, 3000);
         })
         .catch((err) => {
           if (err.response) {
@@ -306,9 +330,11 @@ export default {
           {
             name: this.name,
             positionId: this.positionId,
+            gender: this.gender,
             typeOfEmployee: {
               isContract: this.contractBoolean,
               endContract: this.exp,
+              newContract: this.contract,
             },
             roleId: this.role,
           },
@@ -324,6 +350,9 @@ export default {
           console.log(resp);
           const msg = resp.data.message;
           this.successNotif(msg);
+          setInterval(() => {
+            document.location.reload();
+          }, 3000);
         })
         .catch((err) => {
           if (err.response) {

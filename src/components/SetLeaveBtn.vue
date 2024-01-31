@@ -1,15 +1,15 @@
 <template>
+  <q-btn
+    color="primary"
+    text-color="white"
+    class="capitalize rounded-3xl"
+    @click="dialog = true"
+  >
+    <div class="flex items-center justify-center gap-1">
+      <p>Set</p>
+    </div>
+  </q-btn>
   <div>
-    <q-btn
-      color="primary"
-      text-color="white"
-      class="capitalize rounded-3xl"
-      @click="dialog = true"
-    >
-      <div class="flex items-center justify-center gap-1">
-        <p>Set</p>
-      </div>
-    </q-btn>
     <q-dialog v-model="dialog">
       <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
@@ -99,8 +99,7 @@ export default {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message:
-            'Leave created, redirected to the list of leave page in 3 seconds',
+          message: 'Leave created',
           timeout: 3000,
           color: 'primary',
           multiLine: true,

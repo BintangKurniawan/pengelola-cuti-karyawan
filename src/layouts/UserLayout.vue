@@ -205,6 +205,12 @@ export default {
       </div>
       <div class="w-full">
         <div
+          class="w-full bg-warning text-netral font-bold px-4"
+          v-if="isFirst === 'true'"
+        >
+          <h3>Password has not been change, change it now.</h3>
+        </div>
+        <div
           class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
         >
           <a
