@@ -63,6 +63,7 @@ import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import { onBeforeUnmount } from 'vue';
 export default {
   components: {
     Icon,
@@ -70,8 +71,22 @@ export default {
   setup() {
     const $q = useQuasar();
     const route = useRouter();
+    let timer: string | number | NodeJS.Timeout | undefined;
+    onBeforeUnmount(() => {
+      if (timer !== void 0) {
+        clearTimeout(timer);
+        $q.loading.hide();
+      }
+    });
     return {
       route,
+      showLoading() {
+        $q.loading.show();
+        timer = setTimeout(() => {
+          $q.loading.hide();
+          timer = void 0;
+        }, 2000);
+      },
       successNotif() {
         $q.notify({
           progress: true,
@@ -124,7 +139,9 @@ export default {
       api
         .get(`/employee/detail/${nik}`, { withCredentials: true })
         .then((res) => {
-          console.log(res.data.data);
+          const userData = res.data.data;
+          const userDataString = JSON.stringify(userData);
+          localStorage.setItem('userData', userDataString);
         })
         .catch((err) => {
           console.error(err);
@@ -132,7 +149,7 @@ export default {
     },
     async login() {
       this.loading = true;
-
+      this.showLoading();
       await api
         .post(
           '/auth/login',
@@ -168,7 +185,7 @@ export default {
           setInterval(() => {
             window.location.reload();
           }, 2000);
-          this.successNotif();
+          // this.successNotif();
         })
         .catch((error) => {
           if (error.response) {

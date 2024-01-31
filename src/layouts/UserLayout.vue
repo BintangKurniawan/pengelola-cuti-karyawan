@@ -46,9 +46,8 @@ export default {
       isFirst,
     };
   },
-  async mounted() {
-    await this.getData();
-    console.log(this.isFirst);
+  mounted() {
+    this.getData();
   },
   methods: {
     showNav() {

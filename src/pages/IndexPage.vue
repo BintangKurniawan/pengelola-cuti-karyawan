@@ -192,8 +192,8 @@ export default {
       isFirst: localStorage.getItem('firstLogin'),
     };
   },
-  async mounted() {
-    await this.getData(this.pagination.page);
+  mounted() {
+    this.getData(this.pagination.page);
   },
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -203,12 +203,9 @@ export default {
         .get(`/leave/history/me?page=${page}&perPage=${perPage}`, {
           withCredentials: true,
         })
-        .then((resp) => {
-          this.data = resp.data.data.employee.leaves;
-          this.pagination.rowsNumber = resp.data.meta.lastPage;
-          const msg = resp.data.message;
-          // this.successNotif(msg);
-          // console.log(this.data);
+        .then((res) => {
+          this.data = res.data.data.employee.leaves;
+          this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
           if (err.response) {

@@ -27,6 +27,7 @@
                 color="dark"
                 bg-color="white"
                 for="name"
+                @keydown.enter.prevent="editName"
                 label="Name"
                 class="drop-shadow-sm w-44 outline-none focus:bg-transparent active:bg-transparent"
               />
@@ -165,15 +166,64 @@ export default {
         };
       }
     );
-    // console.log(map);
 
+    // console.log(map);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function getId(name: any) {
+      const typePosition = mapPosition.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (option: { label: any }) => option.label === name
+      );
+      return typePosition ? typePosition.value : null;
+    }
+
+    const roleTypeOptions = [
+      { value: 2, label: 'Admin' },
+      { value: 3, label: 'User' },
+    ];
+
+    function getRoleId(role: any) {
+      const roleType = roleTypeOptions.find((option) => option.label === role);
+
+      return roleType ? roleType.value : null;
+    }
+
+    function formatDate(dateString: {
+      split: (arg0: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (): any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new (): any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
+      };
+    }) {
+      const [day, month, year] = dateString.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return date.toLocaleDateString('en-UK', options);
+    }
+
+    const userData = localStorage.getItem('userData');
+    const storedUserData = JSON.parse(userData);
+    const name = storedUserData[0].name;
+    const positionId = getId(storedUserData[0].positions.name);
+    const contractBoolean = storedUserData[0].typeOfEmployee.isContract;
+    const contract = storedUserData[0].typeOfEmployee.newContract;
+    const gender = storedUserData[0].gender;
+    const role = getRoleId(storedUserData[0].user.role.name);
+    let exp;
+    if (storedUserData[0].typeOfEmployee.endContract) {
+      exp = formatDate(storedUserData[0].typeOfEmployee.endContract);
+    }
     return {
       dialog: ref(false),
       modal: ref(false),
-      name: '',
+      name,
       password: '',
       nik,
-      exp: '',
+      exp,
       pwErr: '',
       mapPosition,
       shadow: true,
@@ -182,13 +232,13 @@ export default {
       //   { status: false, label: 'Permanent' },
       //   { status: true, label: 'Contract' },
       // ],
-      contractBoolean: false,
+      contractBoolean,
 
       // typePosition: {} as { value: number; label: string },
       // FOR POSITION DATA
       typePositionOptions: [],
       // FOR POSITION ID
-      positionId: '',
+      positionId,
 
       // contractType: null,
       // contractTypeOptions: [
@@ -197,13 +247,10 @@ export default {
       // ],
 
       // roleType: null,
-      roleTypeOptions: [
-        { value: 2, label: 'Admin' },
-        { value: 3, label: 'User' },
-      ],
-      role: 3,
-      contract: null,
-      gender: null,
+
+      role,
+      contract,
+      gender,
     };
   },
   components: {
@@ -211,27 +258,15 @@ export default {
   },
   async mounted() {
     // await this.getPosition();
-    await this.getData();
+    // await this.getData();
   },
   methods: {
     //  TO GET POSITION ID
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getId(name: any) {
-      const typePosition = this.mapPosition.find(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (option: { label: any }) => option.label === name
-      );
-      return typePosition ? typePosition.value : null;
-    },
+
     // TO GET ROLE ID
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getRoleId(role: any) {
-      const roleTypeOptions = this.roleTypeOptions.find(
-        (option) => option.label === role
-      );
 
-      return roleTypeOptions ? roleTypeOptions.value : null;
-    },
     // TO GET POSITION
     async getPosition() {
       await api
@@ -260,39 +295,16 @@ export default {
           }
         });
     },
-    formatDate(dateString: {
-      split: (arg0: string) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
-      };
-    }) {
-      const [day, month, year] = dateString.split('-').map(Number);
-      const date = new Date(year, month - 1, day);
 
-      const options = { day: 'numeric', month: 'short', year: 'numeric' };
-      return date.toLocaleDateString('en-UK', options);
-    },
     //  TO GET LOGGED IN USER DATA
-    async getData() {
-      await api
+    getData() {
+      api
         .get(`/employee/detail/${this.nik}`, { withCredentials: true })
         .then((resp) => {
           // console.log(resp);
-          this.name = resp.data.data[0].name;
-          this.positionId = this.getId(resp.data.data[0].positions.name);
-          this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-          this.contract = resp.data.data[0].typeOfEmployee.newContract;
-          this.gender = resp.data.data[0].gender;
-          this.role = this.getRoleId(resp.data.data[0].user.role.name);
-          if (resp.data.data[0].typeOfEmployee.endContract) {
-            this.exp = this.formatDate(
-              resp.data.data[0].typeOfEmployee.endContract
-            );
-          }
+          const userData = resp.data.data;
+          const userDataString = JSON.stringify(userData);
+          localStorage.setItem('userData', userDataString);
         })
         .catch((err) => {
           if (err.response) {
@@ -366,6 +378,7 @@ export default {
           console.log(resp);
           const msg = resp.data.message;
           this.successNotif(msg);
+          this.getData();
           setInterval(() => {
             document.location.reload();
           }, 3000);
