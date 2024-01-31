@@ -73,6 +73,8 @@ export default route(function (/* { store, ssrContext } */) {
       next('/forbidden');
     } else if (role && to.path === '/login') {
       next('/');
+    } else if (role === '1' && to.path === '/') {
+      next('/admin/dashboard');
     } else {
       next();
     }
