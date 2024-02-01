@@ -3,7 +3,7 @@
     <q-btn
       dense
       flat
-      class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
+      class="flex items-start w-full hover:bg-gray-100 p-4"
       @click="dialog = true"
     >
       <div class="flex items-center gap-4">

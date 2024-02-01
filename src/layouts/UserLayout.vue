@@ -5,6 +5,7 @@ import Logout from 'src/components/LogoutBtn.vue';
 import Setting from 'src/components/SettingBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
+import AdminLinkBtn from 'src/components/AdminLinkBtn.vue';
 export default {
   setup() {
     const role = localStorage.getItem('role');
@@ -93,6 +94,7 @@ export default {
     Icon,
     Logout,
     Setting,
+    AdminLinkBtn,
   },
 };
 </script>
@@ -226,43 +228,20 @@ export default {
 
     <q-footer reveal class="bg-white text-black md:hidden">
       <q-toolbar class="">
-        <div class="flex justify-start items-start flex-row w-full">
-          <q-btn
-            dense
-            flat
-            href="/"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent pb-2 w-[33%]"
-            :class="{
-              'border-b-4 border-[#0021ED] text-primary font-semibold':
-                $route.path === '/',
-            }"
-          >
-            <p class="capitalize">History</p>
-          </q-btn>
-          <q-btn
-            dense
-            flat
-            href="/mandatory"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
-            :class="{
-              ' border-b-4 border-b-[#0021ED] text-primary':
-                $route.path === '/mandatory',
-            }"
-          >
-            <p class="capitalize">Mandatory</p>
-          </q-btn>
-          <q-btn
-            dense
-            flat
-            href="/optional"
-            class="hover:border-b-4 border-solid hover:border-b-[#0021ED] transition-all hover:bg-transparent w-[33%] pb-2"
-            :class="{
-              ' border-b-4 border-b-[#0021ED] text-primary':
-                $route.path === '/optional',
-            }"
-          >
-            <p class="capitalize">Optional</p>
-          </q-btn>
+        <div class="flex justify-evenly items-start flex-row w-full">
+          <AdminLinkBtn title="History" icon="history" link="/" width="auto" />
+          <AdminLinkBtn
+            title="Mandatory"
+            icon="format-list-bulleted-square"
+            link="/mandatory"
+            width="auto"
+          />
+          <AdminLinkBtn
+            title="Optional"
+            icon="format-list-checkbox"
+            link="/optional"
+            width="auto"
+          />
         </div>
       </q-toolbar>
     </q-footer>

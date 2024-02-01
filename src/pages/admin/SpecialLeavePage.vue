@@ -38,32 +38,15 @@
             <q-select
               class="rounded-lg w-[110px]"
               outlined
-              v-model="status"
-              :options="statusOptions"
+              v-model="gender"
+              :options="genderOptions"
               @update:model-value="getData(pagination.page)"
               label="Status"
             >
             </q-select>
             <q-icon
-              @click="resetStatus"
-              v-if="status"
-              size="16px"
-              name="close"
-              class="cursor-pointer"
-            />
-          </div>
-          <div class="flex items-center gap-1">
-            <q-select
-              class="rounded-lg w-[125px]"
-              outlined
-              v-model="typeLeave"
-              :options="typeLeaveOptions"
-              @update:model-value="getData(pagination.page)"
-              label="Type"
-            ></q-select>
-            <q-icon
-              @click="resetType"
-              v-if="typeLeave"
+              @click="resetGender"
+              v-if="gender"
               size="16px"
               name="close"
               class="cursor-pointer"
@@ -170,63 +153,39 @@ export default {
     const column = [
       {
         name: 'id',
-        label: 'NIK',
+        label: 'ID',
         align: 'center',
-        field: 'nik',
+        field: 'id',
         style: 'width: 80px;',
       },
       {
-        name: 'name',
-        label: 'Name',
+        name: 'leaveTitle',
+        label: 'Leave Title',
         align: 'center',
-        field: 'name',
+        field: 'leaveTitle',
 
         style: 'width: 150px;',
       },
       {
-        name: 'type',
-        label: 'Type',
+        name: 'gender',
+        label: 'Gender',
         align: 'center',
-        field: 'type',
+        field: 'gender',
         style: 'width: 150px;',
       },
       {
-        name: 'start',
-        label: 'Start Leave',
+        name: 'amount',
+        label: 'Amount',
         align: 'center',
-        field: 'start',
+        field: 'amount',
         style: 'width: 250px;',
       },
       {
-        name: 'end',
-        label: 'End Leave',
+        name: 'information',
+        label: 'Leave Information',
         align: 'center',
-        field: 'end',
+        field: 'leaveInformation',
         style: 'width: 100px;',
-      },
-      {
-        name: 'amountleave',
-        label: 'Leave Used',
-        align: 'center',
-        field: 'leaveUse',
-      },
-      {
-        name: 'status',
-        label: 'Status',
-        align: 'center',
-        field: 'statust',
-      },
-      {
-        name: 'reason',
-        label: 'Reason',
-        align: 'center',
-        field: 'reason',
-      },
-      {
-        name: 'action',
-        label: 'Action',
-        align: 'center',
-        field: 'action',
       },
     ];
 
@@ -247,12 +206,9 @@ export default {
         rowsNumber: 0,
       },
       // TO RECEIVED FILTER DATA FROM Q-SELECT
-      status: '',
+      gender: '',
       // FOR FILTER DATA
-      statusOptions: ['Approve', 'Waiting', 'Reject'],
-
-      typeLeave: '',
-      typeLeaveOptions: ['Mandatory', 'Optional', 'Personal'],
+      genderOptions: ['L', 'P', 'LP'],
     };
   },
   mounted() {
@@ -265,32 +221,26 @@ export default {
       this.getData(this.pagination.page);
     },
     // TO REMOVE FILTER
-    resetStatus() {
-      this.status = '';
+    resetGender() {
+      this.gender = '';
       this.current = 1;
       this.getData(this.pagination.page);
     },
-    resetType() {
-      this.current = 1;
-      this.typeLeave = '';
-      this.getData(this.pagination.page);
-    },
-    // TO GETD ATA
+
     async getData(page) {
-      const perPage = window.innerWidth >= 768 ? 10 : 9;
+      const perPage = window.innerWidth >= 768 ? 10 : 10;
       this.load = true;
       await api
-        .get(`/leave/all?page=${page}&perPage=${perPage}`, {
+        .get(`/leave/special-leaves?page=${page}&perPage=${perPage}`, {
           params: {
             search: this.search,
-            status: this.status,
-            typeOfLeave: this.typeLeave,
+            gender: this.gender,
           },
           withCredentials: true,
         })
-        .then((resp) => {
-          this.data = resp.data.data;
-          this.pagination.rowsNumber = resp.data.meta.lastPage;
+        .then((res) => {
+          this.data = res.data.data;
+          this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
           console.error(err);
@@ -300,6 +250,8 @@ export default {
         });
       this.load = false;
     },
+    // TO GETD ATA
+
     // TO FORMAT DATE
     formatDate(dateString) {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };

@@ -185,7 +185,7 @@
       </q-td>
     </template>
   </q-table>
-  <div class="row justify-center" v-if="pagination.rowsNumber > 1">
+  <div class="row justify-center mt-4" v-if="pagination.rowsNumber > 1">
     <q-pagination
       v-model="current"
       color="primary"
@@ -365,7 +365,7 @@ export default {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getData(page: number | undefined, sort: any, label: any) {
       this.load = true;
-      const perPage = window.innerWidth >= 768 ? 10 : 8;
+      const perPage = window.innerWidth >= 768 ? 10 : 9;
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(

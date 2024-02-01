@@ -25,6 +25,14 @@ const admin_routes = [
     },
   },
   {
+    path: '/admin/leave',
+    component: () => import('pages/admin/SpecialLeavePage.vue'),
+    meta: {
+      title: 'Special Leave',
+      protected: true,
+    },
+  },
+  {
     path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),
     meta: {
