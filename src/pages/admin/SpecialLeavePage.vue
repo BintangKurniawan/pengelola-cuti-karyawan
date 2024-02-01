@@ -50,7 +50,13 @@
         </div>
       </div>
     </template>
-
+    <template v-slot:top-right>
+      <div
+        class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
+      >
+        <SetSpecialLeave />
+      </div>
+    </template>
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
@@ -85,8 +91,9 @@ import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import EditSpecialLeave from 'src/components/EditSpecialLeave.vue';
+import SetSpecialLeave from 'src/components/SetSpecialLeave.vue';
 export default {
-  components: { EditSpecialLeave },
+  components: { EditSpecialLeave, SetSpecialLeave },
   setup() {
     const roleId = localStorage.getItem('role');
     const column = [
