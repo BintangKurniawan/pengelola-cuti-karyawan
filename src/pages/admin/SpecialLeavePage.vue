@@ -1,6 +1,6 @@
 <template>
   <q-table
-    class="my-table table-rounded"
+    class="my-table table-rounded mx-4"
     flat
     :loading="load"
     :columns="column"
@@ -16,19 +16,13 @@
             dense
             class="w-[160px]"
             v-model="search"
+            clearable
             debounce="300"
             input-class="placeholder-color text-black"
             @update:model-value="getData(pagination.page)"
             placeholder="Search"
           >
             <template v-slot:append>
-              <q-icon
-                @click="clearSearch"
-                v-if="search"
-                size="16px"
-                name="close"
-                class="cursor-pointer"
-              />
               <q-icon name="search" class="text-black" />
             </template>
           </q-input>
@@ -36,12 +30,12 @@
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-1">
             <q-select
-              class="rounded-lg w-[110px]"
+              class="rounded-lg w-[120px]"
               outlined
               v-model="gender"
               :options="genderOptions"
               @update:model-value="getData(pagination.page)"
-              label="Status"
+              label="Gender"
             >
             </q-select>
             <q-icon
@@ -55,66 +49,13 @@
         </div>
       </div>
     </template>
-    <template v-slot:body-cell-type="props">
-      <q-td :props="props" class="text-center">
-        <div class="w-fill px-3 py-2">
-          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-start="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-end="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-status="props">
-      <q-td class="text-center" :props="props">
-        <div
-          class="w-fill rounded-3xl px-3 py-2"
-          :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
-          }"
-        >
-          <p class="font-semibold">{{ props.row.status }}</p>
-        </div>
-      </q-td>
-    </template>
+
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
         class="flex gap-1 justify-center items-center text-center w-custom"
       >
-        <div
-          v-if="
-            (props.row.status === 'REJECT' || props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Optional'
-          "
-        >
-          <Approve :id="props.row.leaveEmployeeId" />
-        </div>
-        <div
-          v-if="
-            (props.row.status === 'APPROVE' ||
-              props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Mandatory'
-          "
-        >
-          <Reject
-            :type="props.row.typeOfLeave.name"
-            :id="props.row.leaveEmployeeId"
-          />
-        </div>
+        <EditSpecialLeave :id="props.row.id" />
       </q-td>
     </template>
   </q-table>
@@ -138,16 +79,13 @@
 
 <script>
 // import { Icon } from '@iconify/vue'
-import Reject from 'src/components/RejectBtn.vue';
-import Approve from 'src/components/ApproveBtn.vue';
+
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
+import EditSpecialLeave from 'src/components/EditSpecialLeave.vue';
 export default {
-  components: {
-    Reject,
-    Approve,
-  },
+  components: { EditSpecialLeave },
   setup() {
     const roleId = localStorage.getItem('role');
     const column = [
@@ -186,6 +124,12 @@ export default {
         align: 'center',
         field: 'leaveInformation',
         style: 'width: 100px;',
+      },
+      {
+        name: 'action',
+        label: 'Action',
+        align: 'center',
+        field: 'action',
       },
     ];
 
@@ -251,13 +195,6 @@ export default {
       this.load = false;
     },
     // TO GETD ATA
-
-    // TO FORMAT DATE
-    formatDate(dateString) {
-      const options = { day: 'numeric', month: 'short', year: 'numeric' };
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-UK', options);
-    },
   },
   computed: {},
 };

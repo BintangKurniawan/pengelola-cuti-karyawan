@@ -1,6 +1,6 @@
 <template>
   <q-table
-    class="my-table table-rounded"
+    class="my-table table-rounded mx-4"
     flat
     :loading="load"
     :columns="column"
@@ -16,19 +16,20 @@
             dense
             class="w-[160px]"
             v-model="search"
-            debounce="300"
+            debounce="700"
+            clearable
             input-class="placeholder-color text-black"
             @update:model-value="getData(pagination.page)"
             placeholder="Search"
           >
             <template v-slot:append>
-              <q-icon
+              <!-- <q-icon
                 @click="clearSearch"
                 v-if="search"
                 size="16px"
                 name="close"
                 class="cursor-pointer"
-              />
+              /> -->
               <q-icon name="search" class="text-black" />
             </template>
           </q-input>

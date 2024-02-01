@@ -182,7 +182,7 @@ export default {
 
 <template>
   <q-layout view="hHr lpr lFr">
-    <q-header reveal class="bg-white text-black">
+    <q-header reveal class="bg-white text-black" bordered>
       <q-toolbar class="flex items-center justify-between">
         <q-img
           src="../assets/img/logo_wgs_fullBlack.svg"
@@ -209,6 +209,7 @@ export default {
     <q-drawer
       v-model="leftDrawerOpen"
       side="left"
+      bordered
       :width="200"
       class="p-5 flex flex-col justify-between"
     >
@@ -247,7 +248,7 @@ export default {
       </div>
     </q-drawer>
 
-    <q-page-container class="px-4">
+    <q-page-container class="">
       <router-view />
     </q-page-container>
 

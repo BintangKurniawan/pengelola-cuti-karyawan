@@ -7,20 +7,60 @@
     <q-dialog v-model="dialog">
       <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
-          <h6 class="font-bold text-center">Edit Position</h6>
+          <h6 class="font-bold text-center">Edit Special Leave</h6>
         </q-card-section>
 
         <div class="flex justify-between items-end gap-2 w-full">
           <div class="flex flex-col items-start gap-2 w-full">
-            <p class="text-primary font-semibold">Position Name</p>
+            <p class="text-primary font-semibold">Special Leave Title</p>
             <q-input
-              v-model="name"
+              v-model="leaveTitle"
+              outlined
+              @keydown.enter.prevent="update(id)"
+              color="dark"
+              bg-color="white"
+              for="leave"
+              placeholder="Leave"
+              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+            />
+          </div>
+
+          <div class="flex flex-col items-start gap-2 w-full">
+            <p class="text-primary font-semibold">Gender</p>
+            <q-select
+              outlined
+              class="w-full"
+              v-model="gender"
+              :options="genderOptions"
+              label="Gender"
+            >
+            </q-select>
+          </div>
+
+          <div class="flex flex-col items-start gap-2 w-full">
+            <p class="text-primary font-semibold">Amount</p>
+            <q-input
+              v-model="amount"
               outlined
               color="dark"
               bg-color="white"
-              for="position"
-              placeholder="Position"
+              for="amount"
+              placeholder="Amount"
+              type="number"
+              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+            />
+          </div>
+
+          <div class="flex flex-col items-start gap-2 w-full">
+            <p class="text-primary font-semibold">Leave Information</p>
+            <q-input
+              v-model="info"
+              outlined
+              color="dark"
+              bg-color="white"
+              for="info"
               @keydown.enter.prevent="update(id)"
+              placeholder="Leave Information"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
           </div>
@@ -81,7 +121,11 @@ export default {
   data() {
     return {
       dialog: ref(false),
-      name: '',
+      leaveTitle: '',
+      gender: '',
+      genderOptions: ['L', 'P', 'LP'],
+      amount: 0,
+      info: '',
     };
   },
   props: {
@@ -99,10 +143,13 @@ export default {
     // TO GET POSITION BY ID
     async getData(id) {
       await api
-        .get(`/position/${id}`, { withCredentials: true })
+        .get(`/leave/special-leave/${id}`, { withCredentials: true })
         .then((resp) => {
           console.log(resp);
-          this.name = resp.data.data.name;
+          this.leaveTitle = resp.data.data.leaveTitle;
+          this.gender = resp.data.data.gender;
+          this.amount = resp.data.data.amount;
+          this.info = resp.data.data.leaveInformation;
         })
         .catch((err) => {
           console.error(err);
@@ -111,10 +158,13 @@ export default {
     // TO UPDATE THE POSITION
     async update(id) {
       await api
-        .put(
-          `/position/update/${id}`,
+        .patch(
+          `/leave/special-leave/${id}`,
           {
-            name: this.name,
+            leaveTitle: this.leaveTitle,
+            gender: this.gender,
+            amount: this.amount,
+            leaveInformation: this.info,
           },
           {
             withCredentials: true,
@@ -123,7 +173,10 @@ export default {
         .then((res) => {
           console.log(res);
           this.successNotif(res.data.message);
-          this.name = '';
+          this.leaveTitle = '';
+          this.gender = '';
+          this.amount = '';
+          this.info = '';
           this.dialog = false;
           setInterval(() => {
             window.location.reload();

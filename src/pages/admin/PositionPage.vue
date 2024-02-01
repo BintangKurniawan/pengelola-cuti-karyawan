@@ -1,5 +1,10 @@
 <template>
-  <q-table class="my-table table-rounded" flat :columns="column" :rows="data">
+  <q-table
+    class="my-table table-rounded mx-4"
+    flat
+    :columns="column"
+    :rows="data"
+  >
     <template v-slot:top-right>
       <AddPosition />
     </template>

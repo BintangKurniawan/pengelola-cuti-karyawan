@@ -1,5 +1,6 @@
 <template>
   <div class="flex justify-center items-center w-full">
+    <q-spinner color="primary" size="3em" v-if="loading" />
     <div
       v-if="data && data.length > 0"
       class="flex flex-wrap items-center w-full"
@@ -55,6 +56,7 @@ export default {
   data() {
     return {
       data: [],
+      loading: ref(false),
       pagination: {
         rowsPerPage: 10,
         page: 1,
@@ -67,6 +69,7 @@ export default {
   },
   methods: {
     async getData(page) {
+      this.loading = true;
       await api
         .get(`/leave/mandatory?page=${page}&perPage=10`, {
           withCredentials: true,
@@ -75,6 +78,7 @@ export default {
           this.data = resp.data.data;
           this.pagination.rowsNumber = resp.data.meta.lastPage;
           console.log(this.data);
+          this.loading = false;
         })
         .catch((err) => {
           if (err.response) {
