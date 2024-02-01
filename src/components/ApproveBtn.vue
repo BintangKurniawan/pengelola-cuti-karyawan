@@ -53,15 +53,6 @@ export default {
           message: `${msg}`,
           color: 'primary',
           multiLine: true,
-          actions: [
-            {
-              label: 'Refresh',
-              color: 'white',
-              handler: () => {
-                document.location.reload();
-              },
-            },
-          ],
         });
       },
       failedNotif(msg) {

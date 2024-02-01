@@ -31,7 +31,10 @@ export default {
       <q-toolbar class="flex justify-between p-4 items-center">
         <q-img
           src="../assets/img/logo_wgs_fullBlack.svg"
+          loading="lazy"
+          alt="wgs"
           class="w-[130px] h-[29px]"
+          fetchpriority="low"
         />
 
         <div class="md:flex md:items-center md:gap-2 hid">
@@ -46,7 +49,7 @@ export default {
             }"
           >
             <Icon icon="mdi:home" width="24" />
-            <p class="capitalize">Home</p>
+            <p class="capitalize text-xs">Home</p>
           </q-btn>
           <q-btn
             dense
@@ -59,7 +62,7 @@ export default {
             }"
           >
             <Icon icon="mdi:view-dashboard-outline" width="24" />
-            <p class="capitalize">Dashboard</p>
+            <p class="capitalize text-xs">Dashboard</p>
           </q-btn>
           <q-btn
             v-if="roleId !== '1'"
@@ -73,7 +76,7 @@ export default {
             }"
           >
             <Icon icon="mdi:list-box-outline" width="24" />
-            <p class="capitalize">List of Leave</p>
+            <p class="capitalize text-xs">List of Leave</p>
           </q-btn>
           <q-btn
             dense
@@ -86,7 +89,7 @@ export default {
             }"
           >
             <Icon icon="mdi:family-tree" width="24" />
-            <p class="capitalize">List of Position</p>
+            <p class="capitalize text-xs">List of Position</p>
           </q-btn>
         </div>
 

@@ -22,26 +22,53 @@
             placeholder="Search"
           >
             <template v-slot:append>
+              <q-icon
+                @click="clearSearch"
+                v-if="search"
+                size="16px"
+                name="close"
+                class="cursor-pointer"
+              />
               <q-icon name="search" class="text-black" />
             </template>
           </q-input>
         </div>
-        <div class="flex items-center">
-          <q-select
-            class="rounded-lg w-[110px]"
-            outlined
-            v-model="status"
-            :options="statusOptions"
-            @update:model-value="getData(pagination.page)"
-            label="Filter"
-          ></q-select>
-          <Icon
-            @click="reset"
-            v-if="status"
-            icon="mdi:close-outline"
-            width="24"
-            class="text-negative cursor-pointer"
-          />
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1">
+            <q-select
+              class="rounded-lg w-[110px]"
+              outlined
+              v-model="status"
+              :options="statusOptions"
+              @update:model-value="getData(pagination.page)"
+              label="Status"
+            >
+            </q-select>
+            <q-icon
+              @click="resetStatus"
+              v-if="status"
+              size="16px"
+              name="close"
+              class="cursor-pointer"
+            />
+          </div>
+          <div class="flex items-center gap-1">
+            <q-select
+              class="rounded-lg w-[125px]"
+              outlined
+              v-model="typeLeave"
+              :options="typeLeaveOptions"
+              @update:model-value="getData(pagination.page)"
+              label="Type"
+            ></q-select>
+            <q-icon
+              @click="resetType"
+              v-if="typeLeave"
+              size="16px"
+              name="close"
+              class="cursor-pointer"
+            />
+          </div>
         </div>
       </div>
     </template>
@@ -135,7 +162,6 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 export default {
   components: {
-    Icon,
     Reject,
     Approve,
   },
@@ -224,6 +250,9 @@ export default {
       status: '',
       // FOR FILTER DATA
       statusOptions: ['Approve', 'Waiting', 'Reject'],
+
+      typeLeave: '',
+      typeLeaveOptions: ['Mandatory', 'Optional', 'Personal'],
     };
   },
   mounted() {
@@ -231,10 +260,19 @@ export default {
     this.getData(this.pagination.page);
   },
   methods: {
+    clearSearch() {
+      this.search = '';
+      this.getData(this.pagination.page);
+    },
     // TO REMOVE FILTER
-    reset() {
+    resetStatus() {
       this.status = '';
       this.current = 1;
+      this.getData(this.pagination.page);
+    },
+    resetType() {
+      this.current = 1;
+      this.typeLeave = '';
       this.getData(this.pagination.page);
     },
     // TO GETD ATA
@@ -243,7 +281,11 @@ export default {
       this.load = true;
       await api
         .get(`/leave/all?page=${page}&perPage=${perPage}`, {
-          params: { search: this.search, status: this.status },
+          params: {
+            search: this.search,
+            status: this.status,
+            typeOfLeave: this.typeLeave,
+          },
           withCredentials: true,
         })
         .then((resp) => {
