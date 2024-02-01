@@ -18,6 +18,7 @@
             v-model="search"
             clearable
             debounce="300"
+            clear-icon="close"
             input-class="placeholder-color text-black"
             @update:model-value="getData(pagination.page)"
             placeholder="Search"

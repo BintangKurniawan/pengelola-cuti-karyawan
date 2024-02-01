@@ -19,6 +19,7 @@
             v-model="searchQuery"
             debounce="700"
             clearable
+            clear-icon="close"
             @update:model-value="getData(pagination.page, sort, sortLabel)"
             input-class="placeholder-color text-black"
             placeholder="Search"
@@ -66,6 +67,11 @@
       <q-th :props="props">
         <p @click="toggleSort('nik')" class="cursor-pointer">
           {{ props.col.label }}
+          <q-icon
+            v-if="sortLabel === 'nik'"
+            :name="sort ? 'arrow_upward' : 'arrow_downward'"
+            size="1.5em"
+          />
         </p>
       </q-th>
     </template>
@@ -82,6 +88,7 @@
           /> -->
 
           <q-icon
+            v-if="sortLabel === 'name'"
             :name="sort ? 'arrow_upward' : 'arrow_downward'"
             size="1.5em"
           />
