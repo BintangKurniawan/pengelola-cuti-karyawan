@@ -1,83 +1,113 @@
 <template>
-  <q-table
-    v-if="switchTable"
-    class="my-table table-rounded mx-4"
-    flat
-    :loading="load"
-    :columns="column"
-    :rows="data"
-    hide-pagination
-    v-model:pagination="pagination"
-  >
-    <template v-slot:top-left>
-      <div class="flex items-center gap-2">
-        <div class="px-2 rounded-lg border-2 border-secondary">
-          <q-input
-            borderless
-            dense
-            class="w-[160px]"
-            v-model="search"
-            debounce="700"
-            clearable
-            clear-icon="close"
-            input-class="placeholder-color text-black"
-            @update:model-value="getData(pagination.page)"
-            placeholder="Search"
-          >
-            <template v-slot:append>
-              <!-- <q-icon
+  <div class="flex items-center m-4 flex-nowrap justify-between">
+    <div class="flex items-center gap-2">
+      <div class="px-2 rounded-lg border-2 border-secondary">
+        <q-input
+          borderless
+          dense
+          class="w-[160px]"
+          v-model="search"
+          debounce="700"
+          clearable
+          clear-icon="close"
+          input-class="placeholder-color text-black"
+          @update:model-value="
+            switchTable
+              ? getData(pagination.page)
+              : getDataSpecial(pagination.page)
+          "
+          placeholder="Search"
+        >
+          <template v-slot:append>
+            <!-- <q-icon
                 @click="clearSearch"
                 v-if="search"
                 size="16px"
                 name="close"
                 class="cursor-pointer"
               /> -->
-              <q-icon name="search" class="text-black" />
-            </template>
-          </q-input>
+            <q-icon name="search" class="text-black" />
+          </template>
+        </q-input>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1">
+          <q-select
+            class="rounded-lg w-[110px]"
+            outlined
+            v-model="status"
+            :options="statusOptions"
+            @update:model-value="
+              switchTable
+                ? getData(pagination.page)
+                : getDataSpecial(pagination.page)
+            "
+            label="Status"
+          >
+          </q-select>
+          <q-icon
+            @click="resetStatus"
+            v-if="status"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
+          />
         </div>
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-1">
-            <q-select
-              class="rounded-lg w-[110px]"
-              outlined
-              v-model="status"
-              :options="statusOptions"
-              @update:model-value="getData(pagination.page)"
-              label="Status"
-            >
-            </q-select>
-            <q-icon
-              @click="resetStatus"
-              v-if="status"
-              size="16px"
-              name="close"
-              class="cursor-pointer"
-            />
-          </div>
-          <div class="flex items-center gap-1">
-            <q-select
-              class="rounded-lg w-[125px]"
-              outlined
-              v-model="typeLeave"
-              :options="typeLeaveOptions"
-              @update:model-value="getData(pagination.page)"
-              label="Type"
-            ></q-select>
-            <q-icon
-              @click="resetType"
-              v-if="typeLeave"
-              size="16px"
-              name="close"
-              class="cursor-pointer"
-            />
-          </div>
+        <div class="flex items-center gap-1" v-if="switchTable">
+          <q-select
+            class="rounded-lg w-[125px]"
+            outlined
+            v-model="typeLeave"
+            :options="typeLeaveOptions"
+            @update:model-value="getData(pagination.page)"
+            label="Type"
+          ></q-select>
+          <q-icon
+            @click="resetType"
+            v-if="typeLeave"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
+          />
         </div>
       </div>
-    </template>
-    <template v-slot:top-right>
-      <q-btn label="Special Leave" unelevated outline @click="toggleTable" />
-    </template>
+    </div>
+    <div class="w-[60%] border-b-2 md:flex items-center justify-center gap-4">
+      <div
+        class="cursor-pointer group relative transition-all"
+        @click="switchTable = true"
+        :class="{ 'text-primary font-semibold': switchTable }"
+      >
+        <span
+          class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300"
+          :class="switchTable ? 'w-full' : 'w-0'"
+          >&nbsp;</span
+        >
+        Ordinary
+      </div>
+      <div
+        class="cursor-pointer group relative transition-all"
+        @click="toggleTable"
+        :class="{ 'text-primary font-semibold': !switchTable }"
+      >
+        <span
+          class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300"
+          :class="!switchTable ? 'w-full' : 'w-0'"
+          >&nbsp;</span
+        >
+        Special
+      </div>
+    </div>
+  </div>
+  <q-table
+    class="my-table table-rounded mx-4"
+    flat
+    :loading="load"
+    :columns="switchTable ? column : column2"
+    :rows="switchTable ? data : specialData"
+    hide-pagination
+    v-model:pagination="pagination"
+  >
     <template v-slot:body-cell-type="props">
       <q-td :props="props" class="text-center">
         <div class="w-fill px-3 py-2">
@@ -160,7 +190,7 @@
     />
   </div>
 
-  <q-table
+  <!-- <q-table
     v-if="!switchTable"
     class="my-table table-rounded mx-4"
     flat
@@ -170,63 +200,6 @@
     hide-pagination
     v-model:pagination="pagination"
   >
-    <template v-slot:top-left>
-      <div class="flex items-center gap-2">
-        <div class="px-2 rounded-lg border-2 border-secondary">
-          <q-input
-            borderless
-            dense
-            class="w-[160px]"
-            v-model="search"
-            debounce="700"
-            clearable
-            clear-icon="close"
-            input-class="placeholder-color text-black"
-            @update:model-value="getDataSpecial(pagination.page)"
-            placeholder="Search"
-          >
-            <template v-slot:append>
-              <!-- <q-icon
-                @click="clearSearch"
-                v-if="search"
-                size="16px"
-                name="close"
-                class="cursor-pointer"
-              /> -->
-              <q-icon name="search" class="text-black" />
-            </template>
-          </q-input>
-        </div>
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-1">
-            <q-select
-              class="rounded-lg w-[110px]"
-              outlined
-              v-model="status"
-              :options="statusOptions"
-              @update:model-value="getDataSpecial(pagination.page)"
-              label="Status"
-            >
-            </q-select>
-            <q-icon
-              @click="resetStatus"
-              v-if="status"
-              size="16px"
-              name="close"
-              class="cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-slot:top-right>
-      <q-btn
-        label="Ordinary Leave"
-        unelevated
-        outline
-        @click="switchTable = !switchTable"
-      />
-    </template>
     <template v-slot:body-cell-type="props">
       <q-td :props="props" class="text-center">
         <div class="w-fill px-3 py-2">
@@ -289,7 +262,7 @@
         </div>
       </q-td>
     </template>
-  </q-table>
+  </q-table> -->
   <div
     class="row justify-center mt-4"
     v-if="pagination.rowsNumber > 1 && !switchTable"
@@ -489,7 +462,11 @@ export default {
     resetStatus() {
       this.status = '';
       this.current = 1;
-      this.getData(this.pagination.page);
+      if (this.switchTable) {
+        this.getData(this.pagination.page);
+      } else {
+        this.getDataSpecial(this.pagination.page);
+      }
     },
     resetType() {
       this.current = 1;
@@ -497,7 +474,7 @@ export default {
       this.getData(this.pagination.page);
     },
     toggleTable() {
-      this.switchTable = !this.switchTable;
+      this.switchTable = false;
       this.search = '';
       this.status = '';
       this.current = 1;
