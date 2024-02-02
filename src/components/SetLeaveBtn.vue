@@ -3,7 +3,7 @@
     color="primary"
     text-color="white"
     class="capitalize rounded-3xl"
-    @click="dialog = true"
+    @click="openDialog(id)"
   >
     <div class="flex items-center justify-center gap-1">
       <p>Set</p>
@@ -17,6 +17,34 @@
         </q-card-section>
 
         <div class="flex justify-between items-end gap-2 w-full">
+          <div class="flex flex-col items-start gap-2 w-full">
+            <p class="text-primary font-semibold">Type</p>
+            <q-select
+              outlined
+              class="w-full"
+              label-color="Primary"
+              v-model="typeLeave"
+              :options="typeLeaveOptions"
+              @update:model-value="typeLeaveUpdate"
+              label="Type Leave"
+            >
+            </q-select>
+          </div>
+
+          <div class="flex flex-col items-start gap-2 w-full" v-if="special">
+            <p class="text-primary font-semibold">Special Leave List</p>
+            <q-select
+              outlined
+              class="w-full"
+              label-color="Primary"
+              v-model="specialLeaveSelected"
+              :options="specialLeaveOptions"
+              @update:model-value="leaveUpdate"
+              label="Type Leave"
+            >
+            </q-select>
+          </div>
+
           <div class="flex flex-col items-start gap-2 w-full">
             <p class="text-primary font-semibold">Reason</p>
             <q-input
@@ -75,7 +103,7 @@
             color="primary"
             unelevated
             :disable="totalDays > 8"
-            @click="setLeave(id)"
+            @click="!special ? setLeave(id) : console.log(tes)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -123,6 +151,13 @@ export default {
       startLeave: '',
       endLeave: '',
       totalDays: '',
+      typeLeave: 'Personal',
+      typeLeaveOptions: ['Personal', 'Special'],
+      special: false,
+
+      specialLeaveSelected: null,
+      specialLeaveOptions: [],
+      specialLeaveId: '',
     };
   },
   props: {
@@ -133,6 +168,40 @@ export default {
   },
 
   methods: {
+    leaveUpdate() {
+      this.specialLeaveId = this.specialLeaveSelected.value;
+      console.log(this.specialLeaveId);
+    },
+    openDialog(id) {
+      this.dialog = true;
+      this.getSpecialLeaveList(id);
+    },
+    typeLeaveUpdate() {
+      this.special = !this.special;
+      this.specialLeaveId = '';
+      console.log(this.specialLeaveId);
+    },
+    async getSpecialLeaveList(id) {
+      await api
+        .get(`leave/special-leave/gender/${id}`, { withCredentials: true })
+        .then((res) => {
+          const leaveList = res.data.data;
+
+          const mapList = leaveList.map((leave) => {
+            return {
+              value: leave.id,
+              label: leave.leaveTitle,
+            };
+          });
+
+          this.specialLeaveOptions = mapList;
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+
     // TO SET PERSONAL LEAVEE
     async setLeave(id) {
       await api
