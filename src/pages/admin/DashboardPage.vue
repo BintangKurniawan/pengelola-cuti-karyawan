@@ -18,19 +18,18 @@
             class="w-[160px]"
             v-model="searchQuery"
             debounce="700"
-            clearable
             clear-icon="close"
-            @update:model-value="getData(pagination.page, sort, sortLabel)"
+            @update:model-value="search"
             input-class="placeholder-color text-black"
             placeholder="Search"
           >
             <template v-slot:append>
-              <!-- <q-icon
+              <q-icon
                 v-if="searchQuery !== ''"
                 name="close"
                 @click="clearSearch"
                 class="cursor-pointer"
-              /> -->
+              />
               <q-icon name="search" class="text-black" />
             </template>
           </q-input>
@@ -176,7 +175,7 @@
           flat
           text-color="white"
           class=""
-          @click="$router.push(`/admin/detail/${props.row.nik}`)"
+          @click="goToDetail(props.row.nik)"
         >
           <Icon icon="mdi:information-outline" width="24" class="text-info" />
         </q-btn>
@@ -185,7 +184,7 @@
           flat
           text-color="white"
           class=""
-          @click="$router.push(`/admin/history/${props.row.nik}`)"
+          @click="goToHistory(props.row.nik)"
         >
           <Icon icon="mdi:history" width="24" class="text-dark" />
         </q-btn>
@@ -199,7 +198,7 @@
       color="primary"
       :max="pagination.rowsNumber"
       :max-pages="5"
-      @update:model-value="getData(current, sort, sortLabel)"
+      @update:model-value="paginate"
       :boundary-numbers="false"
       direction-links
       boundary-links
@@ -339,48 +338,96 @@ export default {
       ],
       // TO GET TRUE OR FALSE FROM SELECTED STATUS
       statusWork: null,
+      curentPageRes: 0,
     };
   },
   mounted() {
+    const currentPage = this.$route.query.page || 1;
+    this.current = parseInt(currentPage);
+    const searchq = this.$route.query.search || '';
+    this.searchQuery = searchq;
     // TO GET DATA
-    this.getData(this.pagination.page, this.sort, this.sortLabel);
+    this.getData(currentPage, this.sort, this.sortLabel, searchq);
 
     // setInterval(() => {
     //   this.getData(this.pagination.page, this.sort);
     // }, 3000);
   },
   methods: {
+    paginate() {
+      this.$router.push({ query: { page: this.current } });
+      this.getData(this.current, this.sort, this.sortLabel, this.searchQuery);
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    goToDetail(nik: any) {
+      this.$router.push({
+        path: `/admin/detail/${nik}`,
+        query: { page: this.current },
+      });
+    },
+    goToHistory(nik: any) {
+      this.$router.push({
+        path: `/admin/history/${nik}`,
+        query: { page: this.current },
+      });
+    },
     // TO REMOVE FILTER
     reset() {
       this.statusWork = null;
       this.status = null;
       this.current = 1;
-      this.getData(this.pagination.page, this.sort, this.sortLabel);
+      this.$router.push({ query: { page: this.current } });
+
+      this.getData(this.current, this.sort, this.sortLabel, this.searchQuery);
     },
     clearSearch() {
       this.searchQuery = '';
-      this.getData(this.pagination.page, this.sort, this.sortLabel);
+      this.$router.push({ query: { search: this.searchQuery } });
+
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery
+      );
     },
     // FOR ASC DESC
     toggleSort(label: any) {
       this.sortLabel = label;
       this.sort = !this.sort;
       this.current = 1;
-      this.getData(this.pagination.page, this.sort, this.sortLabel);
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery
+      );
     },
-
+    search() {
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery
+      );
+      this.$router.push({ query: { search: this.searchQuery } });
+    },
     // TO GET DATA
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getData(page: number | undefined, sort: any, label: any) {
+    async getData(
+      page: number | undefined,
+      sort: any,
+      label: any,
+      search: any
+    ) {
       this.load = true;
       const perPage = window.innerWidth >= 768 ? 10 : 9;
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(
-          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}`,
+          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}&search=${search}`,
           {
             params: {
-              search: this.searchQuery,
               isWorking: this.statusWork,
             },
             withCredentials: true,
@@ -389,6 +436,7 @@ export default {
         .then((res) => {
           this.data = res.data.data;
           this.pagination.rowsNumber = res.data.meta.lastPage;
+          this.curentPageRes = res.data.meta.currPage;
           console.log(this.data);
           this.load = false;
         })
@@ -408,7 +456,15 @@ export default {
     updateStatus() {
       this.statusWork = this.status.value;
       this.current = 1;
-      this.getData(this.pagination.page, this.sort, this.sortLabel);
+      console.log(this.curentPageRes);
+
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery
+      );
+      this.$router.push({ query: { page: this.curentPageRes } });
       console.log(this.statusWork);
     },
 

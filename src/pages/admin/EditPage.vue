@@ -72,17 +72,30 @@
       </div>
 
       <div class="flex flex-col gap-4 md:w-fit w-full">
-        <h5 class="font-semibold text-2xl">Start Working</h5>
+        <h5 class="font-semibold text-2xl">Start Contract</h5>
         <q-input
           outlined
           color="dark"
-          bg-color="grey-2"
+          :bg-color="contractBoolean === false ? 'grey-2' : 'white'"
           for="startWork"
           v-model="start"
-          disable
+          :disable="contractBoolean === false"
           placeholder="Start Working"
           class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
-        />
+        >
+          <template v-slot:append>
+            <q-icon name="event" color="dark" class="cursor-pointer">
+              <q-popup-proxy>
+                <q-date
+                  v-model="start"
+                  :mask="mask"
+                  default-view="Years"
+                  color="primary"
+                />
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
       </div>
 
       <div class="flex flex-col gap-4 md:w-fit w-full" v-if="contractBoolean">

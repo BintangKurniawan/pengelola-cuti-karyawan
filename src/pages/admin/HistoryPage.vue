@@ -22,44 +22,67 @@
     hide-bottom
   >
     <template v-slot:top-left>
-      <div class="px-2 rounded-lg border-2 border-secondary">
-        <q-input
-          borderless
-          dense
-          v-model="filter"
-          debounce="300"
-          input-class="placeholder-color text-black"
-          placeholder="Search"
-        >
-          <template v-slot:append>
-            <q-icon name="search" class="text-black" />
-          </template>
-        </q-input>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1">
+          <q-select
+            class="rounded-lg w-[110px]"
+            outlined
+            v-model="status"
+            :options="statusOptions"
+            @update:model-value="getData(pagination.page)"
+            label="Status"
+          >
+          </q-select>
+          <q-icon
+            @click="resetStatus"
+            v-if="status"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
+          />
+        </div>
+        <div class="flex items-center gap-1">
+          <q-select
+            class="rounded-lg w-[125px]"
+            outlined
+            v-model="typeLeave"
+            :options="typeLeaveOptions"
+            @update:model-value="getData(pagination.page)"
+            label="Type"
+          ></q-select>
+          <q-icon
+            @click="resetType"
+            v-if="typeLeave"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
+          />
+        </div>
       </div>
     </template>
     <template v-slot:body-cell-type="props">
-      <q-td class="text-center" :props="props">
+      <q-td class="text-center" :props="props" v-if="props.row.typeOfLeave">
         <div class="w-fill rounded-3xl px-3 py-2">
           <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
         </div>
       </q-td>
     </template>
     <template v-slot:body-cell-start="props">
-      <q-td class="text-center" :props="props">
+      <q-td class="text-center" :props="props" v-if="props.row.startLeave">
         <div class="w-fill rounded-3xl px-3 py-2">
           <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
         </div>
       </q-td>
     </template>
     <template v-slot:body-cell-end="props">
-      <q-td class="text-center" :props="props">
+      <q-td class="text-center" :props="props" v-if="props.row.endLeave">
         <div class="w-fill rounded-3xl px-3 py-2">
           <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
         </div>
       </q-td>
     </template>
     <template v-slot:body-cell-status="props">
-      <q-td class="text-center" :props="props">
+      <q-td class="text-center" :props="props" v-if="props.row.status">
         <div
           class="w-fill rounded-3xl px-3 py-2"
           :class="{
@@ -194,13 +217,34 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+
+      status: '',
+      // FOR FILTER DATA
+      statusOptions: ['Approve', 'Waiting', 'Reject'],
+
+      typeLeave: '',
+      typeLeaveOptions: ['Mandatory', 'Optional', 'Personal'],
     };
   },
   methods: {
+    resetStatus() {
+      this.status = '';
+      this.current = 1;
+      this.getData(this.pagination.page);
+    },
+    resetType() {
+      this.current = 1;
+      this.typeLeave = '';
+      this.getData(this.pagination.page);
+    },
     // TO GET DATA
     async getData(page: number | undefined) {
       await api
         .get(`/leave/history/${this.id}?page=${page}&perPage=10`, {
+          params: {
+            status: this.status,
+            typeOfLeave: this.typeLeave,
+          },
           withCredentials: true,
         })
         .then((resp) => {

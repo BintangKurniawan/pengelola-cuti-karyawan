@@ -7,7 +7,7 @@ import SettingBtn from 'src/components/SettingBtn.vue';
 import AdminLinkBtn from 'src/components/AdminLinkBtn.vue';
 export default {
   setup() {
-    const page = window.innerWidth >= 768 ? true : false;
+    const page = window.innerWidth >= 1280 ? true : false;
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
     return {
@@ -191,7 +191,7 @@ export default {
           class="w-[130px] h-[29px]"
           fetchpriority="low"
         />
-        <div class="md:hidden">
+        <div class="lg:hidden">
           <q-btn dense flat class="" @click="leftDrawerOpen = !leftDrawerOpen">
             <Icon icon="mdi:menu" width="24" />
           </q-btn>

@@ -185,7 +185,7 @@ export default {
           setInterval(() => {
             window.location.reload();
           }, 2000);
-          // this.successNotif();
+          this.successNotif();
         })
         .catch((error) => {
           if (error.response) {

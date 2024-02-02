@@ -1,10 +1,6 @@
 <template>
-  <q-btn
-    color="primary"
-    label="Note"
-    class="rounded-xl capitalize"
-    @click="dialog = true"
-  >
+  <q-btn flat text-color="white" class="px-0" @click="dialog = true">
+    <Icon icon="mdi:event-note" width="24" class="text-primary" />
   </q-btn>
   <q-dialog v-model="dialog">
     <q-card class="bg-white w-full">
@@ -17,7 +13,7 @@
 
 <script>
 import { ref } from 'vue';
-
+import { Icon } from '@iconify/vue';
 export default {
   setup() {
     return {};
@@ -29,6 +25,9 @@ export default {
   },
   props: {
     text: String,
+  },
+  components: {
+    Icon,
   },
 };
 </script>

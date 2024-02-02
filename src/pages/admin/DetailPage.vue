@@ -1,5 +1,16 @@
 <template>
-  <div class="flex justify-center items-center">
+  <div class="flex flex-col justify-center items-center">
+    <q-btn
+      dense
+      flat
+      @click="back()"
+      class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4 text-black self-start"
+    >
+      <div class="flex items-center gap-4">
+        <Icon icon="mdi:arrow-left-circle-outline" width="24" />
+        <p class="capitalize">Back</p>
+      </div>
+    </q-btn>
     <div class="flex flex-wrap items-center gap-4 w-[1128px]">
       <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl">NIK</h5>
@@ -203,6 +214,7 @@
 
 <script>
 import api from 'src/AxiosInterceptors';
+import { Icon } from '@iconify/vue';
 import { useRoute } from 'vue-router';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import moment from 'moment';
@@ -251,7 +263,9 @@ export default {
         return str.substring(0, this.maxLengthMobile) + '...';
       }
     },
-
+    back() {
+      this.$router.back();
+    },
     // TO GET DATA
     async getData() {
       await api
@@ -318,7 +332,7 @@ export default {
       return status ? 'New Employee' : 'Old Employee';
     },
   },
-  components: { ActivateBtn },
+  components: { ActivateBtn, Icon },
 };
 </script>
 

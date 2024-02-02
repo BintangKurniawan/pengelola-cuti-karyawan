@@ -119,6 +119,7 @@ export default {
             v-if="role != '3'"
             dense
             flat
+            id="dashboard"
             href="/admin/dashboard"
             class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
           >

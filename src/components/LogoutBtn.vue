@@ -3,6 +3,7 @@
     <q-btn
       dense
       flat
+      id="logout"
       class="flex items-start w-full hover:bg-gray-100 p-4"
       @click="dialog = true"
     >
@@ -32,6 +33,7 @@
 
           <q-btn
             @click="logout"
+            id="confirm"
             label="Logout"
             unelevated
             text-color="negative"
