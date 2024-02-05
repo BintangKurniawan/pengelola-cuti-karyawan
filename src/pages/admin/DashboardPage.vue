@@ -10,9 +10,14 @@
   >
     <template v-slot:top-left>
       <div class="flex items-center gap-2">
-        <q-btn unelevated color="primary" @click="async">
-          <Icon icon="mdi:sync-circle" size="24" />
-        </q-btn>
+        <Icon
+          icon="mdi:sync-circle"
+          width="36"
+          @click="async"
+          class="text-primary"
+        />
+        <!-- <q-btn unelevated color="primary" @click="async">
+        </q-btn> -->
         <div class="px-2 rounded-lg border-2 border-secondary">
           <!-- SEARCH -->
           <q-input

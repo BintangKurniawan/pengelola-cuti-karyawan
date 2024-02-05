@@ -150,8 +150,10 @@
       >
         <div
           v-if="
-            (props.row.status === 'REJECT' || props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Optional'
+            ((props.row.status === 'REJECT' ||
+              props.row.status === 'WAITING') &&
+              props.row.typeOfLeave.name === 'Personal') ||
+            props.row.typeOfLeave.name === 'Special'
           "
         >
           <Approve
@@ -167,8 +169,8 @@
           "
         >
           <Reject
-            :type="props.row.typeOfLeave.name"
-            :id="props.row.leaveEmployeeId"
+            :type="switchTable ? 'personal' : 'employee-special-leave'"
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
           />
         </div>
         <div v-if="props.row.note && props.row.status === 'REJECT'">
