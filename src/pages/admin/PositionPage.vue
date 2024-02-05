@@ -4,6 +4,8 @@
     flat
     :columns="column"
     :rows="data"
+    v-model:pagination="pagination"
+    hide-pagination
   >
     <template v-slot:top-right>
       <AddPosition />
@@ -18,12 +20,26 @@
       </q-td>
     </template>
   </q-table>
+  <div class="row justify-center mt-4" v-if="pagination.rowsNumber > 1">
+    <q-pagination
+      v-model="current"
+      color="primary"
+      :max="pagination.rowsNumber"
+      :max-pages="5"
+      @update:model-value="getData(current)"
+      :boundary-numbers="false"
+      direction-links
+      boundary-links
+    />
+    <!-- :ellipses="false" -->
+  </div>
 </template>
 
 <script>
 import api from 'src/AxiosInterceptors';
 import { Icon } from '@iconify/vue';
 import { useQuasar } from 'quasar';
+import { ref } from 'vue';
 import DeletePositionBtn from 'src/components/DeletePosition.vue';
 import EditPosition from 'src/components/EditPosition.vue';
 import AddPosition from 'src/components/AddPosition.vue';
@@ -63,6 +79,7 @@ export default {
     ];
     return {
       column,
+      current: ref(1),
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -86,18 +103,27 @@ export default {
   data() {
     return {
       data: [],
+      pagination: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
     };
   },
   async mounted() {
-    await this.getData();
+    await this.getData(this.pagination.page);
   },
   methods: {
     // TO GET DATA
-    async getData() {
+    async getData(page) {
+      const perPage = window.innerWidth >= 768 ? 10 : 9;
       await api
-        .get('/position', { withCredentials: true })
+        .get(`/position?page=${page}&perPage=${perPage}`, {
+          withCredentials: true,
+        })
         .then((resp) => {
           this.data = resp.data.data;
+          this.pagination.rowsNumber = resp.data.meta.lastPage;
 
           const positionDataString = JSON.stringify(this.data);
           localStorage.setItem('position', positionDataString);

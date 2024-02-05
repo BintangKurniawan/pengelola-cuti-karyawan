@@ -122,7 +122,7 @@ export default {
   methods: {
     getPosition() {
       api
-        .get('/position', {
+        .get('/position?page=1&perPage=100', {
           withCredentials: true,
         })
         .then((res) => {

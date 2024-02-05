@@ -126,7 +126,7 @@
                 class="w-full"
                 label="Position"
                 v-model="typePosition"
-                :options="mapPosition"
+                :options="typePositionOptions"
                 @update:model-value="positionIdUpdate"
               />
             </div>
@@ -264,7 +264,7 @@ export default {
   },
   async mounted() {
     // TO GET POSITION DATA
-    // await this.getPosition();
+    await this.getPosition();
   },
   methods: {
     // TO RECEIVE SELECTED typeEmployee VALUE. IF FALSE (PERMANENT), THE contract IS FALSE (OLD EMPLOYEE) AND NOT HAVE END CONTRACT
@@ -289,7 +289,7 @@ export default {
     // TO GET POSITION
     async getPosition() {
       await api
-        .get('/position', { withCredentials: true })
+        .get('/position?page=1&perPage=100', { withCredentials: true })
         .then((resp) => {
           const positions = resp.data.data;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -90,6 +90,11 @@ export default {
           this.successNotif(resp.data.message);
           setInterval(() => {
             window.location.reload();
+            if (type === 'personal') {
+              this.$router.push('/admin/list?type=Ordinary');
+            } else {
+              this.$router.push('/admin/list?type=Special');
+            }
           }, 2000);
         })
         .catch((err) => {

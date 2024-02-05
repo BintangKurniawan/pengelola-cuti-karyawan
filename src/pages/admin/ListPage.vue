@@ -75,7 +75,7 @@
     <div class="w-[60%] border-b-2 md:flex items-center justify-center gap-4">
       <div
         class="cursor-pointer group relative transition-all"
-        @click="switchTable = true"
+        @click="toggleTable1"
         :class="{ 'text-primary font-semibold': switchTable }"
       >
         <span
@@ -153,7 +153,9 @@
             ((props.row.status === 'REJECT' ||
               props.row.status === 'WAITING') &&
               props.row.typeOfLeave.name === 'Personal') ||
-            props.row.typeOfLeave.name === 'Special'
+            ((props.row.status === 'REJECT' ||
+              props.row.status === 'WAITING') &&
+              props.row.typeOfLeave.name === 'Special')
           "
         >
           <Approve
@@ -270,7 +272,7 @@
   </q-table> -->
   <div
     class="row justify-center mt-4"
-    v-if="pagination.rowsNumber > 1 && !switchTable"
+    v-if="pagination.rowsNumberSpe > 1 && $route.query.type === 'Special'"
   >
     <q-pagination
       v-model="currentSpe"
@@ -455,8 +457,15 @@ export default {
     };
   },
   mounted() {
+    if (this.$route.query.type === 'Special') {
+      this.switchTable = false;
+      this.getDataSpecial(this.pagination.page);
+    } else {
+      this.switchTable = true;
+      this.getData(this.pagination.page);
+    }
     // TO GET DATA
-    this.getData(this.pagination.page);
+    // this.getData(this.pagination.page);
   },
   methods: {
     clearSearch() {
@@ -478,11 +487,25 @@ export default {
       this.typeLeave = '';
       this.getData(this.pagination.page);
     },
+    toggleTable1() {
+      this.switchTable = true;
+      this.search = '';
+      this.status = '';
+      this.current = 1;
+      this.$router.push({
+        query: { type: this.switchTable ? 'Ordinary' : 'Special' },
+      });
+      this.getData(this.pagination.page);
+    },
     toggleTable() {
       this.switchTable = false;
       this.search = '';
       this.status = '';
       this.current = 1;
+      this.$router.push({
+        query: { type: this.switchTable ? 'Ordinary' : 'Special' },
+      });
+
       this.getDataSpecial(this.pagination.page);
     },
     // TO GETD ATA
