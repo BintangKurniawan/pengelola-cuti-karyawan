@@ -258,26 +258,11 @@ export default {
 
     <q-footer reveal class="bg-white text-black md:hidden">
       <q-toolbar class="">
-        <div class="flex justify-evenly items-start flex-row w-full">
-          <AdminLinkBtn title="History" icon="history" link="/" width="auto" />
-          <AdminLinkBtn
-            title="Special"
-            icon="format-list-bulleted-square"
-            link="/special"
-            width="auto"
-          />
-          <AdminLinkBtn
-            title="Mandatory"
-            icon="format-list-bulleted-square"
-            link="/mandatory"
-            width="auto"
-          />
-          <AdminLinkBtn
-            title="Optional"
-            icon="format-list-checkbox"
-            link="/optional"
-            width="auto"
-          />
+        <div class="flex justify-between items-center flex-row w-full">
+          <AdminLinkBtn title="History" link="/" width="auto" />
+          <AdminLinkBtn title="Special" link="/special" width="auto" />
+          <AdminLinkBtn title="Mandatory" link="/mandatory" width="auto" />
+          <AdminLinkBtn title="Optional" link="/optional" width="auto" />
         </div>
       </q-toolbar>
     </q-footer>

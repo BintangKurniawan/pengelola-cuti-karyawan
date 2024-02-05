@@ -11,7 +11,7 @@
       >&nbsp;</span
     >
     <Icon :icon="'mdi:' + icon" width="24" v-if="icon" />
-    <p class="capitalize text-xs">{{ title }}</p>
+    <p class="capitalize text-sm">{{ title }}</p>
   </div>
 </template>
 

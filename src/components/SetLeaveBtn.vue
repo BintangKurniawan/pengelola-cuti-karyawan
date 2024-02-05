@@ -45,7 +45,7 @@
             </q-select>
           </div>
 
-          <div class="flex flex-col items-start gap-2 w-full">
+          <div class="flex flex-col items-start gap-2 w-full" v-if="!special">
             <p class="text-primary font-semibold">Reason</p>
             <q-input
               v-model="reason"
@@ -71,7 +71,7 @@
             />
           </div>
 
-          <div class="flex flex-col items-start gap-2 w-full">
+          <div class="flex flex-col items-start gap-2 w-full" v-if="!special">
             <p class="text-primary font-semibold">End Leave</p>
             <q-input
               outlined
@@ -84,7 +84,7 @@
             />
           </div>
 
-          <p class="text-secondary font-semibold">
+          <p class="text-secondary font-semibold" v-if="!special">
             Amount of leave is
             {{ calculateLeaveAmount(startLeave, endLeave) }} day(s)
           </p>
@@ -103,7 +103,7 @@
             color="primary"
             unelevated
             :disable="totalDays > 8"
-            @click="!special ? setLeave(id) : console.log(tes)"
+            @click="setLeave(id)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -204,36 +204,65 @@ export default {
 
     // TO SET PERSONAL LEAVEE
     async setLeave(id) {
-      await api
-        .post(
-          `/leave/personal/${id}`,
-          {
-            reason: this.reason,
-            startLeave: this.startLeave,
-            endLeave: this.endLeave,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          this.successNotif();
-          this.reason = '';
-          this.startLeave = '';
-          this.endLeave = '';
-          this.dialog = false;
+      if (!this.special) {
+        await api
+          .post(
+            `/leave/personal/${id}`,
+            {
+              reason: this.reason,
+              startLeave: this.startLeave,
+              endLeave: this.endLeave,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            this.successNotif();
+            this.reason = '';
+            this.startLeave = '';
+            this.endLeave = '';
+            this.dialog = false;
 
-          setInterval(() => {
-            this.$router.push('/admin/list');
-          }, 3000);
-        })
-        .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-          }
-        });
+            setInterval(() => {
+              this.$router.push('/admin/list');
+            }, 1500);
+          })
+          .catch((err) => {
+            if (err.response) {
+              const msg = err.response.data.message;
+              this.failedNotif(msg);
+            }
+          });
+      } else {
+        await api
+          .post(
+            `/leave/employee-special-leave/${id}`,
+            {
+              specialLeaveId: this.specialLeaveId,
+              startLeave: this.startLeave,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            this.successNotif();
+            this.specialLeaveId = '';
+            this.startLeave = '';
+            this.dialog = false;
+            setInterval(() => {
+              this.$router.push('/admin/list');
+            }, 1500);
+          })
+          .catch((err) => {
+            if (err.response) {
+              const msg = err.response.data.message;
+              this.failedNotif(msg);
+            }
+          });
+      }
     },
 
     calculateLeaveAmount(startLeave, endLeave) {

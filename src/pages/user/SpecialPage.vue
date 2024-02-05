@@ -37,6 +37,13 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-amount="props">
+        <q-td class="text-center" :props="props">
+          <div class="w-fill rounded-3xl px-3 py-2">
+            <p class="">{{ props.row.amount }} day(s)</p>
+          </div>
+        </q-td>
+      </template>
       <template v-slot:body-cell-note="props">
         <q-td class="text-center" :props="props">
           <div
