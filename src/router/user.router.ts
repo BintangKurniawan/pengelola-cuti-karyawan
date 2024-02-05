@@ -25,6 +25,14 @@ const user_routes = [
       protected: true,
     },
   },
+  {
+    path: '/special',
+    component: () => import('pages/user/SpecialPage.vue'),
+    meta: {
+      title: 'Special Leave',
+      protected: true,
+    },
+  },
 ];
 
 export default user_routes;

@@ -68,13 +68,13 @@ export default {
         .then((resp) => {
           // console.log(resp);
           this.name = resp.data.data.name;
-          if (resp.data.data.amountOfLeave[0].year === thisYear) {
-            this.leaveNow = resp.data.data.amountOfLeave[0].amount;
-            this.leaveThen = resp.data.data.amountOfLeave[1].amount;
-          } else {
-            this.leaveNow = resp.data.data.amountOfLeave[1].amount;
-            this.leaveThen = resp.data.data.amountOfLeave[0].amount;
-          }
+          this.leaveNow = resp.data.data.amountOfLeave[0].amount;
+          this.leaveThen = resp.data.data.amountOfLeave[1].amount;
+          // if (resp.data.data.amountOfLeave[0].year === thisYear) {
+          // } else {
+          //   this.leaveNow = resp.data.data.amountOfLeave[1].amount;
+          //   this.leaveThen = resp.data.data.amountOfLeave[0].amount;
+          // }
 
           this.amountLeaveCount = resp.data.data.amountOfLeave.length;
 
@@ -197,31 +197,60 @@ export default {
         <div
           class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
         >
-          <a
-            href="/"
-            :class="{
-              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-                $route.path === '/',
-            }"
-            class=""
-            >History</a
+          <div
+            class="group relative transition-all"
+            :class="{ 'text-primary font-semibold': $route.path === '/' }"
           >
-          <a
-            href="/mandatory"
+            <span
+              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+              :class="{ 'w-full': $route.path === '/' }"
+            >
+              &nbsp;
+            </span>
+            <a href="/">History</a>
+          </div>
+          <div
+            class="group relative transition-all"
             :class="{
-              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-                $route.path === '/mandatory',
+              'text-primary font-semibold': $route.path === '/special',
             }"
-            >Mandatory</a
           >
-          <a
-            href="/optional"
+            <span
+              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+              :class="{ 'w-full': $route.path === '/special' }"
+            >
+              &nbsp;
+            </span>
+            <a href="/special">Special</a>
+          </div>
+          <div
+            class="group relative transition-all"
             :class="{
-              'border-b-2 border-[#0021ED] border-solid text-primary font-semibold':
-                $route.path === '/optional',
+              'text-primary font-semibold': $route.path === '/mandatory',
             }"
-            >Optional</a
           >
+            <span
+              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+              :class="{ 'w-full': $route.path === '/mandatory' }"
+            >
+              &nbsp;
+            </span>
+            <a href="/mandatory">Mandatory</a>
+          </div>
+          <div
+            class="group relative transition-all"
+            :class="{
+              'text-primary font-semibold': $route.path === '/optional',
+            }"
+          >
+            <span
+              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+              :class="{ 'w-full': $route.path === '/optional' }"
+            >
+              &nbsp;
+            </span>
+            <a href="/optional">Optional</a>
+          </div>
         </div>
         <router-view />
       </div>
@@ -231,6 +260,12 @@ export default {
       <q-toolbar class="">
         <div class="flex justify-evenly items-start flex-row w-full">
           <AdminLinkBtn title="History" icon="history" link="/" width="auto" />
+          <AdminLinkBtn
+            title="Special"
+            icon="format-list-bulleted-square"
+            link="/special"
+            width="auto"
+          />
           <AdminLinkBtn
             title="Mandatory"
             icon="format-list-bulleted-square"

@@ -10,7 +10,7 @@
       :class="$route.path === link ? 'w-full' : 'w-0'"
       >&nbsp;</span
     >
-    <Icon :icon="'mdi:' + icon" width="24" />
+    <Icon :icon="'mdi:' + icon" width="24" v-if="icon" />
     <p class="capitalize text-xs">{{ title }}</p>
   </div>
 </template>

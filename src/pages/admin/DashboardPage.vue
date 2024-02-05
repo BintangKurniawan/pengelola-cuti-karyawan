@@ -10,6 +10,9 @@
   >
     <template v-slot:top-left>
       <div class="flex items-center gap-2">
+        <q-btn unelevated color="primary" @click="async">
+          <Icon icon="mdi:sync-circle" size="24" />
+        </q-btn>
         <div class="px-2 rounded-lg border-2 border-secondary">
           <!-- SEARCH -->
           <q-input
@@ -296,6 +299,15 @@ export default {
       column,
       current: ref(1),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      successNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -450,7 +462,20 @@ export default {
           }
         });
     },
-
+    async async() {
+      await api
+        .post('/employee/update-amount-of-leave', {}, { withCredentials: true })
+        .then((res) => {
+          const msg = res.data.message;
+          this.successNotif(msg);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
     // TO FILTER BY STATUS, IS ACTIVE OR RESIGN
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateStatus() {
