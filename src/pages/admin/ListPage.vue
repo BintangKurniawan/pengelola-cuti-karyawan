@@ -154,7 +154,9 @@
             props.row.typeOfLeave.name !== 'Optional'
           "
         >
-          <Approve :id="props.row.leaveEmployeeId" />
+          <Approve
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+          />
         </div>
         <div
           v-if="
