@@ -155,6 +155,7 @@
           "
         >
           <Approve
+            :type="switchTable ? 'personal' : 'employee-special-leave'"
             :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
           />
         </div>

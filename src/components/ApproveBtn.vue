@@ -27,7 +27,7 @@
           <q-btn
             label="Accept"
             unelevated
-            @click="approve(id)"
+            @click="approve(type, id)"
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -77,12 +77,13 @@ export default {
   },
   props: {
     id: Number,
+    type: String,
   },
   methods: {
     // TO APPROVE LEAVE IN LIST PAGE
-    async approve(id) {
+    async approve(type, id) {
       await api
-        .patch(`/leave/personal/${id}/approve`, {}, { withCredentials: true })
+        .patch(`/leave/${type}/${id}/approve`, {}, { withCredentials: true })
         .then((resp) => {
           console.log(resp);
           this.dialog = false;
