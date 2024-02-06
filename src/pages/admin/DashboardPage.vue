@@ -14,7 +14,7 @@
           icon="mdi:sync-circle"
           width="36"
           @click="async"
-          class="text-primary"
+          class="text-primary cursor-pointer"
         />
 
         <div class="px-2 rounded-lg border-2 border-secondary">

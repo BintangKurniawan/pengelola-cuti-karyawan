@@ -193,9 +193,12 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          setInterval(() => {
-            document.location.reload();
-          }, 1000);
+          // setInterval(() => {
+          //   document.location.reload();
+          // }, 1000);
+          if (err.response.status === 403) {
+            this.$router.push('/forbidden');
+          }
         });
       this.load = false;
     },

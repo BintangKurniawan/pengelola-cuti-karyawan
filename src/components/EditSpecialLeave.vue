@@ -129,7 +129,7 @@ export default {
     };
   },
   props: {
-    id: String,
+    id: Number,
   },
   components: {
     Icon,

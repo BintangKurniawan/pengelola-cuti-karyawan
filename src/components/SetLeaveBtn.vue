@@ -226,7 +226,7 @@ export default {
             this.dialog = false;
 
             setInterval(() => {
-              this.$router.push('/admin/list');
+              this.$router.push('/admin/list?type=Ordinary');
             }, 1500);
           })
           .catch((err) => {
@@ -253,7 +253,7 @@ export default {
             this.startLeave = '';
             this.dialog = false;
             setInterval(() => {
-              this.$router.push('/admin/list');
+              this.$router.push('/admin/list?type=Special');
             }, 1500);
           })
           .catch((err) => {

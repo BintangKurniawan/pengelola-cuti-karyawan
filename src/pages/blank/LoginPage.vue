@@ -7,6 +7,7 @@
 
     <div class="flex flex-col gap-8 items-center">
       <q-input
+        id="email"
         rounded
         v-model="email"
         outlined
@@ -19,6 +20,7 @@
       />
 
       <q-input
+        id="pw"
         rounded
         v-model="password"
         outlined
@@ -40,6 +42,7 @@
       ></q-input>
 
       <q-btn
+        id="login"
         text-color="white"
         unelevated
         size="md"
@@ -152,7 +155,6 @@ export default {
     },
     async login() {
       this.loading = true;
-      this.showLoading();
       await api
         .post(
           '/auth/login',
@@ -160,6 +162,8 @@ export default {
           { withCredentials: true }
         )
         .then((resp) => {
+          this.showLoading();
+
           this.response = resp.data.data;
           this.role = resp.data.data.user.roleId;
           const token = resp.data.data.accessToken;
