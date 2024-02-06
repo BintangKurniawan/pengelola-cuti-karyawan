@@ -85,11 +85,8 @@
 </template>
 
 <script>
-// import { Icon } from '@iconify/vue'
-
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import { Icon } from '@iconify/vue';
 import EditSpecialLeave from 'src/components/EditSpecialLeave.vue';
 import SetSpecialLeave from 'src/components/SetSpecialLeave.vue';
 export default {

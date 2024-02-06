@@ -19,13 +19,6 @@
           placeholder="Search"
         >
           <template v-slot:append>
-            <!-- <q-icon
-                @click="clearSearch"
-                v-if="search"
-                size="16px"
-                name="close"
-                class="cursor-pointer"
-              /> -->
             <q-icon name="search" class="text-black" />
           </template>
         </q-input>
@@ -197,79 +190,6 @@
     />
   </div>
 
-  <!-- <q-table
-    v-if="!switchTable"
-    class="my-table table-rounded mx-4"
-    flat
-    :loading="load"
-    :columns="column2"
-    :rows="specialData"
-    hide-pagination
-    v-model:pagination="pagination"
-  >
-    <template v-slot:body-cell-type="props">
-      <q-td :props="props" class="text-center">
-        <div class="w-fill px-3 py-2">
-          <p class="font-semibold">{{ props.row.typeOfLeave.name }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-start="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.startLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-end="props">
-      <q-td class="text-center" :props="props">
-        <div class="w-fill rounded-3xl px-3 py-2">
-          <p class="font-semibold">{{ formatDate(props.row.endLeave) }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-status="props">
-      <q-td class="text-center" :props="props">
-        <div
-          class="w-fill rounded-3xl px-3 py-2"
-          :class="{
-            'bg-[#EBF9F1] text-[#1F9254] ': props.row.status === 'APPROVE',
-            'bg-[#FBE7E8] text-[#A30D11] ': props.row.status === 'REJECT',
-            'bg-[#FEF2E5] text-[#CD6200] ': props.row.status === 'WAITING',
-          }"
-        >
-          <p class="font-semibold">{{ props.row.status }}</p>
-        </div>
-      </q-td>
-    </template>
-    <template v-slot:body-cell-action="props">
-      <q-td
-        :props="props"
-        class="flex gap-1 justify-center items-center text-center w-custom"
-      >
-        <div
-          v-if="
-            (props.row.status === 'REJECT' || props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Optional'
-          "
-        >
-          <Approve :id="props.row.leaveEmployeeId" />
-        </div>
-        <div
-          v-if="
-            (props.row.status === 'APPROVE' ||
-              props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Mandatory'
-          "
-        >
-          <Reject
-            :type="props.row.typeOfLeave.name"
-            :id="props.row.leaveEmployeeId"
-          />
-        </div>
-      </q-td>
-    </template>
-  </q-table> -->
   <div
     class="row justify-center mt-4"
     v-if="pagination.rowsNumberSpe > 1 && $route.query.type === 'Special'"
@@ -292,12 +212,10 @@
 </template>
 
 <script>
-// import { Icon } from '@iconify/vue'
 import Reject from 'src/components/RejectBtn.vue';
 import Approve from 'src/components/ApproveBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import { Icon } from '@iconify/vue';
 import NoteBtn from 'src/components/NoteBtn.vue';
 export default {
   components: {
@@ -457,6 +375,7 @@ export default {
     };
   },
   mounted() {
+    // FOR SPECIFIC TABLE WHEN REJECTED OR APPROVED THE LEAVE, SO IT'S STILL STAY IN THAT TABLE
     if (this.$route.query.type === 'Special') {
       this.switchTable = false;
       this.getDataSpecial(this.pagination.page);
@@ -487,6 +406,7 @@ export default {
       this.typeLeave = '';
       this.getData(this.pagination.page);
     },
+    // SWITCH TABLE DATA
     toggleTable1() {
       this.switchTable = true;
       this.search = '';
@@ -497,6 +417,7 @@ export default {
       });
       this.getData(this.pagination.page);
     },
+    // SWITCH TABLE DATA
     toggleTable() {
       this.switchTable = false;
       this.search = '';

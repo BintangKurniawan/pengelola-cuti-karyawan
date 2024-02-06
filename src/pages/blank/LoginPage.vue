@@ -58,7 +58,6 @@
 
 <script lang="ts">
 import { Icon } from '@iconify/vue';
-import { Cookies } from 'quasar';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
@@ -69,6 +68,7 @@ export default {
     Icon,
   },
   setup() {
+    // FOR LOADING
     const $q = useQuasar();
     const route = useRouter();
     let timer: string | number | NodeJS.Timeout | undefined;
@@ -120,6 +120,7 @@ export default {
     };
   },
   methods: {
+    // TO GET POSITION AND SAVE IT TO LOCALSTORAGE. IDK WILL I USE THIS AGAIN OR NO
     getPosition() {
       api
         .get('/position?page=1&perPage=100', {
@@ -134,6 +135,8 @@ export default {
           console.error(err);
         });
     },
+
+    // TO GET USER LOGIN DATA AND SAVE IT INTO LOCAL
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getLoginData(nik: any) {
       api
@@ -177,11 +180,7 @@ export default {
 
           this.getPosition();
           this.getLoginData(resp.data.data.employee.nik);
-          // if (this.role !== '2' && this.role !== '1') {
-          //   this.$router.push('/');
-          // } else {
-          //   this.$router.push('/admin/dashboard');
-          // }
+
           setInterval(() => {
             window.location.reload();
           }, 2000);
@@ -199,5 +198,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -165,15 +165,10 @@
 </template>
 
 <script lang="ts">
-// import { Icon } from '@iconify/vue'
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
-// import moment from 'moment';
 import { useRoute } from 'vue-router';
 export default {
-  components: {
-    // Icon,
-  },
   setup() {
     const column = [
       {

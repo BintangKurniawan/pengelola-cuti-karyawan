@@ -50,20 +50,6 @@
             class="w-fill rounded-3xl px-3 py-2"
             v-if="props.row.note && props.row.status === 'REJECT'"
           >
-            <!-- <q-btn
-              color="primary"
-              label="Note"
-              class="rounded-xl capitalize"
-              @click="dialog = true"
-            >
-            </q-btn>
-            <q-dialog v-model="dialog">
-              <q-card class="bg-white w-full">
-                <q-card-section class="">
-                  <p class="text-center">{{ props.row.note }}</p>
-                </q-card-section>
-              </q-card>
-            </q-dialog> -->
             <NoteBtn :text="props.row.note" />
           </div>
           <div v-else>
@@ -210,6 +196,7 @@ export default {
         });
     },
 
+    // FORMAT DATE
     formatDate(dateString) {
       // const options = { day: 'numeric', month: 'short', year: 'numeric' };
       // const date = new Date(dateString);

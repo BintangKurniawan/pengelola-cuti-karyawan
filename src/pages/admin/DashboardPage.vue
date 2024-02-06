@@ -16,8 +16,7 @@
           @click="async"
           class="text-primary"
         />
-        <!-- <q-btn unelevated color="primary" @click="async">
-        </q-btn> -->
+
         <div class="px-2 rounded-lg border-2 border-secondary">
           <!-- SEARCH -->
           <q-input
@@ -87,12 +86,6 @@
       <q-th :props="props">
         <p @click="toggleSort('name')" class="cursor-pointer">
           {{ props.col.label }}
-          <!-- <Icon
-            icon="mdi:sort-ascending"
-            width="24"
-            color="text-dark"
-            class="absolute"
-          /> -->
 
           <q-icon
             v-if="sortLabel === 'name'"
@@ -102,13 +95,6 @@
         </p>
       </q-th>
     </template>
-    <!-- <template v-slot:header-cell-position="props">
-      <q-th :props="props">
-        <p @click="toggleSort('positionId')" class="cursor-pointer">
-          {{ props.col.label }}
-        </p>
-      </q-th>
-    </template> -->
 
     <template v-slot:header-cell-setleave="props">
       <q-th :props="props" v-if="roleId !== '1'">
@@ -144,7 +130,6 @@
         <div class="w-fill rounded-3xl px-3 py-2" v-else>
           <p class="font-semibold">0</p>
         </div>
-        <!-- <p v-else>{{ props.row.amountOfLeave[0].amount }}</p> -->
       </q-td>
     </template>
 
@@ -163,12 +148,6 @@
     </template>
     <template v-slot:body-cell-setleave="props">
       <q-td :props="props" v-if="roleId !== '1'">
-        <!-- <q-btn
-          color="primary"
-          text-color="white"
-          label="Set"
-          class="capitalize rounded-3xl"
-          :onClick="() => tes(props.row.nik)" /> -->
         <div v-if="props.row.isWorking === true">
           <SetLeave :id="props.row.nik" />
         </div>
@@ -211,7 +190,6 @@
       direction-links
       boundary-links
     />
-    <!-- :ellipses="false" -->
   </div>
 </template>
 
@@ -359,18 +337,16 @@ export default {
     };
   },
   mounted() {
+    // TO GET THE SPECIFIC PAGE WHEN RETURN FROM DETAIL
     const currentPage = this.$route.query.page || 1;
     this.current = parseInt(currentPage);
     const searchq = this.$route.query.search || '';
     this.searchQuery = searchq;
     // TO GET DATA
     this.getData(currentPage, this.sort, this.sortLabel, searchq);
-
-    // setInterval(() => {
-    //   this.getData(this.pagination.page, this.sort);
-    // }, 3000);
   },
   methods: {
+    // PAGINATE
     paginate() {
       this.$router.push({ query: { page: this.current } });
       this.getData(this.current, this.sort, this.sortLabel, this.searchQuery);
@@ -467,6 +443,8 @@ export default {
           }
         });
     },
+
+    // TO CHECK THE FIELD IN BACKEND, THEY TOLD ME TO WRITE THIS
     async async() {
       await api
         .post('/employee/update-amount-of-leave', {}, { withCredentials: true })

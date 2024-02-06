@@ -66,7 +66,6 @@ export default {
           },
         })
         .then((resp) => {
-          // console.log(resp);
           this.name = resp.data.data.name;
           this.leaveNow = resp.data.data.amountOfLeave[0].amount;
           this.leaveThen = resp.data.data.amountOfLeave[1].amount;
@@ -81,9 +80,6 @@ export default {
           localStorage.setItem('nik', resp.data.data.employee.nik);
         })
         .catch((err) => {
-          // if (err.response) {
-          //   console.log(err.response.data.status);
-          // }
           if (err.response) {
             window.location.reload();
           }

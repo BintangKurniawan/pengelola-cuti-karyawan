@@ -36,9 +36,7 @@
 
 <script>
 import { ref } from 'vue';
-// import { Icon } from '@iconify/vue'
 import api from 'src/AxiosInterceptors';
-// import Rejc from 'src/components/RejcBtn.vue';
 import RejcBtn from 'src/components/RejcBtn.vue';
 import { useQuasar } from 'quasar';
 export default {
@@ -97,10 +95,7 @@ export default {
     },
   },
   components: {
-    // Icon,
     RejcBtn,
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

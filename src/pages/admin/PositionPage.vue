@@ -31,13 +31,11 @@
       direction-links
       boundary-links
     />
-    <!-- :ellipses="false" -->
   </div>
 </template>
 
 <script>
 import api from 'src/AxiosInterceptors';
-import { Icon } from '@iconify/vue';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 import DeletePositionBtn from 'src/components/DeletePosition.vue';
@@ -125,6 +123,7 @@ export default {
           this.data = resp.data.data;
           this.pagination.rowsNumber = resp.data.meta.lastPage;
 
+          // TO SAVE POSITION DATA IN LOCALSTORAGE. WHY I DO THIS? COZ IN SETTING I NEED THE POSIITON DATA
           const positionDataString = JSON.stringify(this.data);
           localStorage.setItem('position', positionDataString);
         })
