@@ -7,8 +7,40 @@
     v-model:pagination="pagination"
     hide-pagination
   >
+    <template v-slot:top-left>
+      <div class="flex items-center gap-2">
+        <div class="px-2 rounded-lg border-2 border-secondary">
+          <q-input
+            borderless
+            dense
+            class="w-[160px]"
+            v-model="search"
+            clearable
+            debounce="300"
+            clear-icon="close"
+            input-class="placeholder-color text-black"
+            @update:model-value="getData(pagination.page)"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" class="text-black" />
+            </template>
+          </q-input>
+        </div>
+      </div>
+    </template>
     <template v-slot:top-right>
       <AddPosition />
+    </template>
+    <template v-slot:body-cell-employeeCount="props">
+      <q-td :props="props" class="">
+        <p
+          @click="goToPosition(props.row.name)"
+          class="cursor-pointer hover:underline"
+        >
+          {{ props.row.employeeCount }}
+        </p>
+      </q-td>
     </template>
     <template v-slot:body-cell-action="props">
       <q-td
@@ -106,17 +138,24 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      search: '',
     };
   },
   async mounted() {
     await this.getData(this.pagination.page);
   },
   methods: {
+    goToPosition(position) {
+      this.$router.push(`/admin/dashboard?position=${position}`);
+    },
     // TO GET DATA
     async getData(page) {
       const perPage = window.innerWidth >= 768 ? 10 : 9;
       await api
         .get(`/position?page=${page}&perPage=${perPage}`, {
+          params: {
+            search: this.search,
+          },
           withCredentials: true,
         })
         .then((resp) => {

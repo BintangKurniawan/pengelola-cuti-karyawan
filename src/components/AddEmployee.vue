@@ -4,7 +4,7 @@
       color="primary"
       text-color="white"
       class="capitalize rounded-3xl"
-      @click="dialog = true"
+      @click="openDialog"
     >
       <div class="flex items-center justify-center gap-1">
         <Icon icon="mdi:account-plus-outline" size="24" />
@@ -262,11 +262,12 @@ export default {
   components: {
     Icon,
   },
-  async mounted() {
-    // TO GET POSITION DATA
-    await this.getPosition();
-  },
+
   methods: {
+    openDialog() {
+      this.dialog = true;
+      this.getPosition();
+    },
     // TO RECEIVE SELECTED typeEmployee VALUE. IF FALSE (PERMANENT), THE contract IS FALSE (OLD EMPLOYEE) AND NOT HAVE END CONTRACT
     employeeTypeUpdate() {
       this.type = this.typeEmployee.value;

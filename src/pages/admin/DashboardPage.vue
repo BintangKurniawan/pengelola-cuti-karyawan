@@ -59,6 +59,24 @@
             class="text-negative cursor-pointer"
           />
         </div>
+        <div class="flex items-center">
+          <!-- FILTER -->
+          <q-select
+            class="rounded-lg w-[130px]"
+            outlined
+            v-model="positionStatus"
+            :options="positionOptions"
+            @update:model-value="updateStatus2"
+            label="Position"
+          ></q-select>
+          <Icon
+            @click="reset2"
+            v-if="positionStatus"
+            icon="mdi:close-outline"
+            width="24"
+            class="text-negative cursor-pointer"
+          />
+        </div>
       </div>
     </template>
     <template v-slot:top-right v-if="roleId !== '1'">
@@ -334,22 +352,43 @@ export default {
       // TO GET TRUE OR FALSE FROM SELECTED STATUS
       statusWork: null,
       curentPageRes: 0,
+      position: '',
+
+      positionOptions: [],
+      positionStatus: null,
     };
   },
   mounted() {
+    this.getPosition();
+
     // TO GET THE SPECIFIC PAGE WHEN RETURN FROM DETAIL
     const currentPage = this.$route.query.page || 1;
     this.current = parseInt(currentPage);
     const searchq = this.$route.query.search || '';
     this.searchQuery = searchq;
+    const getPosition = this.$route.query.position || '';
+    this.position = getPosition;
+    this.positionStatus = getPosition;
     // TO GET DATA
-    this.getData(currentPage, this.sort, this.sortLabel, searchq);
+    this.getData(
+      currentPage,
+      this.sort,
+      this.sortLabel,
+      searchq,
+      this.position
+    );
   },
   methods: {
     // PAGINATE
     paginate() {
       this.$router.push({ query: { page: this.current } });
-      this.getData(this.current, this.sort, this.sortLabel, this.searchQuery);
+      this.getData(
+        this.current,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     goToDetail(nik: any) {
@@ -369,9 +408,32 @@ export default {
       this.statusWork = null;
       this.status = null;
       this.current = 1;
+      this.position = '';
       this.$router.push({ query: { page: this.current } });
 
-      this.getData(this.current, this.sort, this.sortLabel, this.searchQuery);
+      this.getData(
+        this.current,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
+    },
+    reset2() {
+      this.statusWork = null;
+      this.status = null;
+      this.current = 1;
+      this.position = '';
+      this.positionStatus = null;
+      this.$router.push({ query: { page: this.current } });
+
+      this.getData(
+        this.current,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
     },
     clearSearch() {
       this.searchQuery = '';
@@ -381,7 +443,8 @@ export default {
         this.pagination.page,
         this.sort,
         this.sortLabel,
-        this.searchQuery
+        this.searchQuery,
+        this.position
       );
     },
     // FOR ASC DESC
@@ -393,7 +456,8 @@ export default {
         this.pagination.page,
         this.sort,
         this.sortLabel,
-        this.searchQuery
+        this.searchQuery,
+        this.position
       );
     },
     search() {
@@ -401,24 +465,56 @@ export default {
         this.pagination.page,
         this.sort,
         this.sortLabel,
-        this.searchQuery
+        this.searchQuery,
+        this.position
       );
       this.$router.push({ query: { search: this.searchQuery } });
+    },
+    async getPosition() {
+      await api
+        .get('/position?page=1&perPage=100', { withCredentials: true })
+        .then((resp) => {
+          const positions = resp.data.data;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedPositions = positions.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (position: { id: any; name: any }) => {
+              return {
+                value: position.id,
+                label: position.name,
+              };
+            }
+          );
+
+          this.positionOptions = mappedPositions;
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+            document.location.reload();
+          }
+        });
     },
     // TO GET DATA
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getData(
       page: number | undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sort: any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       label: any,
-      search: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      search: any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      position: any
     ) {
       this.load = true;
       const perPage = window.innerWidth >= 768 ? 10 : 9;
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(
-          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}&search=${search}`,
+          `/employee?page=${page}&perPage=${perPage}&orderBy=${orderBy}&sortBy=${sort}&search=${search}&position=${position}`,
           {
             params: {
               isWorking: this.statusWork,
@@ -464,13 +560,27 @@ export default {
     updateStatus() {
       this.statusWork = this.status.value;
       this.current = 1;
-      console.log(this.curentPageRes);
 
       this.getData(
         this.pagination.page,
         this.sort,
         this.sortLabel,
-        this.searchQuery
+        this.searchQuery,
+        this.position
+      );
+      this.$router.push({ query: { page: this.curentPageRes } });
+      console.log(this.statusWork);
+    },
+    updateStatus2() {
+      this.position = this.positionStatus.label;
+      this.current = 1;
+
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
       );
       this.$router.push({ query: { page: this.curentPageRes } });
       console.log(this.statusWork);
