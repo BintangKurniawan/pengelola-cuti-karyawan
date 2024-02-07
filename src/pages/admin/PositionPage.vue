@@ -6,6 +6,7 @@
     :rows="data"
     v-model:pagination="pagination"
     hide-pagination
+    row-key
   >
     <template v-slot:top-left>
       <div class="flex items-center gap-2">
@@ -31,6 +32,16 @@
     </template>
     <template v-slot:top-right>
       <AddPosition />
+    </template>
+    <template v-slot:body-cell-id="props">
+      <q-td :props="props" class="">
+        <!-- <p v-for="(e, i) in props.row" v-bind:key="i">
+          {{ i }}
+        </p> -->
+        <p>
+          {{ props.row.id }}
+        </p>
+      </q-td>
     </template>
     <template v-slot:body-cell-employeeCount="props">
       <q-td :props="props" class="">
@@ -83,10 +94,10 @@ export default {
     const $q = useQuasar();
     const column = [
       {
-        name: 'id',
-        label: 'ID',
+        name: 'no',
+        label: 'No',
         align: 'center',
-        field: 'id',
+        field: 'no',
       },
       {
         name: 'name',

@@ -85,11 +85,12 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      addNotif() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      addNotif(msg: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: 'Employee added successfully',
+          message: `${msg}`,
           color: 'primary',
           multiLine: true,
         });
@@ -175,7 +176,7 @@ export default {
           }
         )
         .then((resp) => {
-          this.addNotif();
+          this.addNotif(resp.data.message);
           console.log(resp);
           // CLEAR DATA
 

@@ -60,9 +60,10 @@
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
-        class="flex gap-1 justify-center items-center text-center w-custom"
+        class="flex gap-1 justify-center items-center text-center md:w-full w-[200px]"
       >
         <EditSpecialLeave :id="props.row.id" />
+        <DeleteSpecialLeave :id="props.row.id" />
       </q-td>
     </template>
   </q-table>
@@ -89,16 +90,17 @@ import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import EditSpecialLeave from 'src/components/EditSpecialLeave.vue';
 import SetSpecialLeave from 'src/components/SetSpecialLeave.vue';
+import DeleteSpecialLeave from 'src/components/DeleteSpecialLeave.vue';
 export default {
-  components: { EditSpecialLeave, SetSpecialLeave },
+  components: { EditSpecialLeave, SetSpecialLeave, DeleteSpecialLeave },
   setup() {
     const roleId = localStorage.getItem('role');
     const column = [
       {
         name: 'id',
-        label: 'ID',
+        label: 'No',
         align: 'center',
-        field: 'id',
+        field: 'no',
         style: 'width: 80px;',
       },
       {
@@ -121,7 +123,7 @@ export default {
         label: 'Amount',
         align: 'center',
         field: 'amount',
-        style: 'width: 250px;',
+        style: 'width: 50px;',
       },
       {
         name: 'information',

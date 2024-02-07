@@ -193,9 +193,9 @@ export default {
           console.log(resp);
           // CLEAR DATA
 
-          //   setInterval(() => {
-          //     document.location.reload();
-          //   }, 2000);
+          setInterval(() => {
+            document.location.reload();
+          }, 2000);
         })
         .catch((err) => {
           if (err.response) {

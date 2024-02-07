@@ -81,9 +81,9 @@ export default {
     const column = [
       {
         name: 'id',
-        label: 'ID',
+        label: 'No',
         align: 'center',
-        field: 'id',
+        field: 'no',
       },
       {
         name: 'name',

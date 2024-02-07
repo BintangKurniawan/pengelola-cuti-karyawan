@@ -408,7 +408,6 @@ export default {
       this.statusWork = null;
       this.status = null;
       this.current = 1;
-      this.position = '';
       this.$router.push({ query: { page: this.current } });
 
       this.getData(
@@ -420,8 +419,6 @@ export default {
       );
     },
     reset2() {
-      this.statusWork = null;
-      this.status = null;
       this.current = 1;
       this.position = '';
       this.positionStatus = null;
