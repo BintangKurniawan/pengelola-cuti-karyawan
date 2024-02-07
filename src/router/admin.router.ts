@@ -9,7 +9,7 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/list',
+    path: '/admin/list-leave',
     component: () => import('pages/admin/ListPage.vue'),
     meta: {
       title: 'List of Leave',
@@ -25,10 +25,18 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/leave',
+    path: '/admin/special-leave',
     component: () => import('pages/admin/SpecialLeavePage.vue'),
     meta: {
       title: 'Special Leave',
+      protected: true,
+    },
+  },
+  {
+    path: '/admin/role',
+    component: () => import('pages/admin/RolePage.vue'),
+    meta: {
+      title: 'Role',
       protected: true,
     },
   },

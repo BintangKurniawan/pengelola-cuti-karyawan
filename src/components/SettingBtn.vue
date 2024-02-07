@@ -156,127 +156,38 @@ export default {
   data() {
     const nik = localStorage.getItem('nik');
 
-    // const positionData = localStorage.getItem('position');
-    // const storedPosition = JSON.parse(positionData);
-    // const mapPosition = storedPosition.map(
-    //   (position: { id: any; name: any }) => {
-    //     return {
-    //       value: position.id,
-    //       label: position.name,
-    //     };
-    //   }
-    // );
+    const positionData = localStorage.getItem('position');
+    const storedPosition = JSON.parse(positionData);
+    const mapPosition = storedPosition.map(
+      (position: { id: any; name: any }) => {
+        return {
+          value: position.id,
+          label: position.name,
+        };
+      }
+    );
 
     // console.log(map);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // function getId(name: any) {
-    //   const typePosition = mapPosition.find(
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     (option: { label: any }) => option.label === name
-    //   );
-    //   return typePosition ? typePosition.value : null;
-    // }
-
-    // function getRoleId(role: any) {
-    //   const roleType = roleTypeOptions.find((option) => option.label === role);
-
-    //   return roleType ? roleType.value : null;
-    // }
-
-    // function formatDate(dateString: {
-    //   split: (arg0: string) => {
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     (): any;
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     new (): any;
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
-    //   };
-    // }) {
-    //   const [day, month, year] = dateString.split('-').map(Number);
-    //   const date = new Date(year, month - 1, day);
-
-    //   const options = { day: 'numeric', month: 'short', year: 'numeric' };
-    //   return date.toLocaleDateString('en-UK', options);
-    // }
-
-    // const userData = localStorage.getItem('userData');
-    // const storedUserData = JSON.parse(userData);
-    // const name = storedUserData[0].name;
-    // const positionId = getId(storedUserData[0].positions.name);
-    // const contractBoolean = storedUserData[0].typeOfEmployee.isContract;
-    // const contract = storedUserData[0].typeOfEmployee.newContract;
-    // const gender = storedUserData[0].gender;
-    // const role = getRoleId(storedUserData[0].user.role.name);
-    // let exp;
-    // if (storedUserData[0].typeOfEmployee.endContract) {
-    //   exp = formatDate(storedUserData[0].typeOfEmployee.endContract);
-    // }
-    return {
-      dialog: ref(false),
-      modal: ref(false),
-      name: '',
-      password: '',
-      nik,
-      exp: '',
-      pwErr: '',
-      shadow: true,
-      // typeContract: {} as { status: boolean; label: string },
-      // typeContractOptions: [
-      //   { status: false, label: 'Permanent' },
-      //   { status: true, label: 'Contract' },
-      // ],
-      contractBoolean: false,
-
-      // typePosition: {} as { value: number; label: string },
-      // FOR POSITION DATA
-      typePositionOptions: [],
-      // FOR POSITION ID
-      positionId: '',
-
-      // contractType: null,
-      // contractTypeOptions: [
-      //   { value: false, label: 'Old Employee' },
-      //   { value: true, label: 'New Employee' },
-      // ],
-
-      // roleType: null,
-      roleTypeOptions: [
-        { value: 2, label: 'Admin' },
-        { value: 3, label: 'User' },
-      ],
-      role: 3,
-      contract: null,
-      gender: null,
-    };
-  },
-  components: {
-    Icon,
-  },
-  async mounted() {
-    await this.getPosition();
-    this.getData();
-  },
-  methods: {
-    //  TO GET POSITION ID
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getId(name: any) {
-      const typePosition = this.typePositionOptions.find(
+    function getId(name: any) {
+      const typePosition = mapPosition.find(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (option: { label: any }) => option.label === name
       );
       return typePosition ? typePosition.value : null;
-    },
-    // TO GET ROLE ID
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getRoleId(role: any) {
-      const roleType = this.roleTypeOptions.find(
-        (option: { label: any }) => option.label === role
-      );
+    }
+    const roleTypeOptions = [
+      { value: 2, label: 'Admin' },
+      { value: 3, label: 'User' },
+    ];
+
+    function getRoleId(role: any) {
+      const roleType = roleTypeOptions.find((option) => option.label === role);
 
       return roleType ? roleType.value : null;
-    },
-    formatDate(dateString: {
+    }
+
+    function formatDate(dateString: {
       split: (arg0: string) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (): any;
@@ -291,7 +202,97 @@ export default {
 
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       return date.toLocaleDateString('en-UK', options);
-    },
+    }
+
+    const userData = localStorage.getItem('userData');
+    const storedUserData = JSON.parse(userData);
+    const name = storedUserData[0].name;
+    const positionId = getId(storedUserData[0].positions.name);
+    const contractBoolean = storedUserData[0].typeOfEmployee.isContract;
+    const contract = storedUserData[0].typeOfEmployee.newContract;
+    const gender = storedUserData[0].gender;
+    const role = getRoleId(storedUserData[0].user.role.name);
+    let exp;
+    if (storedUserData[0].typeOfEmployee.endContract) {
+      exp = formatDate(storedUserData[0].typeOfEmployee.endContract);
+    }
+    return {
+      dialog: ref(false),
+      modal: ref(false),
+      name,
+      password: '',
+      nik,
+      exp,
+      pwErr: '',
+      shadow: true,
+      // typeContract: {} as { status: boolean; label: string },
+      // typeContractOptions: [
+      //   { status: false, label: 'Permanent' },
+      //   { status: true, label: 'Contract' },
+      // ],
+      contractBoolean,
+
+      // typePosition: {} as { value: number; label: string },
+      // FOR POSITION DATA
+      typePositionOptions: [],
+      // FOR POSITION ID
+      positionId,
+
+      // contractType: null,
+      // contractTypeOptions: [
+      //   { value: false, label: 'Old Employee' },
+      //   { value: true, label: 'New Employee' },
+      // ],
+
+      // roleType: null,
+
+      role,
+      contract,
+      gender,
+    };
+  },
+  components: {
+    Icon,
+  },
+  async mounted() {
+    await this.getPosition();
+    // this.getData();
+  },
+  methods: {
+    //  TO GET POSITION ID
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // getId(name: any) {
+    //   const typePosition = this.typePositionOptions.find(
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     (option: { label: any }) => option.label === name
+    //   );
+    //   return typePosition ? typePosition.value : null;
+    // },
+    // TO GET ROLE ID
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // getRoleId(role: any) {
+    //   const roleType = this.roleTypeOptions.find(
+    //     (option: { label: any }) => option.label === role
+    //   );
+
+    //   return roleType ? roleType.value : null;
+    // },
+    // formatDate(dateString: {
+    //   split: (arg0: string) => {
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     (): any;
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     new (): any;
+    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
+    //   };
+    // }) {
+    //   const [day, month, year] = dateString.split('-').map(Number);
+    //   const date = new Date(year, month - 1, day);
+
+    //   const options = { day: 'numeric', month: 'short', year: 'numeric' };
+    //   return date.toLocaleDateString('en-UK', options);
+    // },
     // TO GET POSITION
     async getPosition() {
       await api
@@ -308,16 +309,17 @@ export default {
               };
             }
           );
-
+          const positionDataString = JSON.stringify(positions);
+          localStorage.setItem('position', positionDataString);
           this.typePositionOptions = mappedPositions;
           console.log(this.typePositionOptions);
         })
         .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-            document.location.reload();
-          }
+          // if (err.response) {
+          //   const msg = err.response.data.message;
+          //   this.failedNotif(msg);
+          //   document.location.reload();
+          // }
         });
     },
 
@@ -327,17 +329,17 @@ export default {
         .get(`/employee/detail/${this.nik}`, { withCredentials: true })
         .then((resp) => {
           // console.log(resp);
-          this.name = resp.data.data[0].name;
-          this.positionId = this.getId(resp.data.data[0].positions.name);
-          this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-          this.contract = resp.data.data[0].typeOfEmployee.newContract;
-          this.gender = resp.data.data[0].gender;
-          this.role = this.getRoleId(resp.data.data[0].user.role.name);
-          if (resp.data.data[0].typeOfEmployee.endContract) {
-            this.exp = this.formatDate(
-              resp.data.data[0].typeOfEmployee.endContract
-            );
-          }
+          // this.name = resp.data.data[0].name;
+          // this.positionId = this.getId(resp.data.data[0].positions.name);
+          // this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
+          // this.contract = resp.data.data[0].typeOfEmployee.newContract;
+          // this.gender = resp.data.data[0].gender;
+          // this.role = this.getRoleId(resp.data.data[0].user.role.name);
+          // if (resp.data.data[0].typeOfEmployee.endContract) {
+          //   this.exp = this.formatDate(
+          //     resp.data.data[0].typeOfEmployee.endContract
+          //   );
+          // }
           const userData = resp.data.data;
           const userDataString = JSON.stringify(userData);
           localStorage.setItem('userData', userDataString);

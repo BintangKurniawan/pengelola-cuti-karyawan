@@ -74,7 +74,7 @@ export default {
         <AdminLinkBtn
           v-if="roleId !== '1'"
           title="List of Leave"
-          link="/admin/list"
+          link="/admin/list-leave"
           icon="list-status"
           width="full"
         />
@@ -86,8 +86,14 @@ export default {
         />
         <AdminLinkBtn
           title="Special Leave"
-          link="/admin/leave"
+          link="/admin/special-leave"
           icon="list-box-outline"
+          width="full"
+        />
+        <AdminLinkBtn
+          title="Role"
+          link="/admin/role"
+          icon="worker-outline"
           width="full"
         />
       </div>

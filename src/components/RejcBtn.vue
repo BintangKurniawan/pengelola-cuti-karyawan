@@ -25,6 +25,7 @@
               bg-color="white"
               for="note"
               placeholder="Note"
+              @keydown.enter.prevent="reject(id)"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
           </div>

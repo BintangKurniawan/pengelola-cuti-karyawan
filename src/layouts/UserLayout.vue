@@ -55,8 +55,6 @@ export default {
       this.nav = !this.nav;
     },
     async getData() {
-      const date = new Date();
-      const thisYear = date.getFullYear();
       const token = localStorage.getItem('token');
       await api
         .get('/employee/me', {
@@ -80,9 +78,9 @@ export default {
           localStorage.setItem('nik', resp.data.data.employee.nik);
         })
         .catch((err) => {
-          if (err.response) {
-            window.location.reload();
-          }
+          // if (err.response) {
+          //   window.location.reload();
+          // }
         });
     },
   },
