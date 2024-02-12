@@ -27,21 +27,12 @@
                 color="dark"
                 bg-color="white"
                 for="name"
-                @keydown.enter.prevent="editName"
+                @keydown.enter.prevent="save"
                 label="Name"
                 class="drop-shadow-sm w-44 outline-none focus:bg-transparent active:bg-transparent"
               />
             </div>
 
-            <q-btn
-              label="Save Change"
-              unelevated
-              @click="editName"
-              text-color="positive"
-              class="font-bold round text-center capitalize px-4 py-2"
-            />
-          </div>
-          <div class="flex justify-around items-end gap-5 w-full">
             <div class="flex flex-col items-start gap-1">
               <p class="text-primary font-semibold">Password</p>
               <q-input
@@ -63,15 +54,23 @@
                   /> </template
               ></q-input>
             </div>
-
+          </div>
+          <div class="flex justify-around items-end gap-5 w-full">
             <q-btn
+              label="Save Change"
+              unelevated
+              @click="save"
+              text-color="positive"
+              class="font-bold round text-center capitalize px-4 py-2"
+            />
+            <!-- <q-btn
               @click="modal = true"
               label="Change"
               unelevated
               color="primary"
               text-color="white"
               class="font-bold round text-center capitalize px-4 py-2 w-[120px]"
-            />
+            /> -->
           </div>
           <q-card-section
             class="flex items-center gap-4 w-full justify-between"
@@ -108,13 +107,13 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
-          <q-btn
+          <!-- <q-btn
             label="Yes"
             @click="changePassword"
             unelevated
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
-          />
+          /> -->
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -363,70 +362,74 @@ export default {
       }
     },
     // FOR CHANGE PASSWORD
-    async changePassword() {
-      await api
-        .post(
-          '/employee/change-password',
-          { newPassword: this.password },
-          { withCredentials: true }
-        )
-        .then((resp) => {
-          console.log(resp);
-          const msg = resp.data.message;
-          this.successNotif(msg);
-          this.dialog = false;
-          this.modal = false;
-          localStorage.setItem('firstLogin', 'false');
-          setInterval(() => {
-            window.location.reload();
-          }, 3000);
-        })
-        .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-          }
-        });
-    },
+    // async changePassword() {
+
+    // },
     // FOR EDIT NAME
-    async editName() {
-      await api
-        .put(
-          `/employee/update/${this.nik}`,
-          {
-            name: this.name,
-            positionId: this.positionId,
-            gender: this.gender,
-            typeOfEmployee: {
-              isContract: this.contractBoolean,
-              endContract: this.exp,
-              newContract: this.contract,
+    async save() {
+      if (this.password) {
+        await api
+          .post(
+            '/employee/change-password',
+            { newPassword: this.password },
+            { withCredentials: true }
+          )
+          .then((resp) => {
+            console.log(resp);
+            const msg = resp.data.message;
+            this.successNotif(msg);
+            this.dialog = false;
+            this.modal = false;
+            localStorage.setItem('firstLogin', 'false');
+            setInterval(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((err) => {
+            if (err.response) {
+              const msg = err.response.data.message;
+              this.failedNotif(msg);
+            }
+          });
+      } else {
+        await api
+          .put(
+            `/employee/update/${this.nik}`,
+            {
+              name: this.name,
+              positionId: this.positionId,
+              gender: this.gender,
+              typeOfEmployee: {
+                isContract: this.contractBoolean,
+                endContract: this.exp,
+                newContract: this.contract,
+              },
+              roleId: this.role,
             },
-            roleId: this.role,
-          },
-          {
-            withCredentials: true,
-            headers: {
-              Accept: '*/*',
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .then((resp) => {
-          console.log(resp);
-          const msg = resp.data.message;
-          this.successNotif(msg);
-          this.getData();
-          setInterval(() => {
-            document.location.reload();
-          }, 3000);
-        })
-        .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-          }
-        });
+            {
+              withCredentials: true,
+              headers: {
+                Accept: '*/*',
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+          .then((resp) => {
+            console.log(resp);
+            const msg = resp.data.message;
+            this.successNotif(msg);
+            this.getData();
+            setInterval(() => {
+              document.location.reload();
+            }, 3000);
+          })
+          .catch((err) => {
+            if (err.response) {
+              const msg = err.response.data.message;
+              this.failedNotif(msg);
+            }
+          });
+      }
     },
   },
   watch: {

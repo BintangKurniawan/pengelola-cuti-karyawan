@@ -164,7 +164,13 @@
           "
         >
           <Reject
+            v-if="props.row.typeOfLeave.name !== 'Optional'"
             :type="switchTable ? 'personal' : 'employee-special-leave'"
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+          />
+          <Reject
+            v-else
+            :type="switchTable ? 'optional' : 'employee-special-leave'"
             :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
           />
         </div>

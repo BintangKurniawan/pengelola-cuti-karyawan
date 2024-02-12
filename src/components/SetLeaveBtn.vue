@@ -39,7 +39,8 @@
               label-color="Primary"
               v-model="specialLeaveSelected"
               :options="specialLeaveOptions"
-              @update:model-value="leaveUpdate"
+              emit-value
+              map-options
               label="Type Leave"
             >
             </q-select>
@@ -155,9 +156,8 @@ export default {
       typeLeaveOptions: ['Personal', 'Special'],
       special: false,
 
-      specialLeaveSelected: null,
+      specialLeaveSelected: ref(null),
       specialLeaveOptions: [],
-      specialLeaveId: '',
     };
   },
   props: {
@@ -168,10 +168,6 @@ export default {
   },
 
   methods: {
-    leaveUpdate() {
-      this.specialLeaveId = this.specialLeaveSelected.value;
-      console.log(this.specialLeaveId);
-    },
     openDialog(id) {
       this.dialog = true;
       this.getSpecialLeaveList(id);
@@ -227,7 +223,10 @@ export default {
 
             setInterval(() => {
               this.$router.push('/admin/list-leave?type=Ordinary');
-            }, 1500);
+              setInterval(() => {
+                window.location.reload();
+              }, 1000);
+            }, 2000);
           })
           .catch((err) => {
             if (err.response) {
@@ -240,7 +239,7 @@ export default {
           .post(
             `/leave/employee-special-leave/${id}`,
             {
-              specialLeaveId: this.specialLeaveId,
+              specialLeaveId: this.specialLeaveSelected,
               startLeave: this.startLeave,
             },
             {
@@ -254,7 +253,10 @@ export default {
             this.dialog = false;
             setInterval(() => {
               this.$router.push('/admin/list-leave?type=Special');
-            }, 1500);
+              setInterval(() => {
+                window.location.reload();
+              }, 1000);
+            }, 2000);
           })
           .catch((err) => {
             if (err.response) {

@@ -27,6 +27,8 @@
               v-model="typeLeave"
               :options="typeLeaveOptions"
               @update:model-value="updateLeaveId"
+              emit-value
+              map-options
               label="Collective Leave"
             >
             </q-select>
@@ -137,14 +139,13 @@ export default {
       startLeave: '',
       endLeave: '',
       // FOR SELECTED typeLeave IN Q-SELECT
-      typeLeave: null,
+      typeLeave: ref(1),
       //  FOR Q-SELECT
       typeLeaveOptions: [
         { value: 1, label: 'Mandatory' },
         { value: 2, label: 'Optional' },
       ],
       // TO RECEIVE typeLeave ID
-      leaveId: '',
     };
   },
 
@@ -159,7 +160,7 @@ export default {
         .post(
           '/leave/collective',
           {
-            typeOfLeaveId: this.leaveId,
+            typeOfLeaveId: this.typeLeave,
             reason: this.reason,
             startLeave: this.startLeave,
             endLeave: this.endLeave,
