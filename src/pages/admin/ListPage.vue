@@ -217,6 +217,7 @@ import Approve from 'src/components/ApproveBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import NoteBtn from 'src/components/NoteBtn.vue';
+import { useQuasar } from 'quasar';
 export default {
   components: {
     Reject,
@@ -224,6 +225,7 @@ export default {
     NoteBtn,
   },
   setup() {
+    const $q = useQuasar();
     const roleId = localStorage.getItem('role');
     const column = [
       {
@@ -350,6 +352,15 @@ export default {
       column2,
       current: ref(1),
       currentSpe: ref(1),
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
     };
   },
   data() {
@@ -448,9 +459,17 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          setInterval(() => {
-            document.location.reload();
-          }, 1000);
+          // setInterval(() => {
+          //   document.location.reload();
+          // }, 1000);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+
+          if (err.response.status === 403) {
+            this.$router.push('/forbidden');
+          }
         });
       this.load = false;
     },

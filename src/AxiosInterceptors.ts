@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Cookies } from 'quasar';
 import { useRouter } from 'vue-router';
 const api = axios.create({
-  baseURL: 'https://10.10.101.251:8080/api',
+  baseURL: 'https://10.10.101.57:8080/api',
 });
 api.interceptors.request.use(
   (config) => {

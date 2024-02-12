@@ -127,7 +127,8 @@
                 label="Position"
                 v-model="typePosition"
                 :options="typePositionOptions"
-                @update:model-value="positionIdUpdate"
+                emit-value
+                map-options
               />
             </div>
             <div
@@ -140,7 +141,8 @@
                 class="w-full"
                 v-model="typeContract"
                 :options="typeContractOptions"
-                @update:model-value="contractTypeUpdate"
+                emit-value
+                map-options
                 label="Type Contract"
               >
               </q-select>
@@ -236,21 +238,21 @@ export default {
       type: false,
 
       // FOR CONTRACT TYPE FROM Q-SELECT
-      typeContract: null,
+      typeContract: ref(false),
       // FOR SELECT IN Q-SELECT
       typeContractOptions: [
         { value: false, label: 'Old Employee' },
         { value: true, label: 'New Employee' },
       ],
       // TO RECEIVED VALUE FROM SELECTED typeContract
-      contract: false,
+      // contract: false,
 
       // FOR SELECTED POSITION FROM Q-SELECT
-      typePosition: null,
+      typePosition: ref(null),
       // FOR SELECT IN Q-SELECT, THE DATA IS GAINED FROM API
       typePositionOptions: [],
       // TO RECEIVED POSITION ID FROM SELECTED typePosition
-      positionId: '',
+      // positionId: '',
 
       gender: null,
       genderOptions: ['L', 'P'],
@@ -272,21 +274,21 @@ export default {
     employeeTypeUpdate() {
       this.type = this.typeEmployee.value;
       if (this.type === false) {
-        this.contract = false;
+        this.typeContract = false;
         this.endContract = '';
       }
       console.log(this.type);
     },
     // TO RECCEIVE SELECTED typeContract VALUE. IS OLD OR NEW
-    contractTypeUpdate() {
-      this.contract = this.typeContract.value;
-      console.log(this.contract);
-    },
-    // TO RECEIVE SELECTED typePosition VALUE
-    positionIdUpdate() {
-      this.positionId = this.typePosition.value;
-      console.log(this.positionId);
-    },
+    // contractTypeUpdate() {
+    //   this.contract = this.typeContract.value;
+    //   console.log(this.contract);
+    // },
+    // // TO RECEIVE SELECTED typePosition VALUE
+    // positionIdUpdate() {
+    //   this.positionId = this.typePosition.value;
+    //   console.log(this.positionId);
+    // },
     // TO GET POSITION
     async getPosition() {
       await api
@@ -328,8 +330,8 @@ export default {
             startContract: this.startWorking,
             gender: this.gender,
             endContract: this.endContract,
-            positionId: this.positionId,
-            newContract: this.contract,
+            positionId: this.typePosition,
+            newContract: this.typeContract,
           },
           {
             withCredentials: true,
@@ -343,15 +345,8 @@ export default {
           this.addNotif();
           console.log(resp);
           // CLEAR DATA
-          this.dialog = false;
-          this.nik = '';
-          this.name = '';
-          this.email = '';
-          this.type = false;
-          this.startWorking = '';
-          this.endContract = '';
-          this.positionId = '';
-          this.contract = false;
+
+          // this.contract = false;
           setInterval(() => {
             document.location.reload();
           }, 2000);

@@ -309,10 +309,7 @@ export default {
       // TO RECEIVED ROLE FROM Q-SELECT
       roleType: null,
       // ROLE OPTIONS FOR Q-SELECT
-      roleTypeOptions: [
-        { value: 2, label: 'Admin' },
-        { value: 3, label: 'User' },
-      ],
+      roleTypeOptions: [],
       // TO GET ROLE FROM SELECTED roleType
       role: 3,
 
@@ -325,12 +322,13 @@ export default {
   async mounted() {
     // TO GET POSITION AND EMPLOYEE DATA
     await this.getPosition();
+    await this.getRole();
     await this.getData();
   },
   methods: {
     async getPosition() {
       await api
-        .get('/position', { withCredentials: true })
+        .get('/position?page=1&perPage=100', { withCredentials: true })
         .then((resp) => {
           const positions = resp.data.data;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -349,6 +347,28 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+        });
+    },
+    async getRole() {
+      await api
+        .get('/role/select', { withCredentials: true })
+        .then((res) => {
+          const roles = res.data.data;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedRoles = roles.map((roles: { id: any; name: any }) => {
+            return {
+              value: roles.id,
+              label: roles.name,
+            };
+          });
+
+          this.roleTypeOptions = mappedRoles;
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
     async getData() {

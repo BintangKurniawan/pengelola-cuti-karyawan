@@ -98,6 +98,12 @@ export default {
         field: 'rolePermissionCount',
       },
       {
+        name: 'userCount',
+        label: 'User Count',
+        align: 'center',
+        field: 'userCount',
+      },
+      {
         name: 'action',
         label: 'Action',
         align: 'center',
@@ -164,6 +170,9 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+          }
+          if (err.response.status === 403) {
+            this.$router.push('/forbidden');
           }
         });
     },

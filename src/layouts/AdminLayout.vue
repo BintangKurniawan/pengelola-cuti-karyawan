@@ -64,7 +64,13 @@ export default {
       class="p-5 flex flex-col justify-between"
     >
       <div class="flex flex-col md:items-start gap-4">
-        <AdminLinkBtn title="Home" link="/" icon="home" width="full" />
+        <AdminLinkBtn
+          title="Home"
+          link="/"
+          icon="home"
+          width="full"
+          v-if="roleId !== '1'"
+        />
         <AdminLinkBtn
           title="Dashboard"
           link="/admin/dashboard"
@@ -89,6 +95,7 @@ export default {
           link="/admin/special-leave"
           icon="list-box-outline"
           width="full"
+          v-if="roleId !== '1'"
         />
         <AdminLinkBtn
           title="Role"
