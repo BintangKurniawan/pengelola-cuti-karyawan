@@ -180,11 +180,13 @@ export default {
           console.log(resp);
           // CLEAR DATA
 
+          this.dialog = false;
           this.name = '';
 
-          setInterval(() => {
-            document.location.reload();
-          }, 2000);
+          this.$emit('get-data');
+          // setInterval(() => {
+          //   document.location.reload();
+          // }, 2000);
         })
         .catch((err) => {
           if (err.response) {

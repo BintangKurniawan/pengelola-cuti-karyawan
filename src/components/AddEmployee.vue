@@ -347,9 +347,13 @@ export default {
           // CLEAR DATA
 
           // this.contract = false;
-          setInterval(() => {
-            document.location.reload();
-          }, 2000);
+          // setInterval(() => {
+          //   document.location.reload();
+          // }, 2000);
+
+          this.dialog = false;
+
+          this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {

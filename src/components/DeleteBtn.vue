@@ -87,9 +87,11 @@ export default {
         .then((resp) => {
           this.deleteNotif(resp.data.message);
           this.dialog = false;
-          setInterval(() => {
-            document.location.reload();
-          }, 1500);
+          // setInterval(() => {
+          //   document.location.reload();
+          // }, 1500);
+
+          this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {

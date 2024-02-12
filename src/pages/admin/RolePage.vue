@@ -30,7 +30,7 @@
       </div>
     </template>
     <template v-slot:top-right>
-      <AddRole />
+      <AddRole @get-data="handleChildEvent" />
     </template>
 
     <template v-slot:body-cell-action="props">
@@ -42,8 +42,8 @@
           :id="props.row.id"
           :count="props.row.rolePermissionCount"
         />
-        <EditRole :id="props.row.id" />
-        <DeleteRole :id="props.row.id" />
+        <EditRole :id="props.row.id" @get-data="handleChildEvent" />
+        <DeleteRole :id="props.row.id" @get-data="handleChildEvent" />
       </q-td>
     </template>
   </q-table>
@@ -148,6 +148,9 @@ export default {
     await this.getData(this.pagination.page);
   },
   methods: {
+    handleChildEvent() {
+      this.getData(this.current);
+    },
     // TO GET DATA
     async getData(page) {
       const perPage = window.innerWidth >= 768 ? 10 : 9;

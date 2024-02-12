@@ -84,7 +84,7 @@
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
         <SetCollective />
-        <AddEmployee />
+        <AddEmployee @get-data="handleChildEvent" />
       </div>
     </template>
     <template v-slot:header-cell-nik="props">
@@ -193,7 +193,11 @@
         >
           <Icon icon="mdi:history" width="24" class="text-dark" />
         </q-btn>
-        <Delete :id="props.row.nik" v-if="roleId !== '1'" />
+        <Delete
+          :id="props.row.nik"
+          v-if="roleId !== '1'"
+          @get-data="handleChildEvent"
+        />
       </q-td>
     </template>
   </q-table>
@@ -379,6 +383,15 @@ export default {
     );
   },
   methods: {
+    handleChildEvent() {
+      this.getData(
+        this.current,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
+    },
     // PAGINATE
     paginate() {
       this.$router.push({ query: { page: this.current } });

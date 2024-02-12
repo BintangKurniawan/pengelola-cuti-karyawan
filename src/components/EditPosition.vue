@@ -125,9 +125,10 @@ export default {
           this.successNotif(res.data.message);
           this.name = '';
           this.dialog = false;
-          setInterval(() => {
-            window.location.reload();
-          }, 1000);
+          // setInterval(() => {
+          //   window.location.reload();
+          // }, 1000);
+          this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {

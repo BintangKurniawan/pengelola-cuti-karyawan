@@ -31,7 +31,7 @@
       </div>
     </template>
     <template v-slot:top-right>
-      <AddPosition />
+      <AddPosition @get-data="handleChildEvent" />
     </template>
     <template v-slot:body-cell-id="props">
       <q-td :props="props" class="">
@@ -58,8 +58,8 @@
         :props="props"
         class="flex items-center gap-1 justify-center md:w-full w-[200px]"
       >
-        <EditPosition :id="props.row.id" />
-        <DeletePositionBtn :id="props.row.id" />
+        <EditPosition :id="props.row.id" @get-data="handleChildEvent" />
+        <DeletePositionBtn :id="props.row.id" @get-data="handleChildEvent" />
       </q-td>
     </template>
   </q-table>
@@ -156,6 +156,9 @@ export default {
     await this.getData(this.pagination.page);
   },
   methods: {
+    handleChildEvent() {
+      this.getData(this.current);
+    },
     goToPosition(position) {
       this.$router.push(`/admin/dashboard?position=${position}`);
     },

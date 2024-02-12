@@ -54,7 +54,7 @@
       <div
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
-        <SetSpecialLeave />
+        <SetSpecialLeave @get-data="handleChildEvent" />
       </div>
     </template>
     <template v-slot:body-cell-action="props">
@@ -62,8 +62,8 @@
         :props="props"
         class="flex gap-1 justify-center items-center text-center md:w-full w-[200px]"
       >
-        <EditSpecialLeave :id="props.row.id" />
-        <DeleteSpecialLeave :id="props.row.id" />
+        <EditSpecialLeave :id="props.row.id" @get-data="handleChildEvent" />
+        <DeleteSpecialLeave :id="props.row.id" @get-data="handleChildEvent" />
       </q-td>
     </template>
   </q-table>
@@ -167,6 +167,9 @@ export default {
     this.getData(this.pagination.page);
   },
   methods: {
+    handleChildEvent() {
+      this.getData(this.current);
+    },
     clearSearch() {
       this.search = '';
       this.getData(this.pagination.page);
