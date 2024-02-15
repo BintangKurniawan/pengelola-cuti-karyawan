@@ -8,7 +8,7 @@
       <q-card class="bg-white w-full">
         <q-card-section>
           <h6 class="font-bold text-center">Edit Role</h6>
-          <p>{{ selectedRole }}</p>
+          <!-- <p>{{ selectedRole }}</p> -->
         </q-card-section>
 
         <q-card-section class="flex items-center gap-4 w-full justify-between">
@@ -144,13 +144,11 @@ export default {
           );
 
           this.roleOptions = mappedRoles;
-          // console.log(this.typePositionOptions);
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            // document.location.reload();
           }
         });
     },
@@ -162,6 +160,7 @@ export default {
         .then((res) => {
           this.name = res.data.data.name;
           this.selectedRole = res.data.data.rolePermissions.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (permission: { permission: { id: any } }) =>
               permission.permission.id
           );
@@ -191,13 +190,9 @@ export default {
         .then((resp) => {
           this.addNotif(resp.data.message);
           console.log(resp);
-          // CLEAR DATA
 
           this.dialog = false;
           this.$emit('get-data');
-          // setInterval(() => {
-          //   document.location.reload();
-          // }, 2000);
         })
         .catch((err) => {
           if (err.response) {

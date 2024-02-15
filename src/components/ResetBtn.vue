@@ -28,11 +28,7 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
-          <!-- <div
-            class="text-negative bg-[#FBE7E8] px-10 py-2 font-bold rounded-lg text-center cursor-pointer"
-            @click="acc(id)">
-            Reset
-          </div> -->
+
           <q-btn
             label="Reset"
             unelevated

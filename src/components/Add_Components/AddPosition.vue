@@ -1,6 +1,14 @@
 <template>
-  <q-btn flat text-color="white" class="" @click="openModal">
-    <Icon icon="mdi:pencil" width="24" class="text-info" />
+  <q-btn
+    color="primary"
+    text-color="white"
+    class="capitalize rounded-3xl"
+    @click="dialog = true"
+  >
+    <div class="flex items-center justify-center gap-1">
+      <Icon icon="mdi:plus-circle-outline" size="24" />
+      <p>Add Position</p>
+    </div>
   </q-btn>
 
   <div>
@@ -18,9 +26,9 @@
               outlined
               color="dark"
               bg-color="white"
+              @keydown.enter.prevent="create"
               for="position"
               placeholder="Position"
-              @keydown.enter.prevent="update(id)"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
           </div>
@@ -38,7 +46,7 @@
             label="Confirm"
             color="primary"
             unelevated
-            @click="update(id)"
+            @click="create"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -84,35 +92,17 @@ export default {
       name: '',
     };
   },
-  props: {
-    id: Number,
-  },
+
   components: {
     Icon,
   },
 
   methods: {
-    openModal() {
-      this.dialog = true;
-      this.getData(this.id);
-    },
-    // TO GET POSITION BY ID
-    async getData(id) {
+    // TO CREATE POSITION
+    async create() {
       await api
-        .get(`/position/${id}`, { withCredentials: true })
-        .then((resp) => {
-          console.log(resp);
-          this.name = resp.data.data.name;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    // TO UPDATE THE POSITION
-    async update(id) {
-      await api
-        .put(
-          `/position/update/${id}`,
+        .post(
+          '/position/create/',
           {
             name: this.name,
           },
@@ -125,15 +115,14 @@ export default {
           this.successNotif(res.data.message);
           this.name = '';
           this.dialog = false;
-          // setInterval(() => {
-          //   window.location.reload();
-          // }, 1000);
+
           this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            window.location.reload();
           }
         });
     },

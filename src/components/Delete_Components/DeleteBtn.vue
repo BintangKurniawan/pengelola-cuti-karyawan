@@ -1,38 +1,21 @@
 <template>
-  <q-btn
-    color="primary"
-    text-color="white"
-    class="capitalize rounded-3xl"
-    @click="dialog = true"
-  >
-    <div class="flex items-center justify-center gap-1">
-      <Icon icon="mdi:plus-circle-outline" size="24" />
-      <p>Add Position</p>
-    </div>
+  <q-btn flat text-color="white" class="" @click="dialog = true">
+    <Icon icon="mdi:delete-outline" width="24" class="text-negative" />
   </q-btn>
 
   <div>
     <q-dialog v-model="dialog">
-      <q-card class="bg-white w-full px-4 pb-4">
+      <q-card class="bg-white">
         <q-card-section>
-          <h6 class="font-bold text-center">Edit Position</h6>
+          <h6 class="font-bold text-center">Delete Data</h6>
         </q-card-section>
 
-        <div class="flex justify-between items-end gap-2 w-full">
-          <div class="flex flex-col items-start gap-2 w-full">
-            <p class="text-primary font-semibold">Position Name</p>
-            <q-input
-              v-model="name"
-              outlined
-              color="dark"
-              bg-color="white"
-              @keydown.enter.prevent="create"
-              for="position"
-              placeholder="Position"
-              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
-            />
-          </div>
-        </div>
+        <q-card-section>
+          <p class="text-center text-[#a0a0a0]">
+            Are you sure want to delete this data? <br />
+            It will change it's status into resign
+          </p>
+        </q-card-section>
 
         <q-card-section class="flex items-center gap-4 w-full justify-between">
           <div
@@ -42,12 +25,12 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
+
           <q-btn
-            label="Confirm"
-            color="primary"
+            label="Delete"
             unelevated
-            @click="create"
-            text-color="white"
+            text-color="negative"
+            @click="remove(id)"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -65,7 +48,7 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      successNotif(msg) {
+      deleteNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
@@ -80,7 +63,6 @@ export default {
           position: 'bottom-right',
           message: `${msg}`,
           color: 'negative',
-
           multiLine: true,
         });
       },
@@ -89,44 +71,34 @@ export default {
   data() {
     return {
       dialog: ref(false),
-      name: '',
     };
   },
-
+  props: {
+    id: String,
+  },
   components: {
     Icon,
   },
-
   methods: {
-    // TO CREATE POSITION
-    async create() {
-      await api
-        .post(
-          '/position/create/',
-          {
-            name: this.name,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          this.successNotif(res.data.message);
-          this.name = '';
+    // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
+    remove(id) {
+      api
+        .post(`/employee/disable/${id}`, { withCredentials: true })
+        .then((resp) => {
+          this.deleteNotif(resp.data.message);
           this.dialog = false;
-          // setInterval(() => {
-          //   window.location.reload();
-          // }, 2000);
+
           this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            window.location.reload();
           }
         });
+    },
+    acc(id) {
+      console.log(id);
     },
   },
 };
@@ -134,6 +106,7 @@ export default {
 
 <style lang="scss" scoped>
 .round {
+  background-color: #fbe7e8;
   border-radius: 8px;
 }
 </style>

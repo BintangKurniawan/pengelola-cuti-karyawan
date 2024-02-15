@@ -218,7 +218,7 @@ import { Icon } from '@iconify/vue';
 import { useRoute } from 'vue-router';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import moment from 'moment';
-import ActivateBtn from 'src/components/ActivateBtn.vue';
+import ActivateBtn from 'src/components/Positive_Components/ActivateBtn.vue';
 export default {
   setup() {
     const maxLengthMobile = 12;

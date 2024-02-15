@@ -86,7 +86,7 @@
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
-import NoteBtn from 'src/components/NoteBtn.vue';
+import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
 export default {
   components: {
     NoteBtn,

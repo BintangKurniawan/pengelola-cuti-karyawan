@@ -1,13 +1,21 @@
 <template>
-  <q-btn flat text-color="white" class="" @click="openModal">
-    <Icon icon="mdi:pencil" width="24" class="text-info" />
+  <q-btn
+    color="primary"
+    text-color="white"
+    class="capitalize rounded-3xl"
+    @click="dialog = true"
+  >
+    <div class="flex items-center justify-center gap-1">
+      <Icon icon="mdi:plus-circle-outline" size="24" />
+      <p>Add Special Leave</p>
+    </div>
   </q-btn>
 
   <div>
     <q-dialog v-model="dialog">
       <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
-          <h6 class="font-bold text-center">Edit Special Leave</h6>
+          <h6 class="font-bold text-center">Add Special Leave</h6>
         </q-card-section>
 
         <div class="flex justify-between items-end gap-2 w-full">
@@ -16,7 +24,6 @@
             <q-input
               v-model="leaveTitle"
               outlined
-              @keydown.enter.prevent="update(id)"
               color="dark"
               bg-color="white"
               for="leave"
@@ -59,7 +66,7 @@
               color="dark"
               bg-color="white"
               for="info"
-              @keydown.enter.prevent="update(id)"
+              @keydown.enter.prevent="create()"
               placeholder="Leave Information"
               class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
             />
@@ -78,7 +85,7 @@
             label="Confirm"
             color="primary"
             unelevated
-            @click="update(id)"
+            @click="create()"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -129,37 +136,18 @@ export default {
     };
   },
   props: {
-    id: Number,
+    id: String,
   },
   components: {
     Icon,
   },
 
   methods: {
-    openModal() {
-      this.dialog = true;
-      this.getData(this.id);
-    },
-    // TO GET POSITION BY ID
-    async getData(id) {
-      await api
-        .get(`/leave/special-leave/${id}`, { withCredentials: true })
-        .then((resp) => {
-          console.log(resp);
-          this.leaveTitle = resp.data.data.leaveTitle;
-          this.gender = resp.data.data.gender;
-          this.amount = resp.data.data.amount;
-          this.info = resp.data.data.leaveInformation;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
     // TO UPDATE THE POSITION
-    async update(id) {
+    async create() {
       await api
-        .patch(
-          `/leave/special-leave/${id}`,
+        .post(
+          '/leave/special-leave/',
           {
             leaveTitle: this.leaveTitle,
             gender: this.gender,
@@ -178,9 +166,7 @@ export default {
           this.amount = '';
           this.info = '';
           this.dialog = false;
-          // setInterval(() => {
-          //   window.location.reload();
-          // }, 1000);
+
           this.$emit('get-data');
         })
         .catch((err) => {

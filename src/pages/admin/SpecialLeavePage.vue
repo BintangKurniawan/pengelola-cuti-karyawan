@@ -54,7 +54,7 @@
       <div
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
-        <SetSpecialLeave @get-data="handleChildEvent" />
+        <AddSpecialLeave @get-data="handleChildEvent" />
       </div>
     </template>
     <template v-slot:body-cell-action="props">
@@ -88,11 +88,11 @@
 <script>
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import EditSpecialLeave from 'src/components/EditSpecialLeave.vue';
-import SetSpecialLeave from 'src/components/SetSpecialLeave.vue';
-import DeleteSpecialLeave from 'src/components/DeleteSpecialLeave.vue';
+import EditSpecialLeave from 'src/components/Edit_Componets/EditSpecialLeave.vue';
+import AddSpecialLeave from 'src/components/Add_Components/AddSpecialLeave.vue';
+import DeleteSpecialLeave from 'src/components/Delete_Components/DeleteSpecialLeave.vue';
 export default {
-  components: { EditSpecialLeave, SetSpecialLeave, DeleteSpecialLeave },
+  components: { EditSpecialLeave, AddSpecialLeave, DeleteSpecialLeave },
   setup() {
     const roleId = localStorage.getItem('role');
     const column = [

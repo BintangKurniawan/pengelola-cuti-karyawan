@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ref } from 'vue';
 import Logout from 'src/components/LogoutBtn.vue';
 import SettingBtn from 'src/components/SettingBtn.vue';
-import AdminLinkBtn from 'src/components/AdminLinkBtn.vue';
+import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 export default {
   setup() {
     const page = window.innerWidth >= 1280 ? true : false;

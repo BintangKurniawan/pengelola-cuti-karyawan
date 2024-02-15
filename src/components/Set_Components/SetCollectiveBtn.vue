@@ -177,15 +177,10 @@ export default {
           this.successNotif(resp.data.message);
           setInterval(() => {
             window.location.reload();
-          }, 2000);
+          }, 1500);
         })
         .catch((err) => {
           if (err.response) {
-            // if (err.response.data.data[0].code) {
-            //   const msg = err.response.data.data[0].code;
-            //   const msg2 = err.response.data.message;
-            //   this.failedNotif(msg, msg2);
-            // }
             const msg = err.response.data.message;
 
             this.failedNotif(msg);

@@ -65,10 +65,10 @@
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
-import PermissionDetail from 'src/components/PermissionDetail.vue';
-import DeleteRole from 'src/components/DeleteRole.vue';
-import AddRole from 'src/components/AddRole.vue';
-import EditRole from 'src/components/EditRole.vue';
+import PermissionDetail from 'src/components/Display_Components/PermissionDetail.vue';
+import DeleteRole from 'src/components/Delete_Components/DeleteRole.vue';
+import AddRole from 'src/components/Add_Components/AddRole.vue';
+import EditRole from 'src/components/Edit_Componets/EditRole.vue';
 export default {
   components: {
     PermissionDetail,

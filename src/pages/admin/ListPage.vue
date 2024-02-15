@@ -218,11 +218,11 @@
 </template>
 
 <script>
-import Reject from 'src/components/RejectBtn.vue';
-import Approve from 'src/components/ApproveBtn.vue';
+import Reject from 'src/components/Negative_Components/RejectLeaveBtn.vue';
+import Approve from 'src/components/Positive_Components/ApproveBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import NoteBtn from 'src/components/NoteBtn.vue';
+import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
 import { useQuasar } from 'quasar';
 export default {
   components: {

@@ -158,6 +158,7 @@ export default {
     const positionData = localStorage.getItem('position');
     const storedPosition = JSON.parse(positionData);
     const mapPosition = storedPosition.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (position: { id: any; name: any }) => {
         return {
           value: position.id,
@@ -180,6 +181,7 @@ export default {
       { value: 3, label: 'User' },
     ];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function getRoleId(role: any) {
       const roleType = roleTypeOptions.find((option) => option.label === role);
 
@@ -224,26 +226,13 @@ export default {
       exp,
       pwErr: '',
       shadow: true,
-      // typeContract: {} as { status: boolean; label: string },
-      // typeContractOptions: [
-      //   { status: false, label: 'Permanent' },
-      //   { status: true, label: 'Contract' },
-      // ],
+
       contractBoolean,
 
-      // typePosition: {} as { value: number; label: string },
       // FOR POSITION DATA
       typePositionOptions: [],
       // FOR POSITION ID
       positionId,
-
-      // contractType: null,
-      // contractTypeOptions: [
-      //   { value: false, label: 'Old Employee' },
-      //   { value: true, label: 'New Employee' },
-      // ],
-
-      // roleType: null,
 
       role,
       contract,
@@ -314,11 +303,10 @@ export default {
           console.log(this.typePositionOptions);
         })
         .catch((err) => {
-          // if (err.response) {
-          //   const msg = err.response.data.message;
-          //   this.failedNotif(msg);
-          //   document.location.reload();
-          // }
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
 

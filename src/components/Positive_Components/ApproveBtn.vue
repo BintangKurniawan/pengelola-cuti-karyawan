@@ -1,18 +1,18 @@
 <template>
-  <q-btn flat text-color="white" class="" @click="dialog = true">
-    <Icon icon="mdi:delete-outline" width="24" class="text-negative" />
+  <q-btn flat text-color="white" class="px-0" @click="dialog = true">
+    <Icon icon="mdi:check-circle-outline" width="24" class="text-info" />
   </q-btn>
 
   <div>
     <q-dialog v-model="dialog">
       <q-card class="bg-white">
         <q-card-section>
-          <h6 class="font-bold text-center">Delete Special Leave</h6>
+          <h6 class="font-bold text-center">Accept Request</h6>
         </q-card-section>
 
         <q-card-section>
           <p class="text-center text-[#a0a0a0]">
-            Are you sure want to delete this Special Leave?
+            Are you sure want to accept this request leave?
           </p>
         </q-card-section>
 
@@ -24,12 +24,11 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
-
           <q-btn
-            label="Delete"
+            label="Accept"
             unelevated
-            text-color="negative"
-            @click="remove(id)"
+            @click="approve(type, id)"
+            text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -47,7 +46,7 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      deleteNotif(msg) {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
@@ -72,24 +71,31 @@ export default {
       dialog: ref(false),
     };
   },
-  props: {
-    id: Number,
-  },
+
   components: {
     Icon,
   },
+  props: {
+    id: Number,
+    type: String,
+  },
   methods: {
-    // TO DELETE POSITION
-    remove(id) {
-      api
-        .patch(`/leave/special-leave/delete/${id}`, { withCredentials: true })
+    // TO APPROVE LEAVE IN LIST PAGE
+    async approve(type, id) {
+      await api
+        .patch(`/leave/${type}/${id}/approve`, {}, { withCredentials: true })
         .then((resp) => {
-          this.deleteNotif(resp.data.message);
+          console.log(resp);
           this.dialog = false;
-          // setInterval(() => {
-          //   window.location.reload();
-          // }, 2000);
-          this.$emit('get-data');
+          this.successNotif(resp.data.message);
+          setInterval(() => {
+            window.location.reload();
+            if (type === 'personal') {
+              this.$router.push('/admin/list-leave?type=Ordinary');
+            } else {
+              this.$router.push('/admin/list-leave?type=Special');
+            }
+          }, 1500);
         })
         .catch((err) => {
           if (err.response) {
@@ -98,16 +104,13 @@ export default {
           }
         });
     },
-    acc(id) {
-      console.log(id);
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .round {
-  background-color: #fbe7e8;
+  background-color: #ebf9f1;
   border-radius: 8px;
 }
 </style>

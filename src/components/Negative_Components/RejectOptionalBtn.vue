@@ -1,19 +1,34 @@
 <template>
-  <q-btn flat text-color="white" class="" @click="dialog = true">
-    <Icon icon="mdi:delete-outline" width="24" class="text-negative" />
-  </q-btn>
-
   <div>
+    <q-btn
+      @click="dialog = true"
+      label="Reject Leave"
+      unelevated
+      text-color="negative"
+      class="font-bold round text-center capitalize px-4 mx-4 my-0 py-0 h-[21px]"
+    />
     <q-dialog v-model="dialog">
-      <q-card class="bg-white">
+      <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
-          <h6 class="font-bold text-center">Delete Position</h6>
+          <h6 class="font-bold text-center text-xl">Reject Optional Leave</h6>
         </q-card-section>
 
         <q-card-section>
-          <p class="text-center text-[#a0a0a0]">
-            Are you sure want to delete this position?
+          <p class="text-center text-[#a0a0a0] font-semibold text-base">
+            Are you sure want to reject this optional leave?
           </p>
+          <div class="flex flex-col items-start mt-2 w-full">
+            <q-input
+              v-model="note"
+              outlined
+              color="dark"
+              bg-color="white"
+              for="note"
+              placeholder="Note"
+              @keydown.enter.prevent="reject(id)"
+              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+            />
+          </div>
         </q-card-section>
 
         <q-card-section class="flex items-center gap-4 w-full justify-between">
@@ -26,10 +41,10 @@
           </div>
 
           <q-btn
-            label="Delete"
+            label="Reject"
+            @click="reject(id)"
             unelevated
             text-color="negative"
-            @click="remove(id)"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -46,22 +61,14 @@ import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
+
     return {
-      deleteNotif(msg) {
+      rejectNotif() {
         $q.notify({
           progress: true,
           position: 'bottom-right',
-          message: `${msg}`,
+          message: 'Optional leave rejected',
           color: 'primary',
-          multiLine: true,
-        });
-      },
-      failedNotif(msg) {
-        $q.notify({
-          progress: true,
-          position: 'bottom-right',
-          message: `${msg}`,
-          color: 'negative',
           multiLine: true,
         });
       },
@@ -70,6 +77,7 @@ export default {
   data() {
     return {
       dialog: ref(false),
+      note: '',
     };
   },
   props: {
@@ -79,28 +87,23 @@ export default {
     Icon,
   },
   methods: {
-    // TO DELETE POSITION
-    remove(id) {
-      api
-        .delete(`/position/delete/${id}`, { withCredentials: true })
+    // TO REJECT OPTIONAL LEAVE
+    async reject(id) {
+      await api
+        .patch(
+          `/leave/optional/${id}/reject`,
+          { note: this.note },
+          { withCredentials: true }
+        )
         .then((resp) => {
-          this.deleteNotif(resp.data.message);
+          console.log(resp);
           this.dialog = false;
-          // setInterval(() => {
-          //   window.location.reload();
-          // }, 2000);
-
+          this.rejectNotif();
           this.$emit('get-data');
         })
         .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-          }
+          console.error(err);
         });
-    },
-    acc(id) {
-      console.log(id);
     },
   },
 };

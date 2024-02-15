@@ -218,10 +218,10 @@
 <script lang="ts">
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
-import SetCollective from '../../components/SetCollectiveBtn.vue';
-import AddEmployee from 'src/components/AddEmployee.vue';
-import SetLeave from 'src/components/SetLeaveBtn.vue';
-import Delete from 'src/components/DeleteBtn.vue';
+import SetCollective from '../../components/Set_Components/SetCollectiveBtn.vue';
+import AddEmployee from 'src/components/Add_Components/AddEmployee.vue';
+import SetLeave from 'src/components/Set_Components/SetLeaveBtn.vue';
+import Delete from 'src/components/Delete_Components/DeleteBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 export default {

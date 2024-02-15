@@ -1,5 +1,16 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex flex-col items-center justify-center">
+    <q-btn
+      dense
+      flat
+      @click="$router.back()"
+      class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4 text-black self-start"
+    >
+      <div class="flex items-center gap-4">
+        <Icon icon="mdi:arrow-left-circle-outline" width="24" />
+        <p class="capitalize">Back</p>
+      </div>
+    </q-btn>
     <div class="flex flex-wrap items-center gap-4 w-[1128px] md:p-0 px-4">
       <div class="flex flex-col gap-4 md:w-fit w-full">
         <h5 class="font-semibold text-2xl">NIK</h5>

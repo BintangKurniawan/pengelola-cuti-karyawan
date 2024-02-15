@@ -148,13 +148,11 @@ export default {
           );
 
           this.roleOptions = mappedRoles;
-          // console.log(this.typePositionOptions);
         })
         .catch((err) => {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            // document.location.reload();
           }
         });
     },
@@ -184,9 +182,6 @@ export default {
           this.name = '';
 
           this.$emit('get-data');
-          // setInterval(() => {
-          //   document.location.reload();
-          // }, 2000);
         })
         .catch((err) => {
           if (err.response) {

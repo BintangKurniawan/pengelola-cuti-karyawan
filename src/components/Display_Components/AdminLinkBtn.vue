@@ -1,3 +1,5 @@
+<!-- just for ordinary component button -->
+
 <template>
   <div
     @click="router.push(link)"

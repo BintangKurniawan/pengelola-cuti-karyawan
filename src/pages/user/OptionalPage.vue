@@ -14,7 +14,7 @@
           <p class="px-4 text-xs">
             {{ formatDate(data.startLeave) }} - {{ formatDate(data.endLeave) }}
           </p>
-          <RejcBtn :id="data.leaveEmployeeId" />
+          <RejcBtn :id="data.leaveEmployeeId" @get-data="handleChildEvent" />
         </div>
       </q-expansion-item>
     </div>
@@ -37,7 +37,7 @@
 <script>
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
-import RejcBtn from 'src/components/RejcBtn.vue';
+import RejcBtn from 'src/components/Negative_Components/RejectOptionalBtn.vue';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
@@ -69,6 +69,9 @@ export default {
     this.getData(this.pagination.page);
   },
   methods: {
+    handleChildEvent() {
+      this.getData(this.current);
+    },
     async getData(page) {
       await api
         .get(`/leave/optional?page=${page}&perPage=10`, {

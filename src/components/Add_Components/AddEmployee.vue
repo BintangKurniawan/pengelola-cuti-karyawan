@@ -60,14 +60,6 @@
             </div>
             <div class="flex flex-col items-start gap-1 w-[45%]">
               <p class="text-primary font-semibold">Type of Employee</p>
-              <!-- <q-input
-                v-model="name"
-                outlined
-                color="dark"
-                bg-color="white"
-                for="name"
-                placeholder="Name"
-                class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent" /> -->
               <q-select
                 outlined
                 class="w-full"
@@ -135,12 +127,12 @@
               v-if="type === true"
               class="flex flex-col items-start gap-1 w-[45%]"
             >
-              <p class="text-primary font-semibold">Type of Contract</p>
+              <p class="text-primary font-semibold">Employee Status</p>
               <q-select
                 outlined
                 class="w-full"
-                v-model="typeContract"
-                :options="typeContractOptions"
+                v-model="employeeStatus"
+                :options="employeeStatusOptions"
                 emit-value
                 map-options
                 label="Type Contract"
@@ -238,21 +230,17 @@ export default {
       type: false,
 
       // FOR CONTRACT TYPE FROM Q-SELECT
-      typeContract: ref(false),
+      employeeStatus: ref(false),
       // FOR SELECT IN Q-SELECT
-      typeContractOptions: [
+      employeeStatusOptions: [
         { value: false, label: 'Old Employee' },
         { value: true, label: 'New Employee' },
       ],
-      // TO RECEIVED VALUE FROM SELECTED typeContract
-      // contract: false,
 
       // FOR SELECTED POSITION FROM Q-SELECT
       typePosition: ref(null),
       // FOR SELECT IN Q-SELECT, THE DATA IS GAINED FROM API
       typePositionOptions: [],
-      // TO RECEIVED POSITION ID FROM SELECTED typePosition
-      // positionId: '',
 
       gender: null,
       genderOptions: ['L', 'P'],
@@ -274,21 +262,12 @@ export default {
     employeeTypeUpdate() {
       this.type = this.typeEmployee.value;
       if (this.type === false) {
-        this.typeContract = false;
+        this.employeeStatus = false;
         this.endContract = '';
       }
       console.log(this.type);
     },
-    // TO RECCEIVE SELECTED typeContract VALUE. IS OLD OR NEW
-    // contractTypeUpdate() {
-    //   this.contract = this.typeContract.value;
-    //   console.log(this.contract);
-    // },
-    // // TO RECEIVE SELECTED typePosition VALUE
-    // positionIdUpdate() {
-    //   this.positionId = this.typePosition.value;
-    //   console.log(this.positionId);
-    // },
+
     // TO GET POSITION
     async getPosition() {
       await api
@@ -331,7 +310,7 @@ export default {
             gender: this.gender,
             endContract: this.endContract,
             positionId: this.typePosition,
-            newContract: this.typeContract,
+            newContract: this.employeeStatus,
           },
           {
             withCredentials: true,
@@ -345,12 +324,16 @@ export default {
           this.addNotif();
           console.log(resp);
           // CLEAR DATA
-
-          // this.contract = false;
-          // setInterval(() => {
-          //   document.location.reload();
-          // }, 2000);
-
+          this.nik = '';
+          this.name = '';
+          this.email = '';
+          this.type = false;
+          this.typeEmployee = null;
+          this.startWorking = '';
+          this.gender = null;
+          this.endContract = '';
+          this.typePosition = null;
+          this.employeeStatus = false;
           this.dialog = false;
 
           this.$emit('get-data');

@@ -88,7 +88,7 @@ export default {
         timer = setTimeout(() => {
           $q.loading.hide();
           timer = void 0;
-        }, 2000);
+        }, 1500);
       },
       successNotif() {
         $q.notify({
@@ -187,7 +187,7 @@ export default {
 
           setInterval(() => {
             window.location.reload();
-          }, 2000);
+          }, 1500);
           this.successNotif();
         })
         .catch((error) => {

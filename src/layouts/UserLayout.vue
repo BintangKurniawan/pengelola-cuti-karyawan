@@ -5,7 +5,7 @@ import Logout from 'src/components/LogoutBtn.vue';
 import Setting from 'src/components/SettingBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
-import AdminLinkBtn from 'src/components/AdminLinkBtn.vue';
+import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 export default {
   setup() {
     const role = localStorage.getItem('role');
@@ -81,6 +81,9 @@ export default {
           // if (err.response) {
           //   window.location.reload();
           // }
+          if (err.response) {
+            this.failedNotif(err.response.data.message);
+          }
         });
     },
   },
