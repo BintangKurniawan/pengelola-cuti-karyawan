@@ -88,7 +88,7 @@
 <script>
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import EditSpecialLeave from 'src/components/Edit_Componets/EditSpecialLeave.vue';
+import EditSpecialLeave from 'src/components/Edit_Components/EditSpecialLeave.vue';
 import AddSpecialLeave from 'src/components/Add_Components/AddSpecialLeave.vue';
 import DeleteSpecialLeave from 'src/components/Delete_Components/DeleteSpecialLeave.vue';
 export default {

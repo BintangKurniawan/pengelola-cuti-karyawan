@@ -82,7 +82,7 @@ import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 import DeletePositionBtn from 'src/components/Delete_Components/DeletePosition.vue';
-import EditPosition from 'src/components/Edit_Componets/EditPosition.vue';
+import EditPosition from 'src/components/Edit_Components/EditPosition.vue';
 import AddPosition from 'src/components/Add_Components/AddPosition.vue';
 export default {
   components: {

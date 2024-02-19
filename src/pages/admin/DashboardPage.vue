@@ -51,12 +51,13 @@
             @update:model-value="updateStatus"
             label="Filter"
           ></q-select>
-          <Icon
+
+          <q-icon
             @click="reset"
             v-if="status"
-            icon="mdi:close-outline"
-            width="24"
-            class="text-negative cursor-pointer"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
           />
         </div>
         <div class="flex items-center">
@@ -69,12 +70,13 @@
             @update:model-value="updateStatus2"
             label="Position"
           ></q-select>
-          <Icon
+
+          <q-icon
             @click="reset2"
             v-if="positionStatus"
-            icon="mdi:close-outline"
-            width="24"
-            class="text-negative cursor-pointer"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
           />
         </div>
       </div>

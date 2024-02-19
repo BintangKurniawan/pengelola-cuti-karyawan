@@ -44,6 +44,8 @@ import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 export default {
+  emits: ['get-data'],
+
   setup() {
     const $q = useQuasar();
     return {

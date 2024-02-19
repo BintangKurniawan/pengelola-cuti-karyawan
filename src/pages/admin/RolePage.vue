@@ -68,7 +68,7 @@ import { ref } from 'vue';
 import PermissionDetail from 'src/components/Display_Components/PermissionDetail.vue';
 import DeleteRole from 'src/components/Delete_Components/DeleteRole.vue';
 import AddRole from 'src/components/Add_Components/AddRole.vue';
-import EditRole from 'src/components/Edit_Componets/EditRole.vue';
+import EditRole from 'src/components/Edit_Components/EditRole.vue';
 export default {
   components: {
     PermissionDetail,
