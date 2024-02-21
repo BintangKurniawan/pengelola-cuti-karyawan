@@ -169,7 +169,7 @@ export default {
     };
   },
   mounted() {
-    this.getData();
+    this.getData(this.pagination.page);
   },
   components: {
     NoteBtn,

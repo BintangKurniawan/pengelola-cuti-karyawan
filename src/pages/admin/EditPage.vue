@@ -50,7 +50,8 @@
           :disable="roleId === '1'"
           v-model="typePosition"
           :options="typePositionOptions"
-          @update:model-value="updatePositionId"
+          emit-value
+          map-options
           label="Position"
         ></q-select>
       </div>
@@ -184,8 +185,9 @@
           class="md:w-[270px] w-full"
           v-model="roleType"
           :options="roleTypeOptions"
-          @update:model-value="updateRole"
           label="Role"
+          emit-value
+          map-options
         />
       </div>
       <div class="flex flex-col gap-4 md:w-fit w-full h-[104px] justify-end">
@@ -301,7 +303,7 @@ export default {
       contractBoolean: false,
 
       // TO RECEIVED POSITION FROM Q-SELECT
-      typePosition: {} as { value: number; label: string },
+      typePosition: null,
       // FOR POSITION DATA FROM API
       typePositionOptions: [],
       // TO GET POSITION ID FROM SELECTED POSITION
@@ -409,8 +411,9 @@ export default {
             );
 
             this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-            this.role = this.getRoleId(resp.data.data[0].user.role.name);
-            this.roleType = this.getRoleText(resp.data.data[0].user.role.name);
+            // this.role = this.getRoleId(resp.data.data[0].user.role.name);
+            // this.roleType = this.getRoleText(resp.data.data[0].user.role.name);
+            this.roleType = resp.data.data[0].user.role.id;
             console.log(this.role);
 
             if (resp.data.data[0].typeOfEmployee.endContract) {
@@ -418,13 +421,7 @@ export default {
                 resp.data.data[0].typeOfEmployee.endContract
               );
             }
-            this.typePosition = this.getPositionText(
-              resp.data.data[0].positions.name
-            );
-            this.positionId = this.getId(resp.data.data[0].positions.name);
-
-            console.log(this.status);
-            console.log(resp.data.data);
+            this.typePosition = resp.data.data[0].positions.id;
           });
       } catch (err) {
         console.error(err);
@@ -467,13 +464,13 @@ export default {
     },
 
     // TO GET ROLE TEXT
-    getRoleText(role: any) {
-      const roleType = this.roleTypeOptions.find(
-        (option) => option.label === role
-      );
+    // getRoleText(role: any) {
+    //   const roleType = this.roleTypeOptions.find(
+    //     (option) => option.label === role
+    //   );
 
-      return roleType ? roleType.label : null;
-    },
+    //   return roleType ? roleType.label : null;
+    // },
 
     // TO UPDATE TYPE CONTRACT, IS PERMANENT OR NOT. AND IF PERMANENT, THE END CONTRACT IS NULL
     updateContractId() {
@@ -484,15 +481,15 @@ export default {
       console.log(this.contractBoolean);
     },
     // TO SET POSITION ID FROM SELECTED POSITION IN Q-SELECT
-    updatePositionId() {
-      this.positionId = this.typePosition.value;
-      console.log(this.positionId);
-    },
+    // updatePositionId() {
+    //   this.positionId = this.typePosition.value;
+    //   console.log(this.positionId);
+    // },
     // TO SET ROLE ID FROM SELECTED ROLE IN Q-SELECT
-    updateRole() {
-      this.role = this.roleType.value;
-      console.log(this.role);
-    },
+    // updateRole() {
+    //   this.role = this.roleType.value;
+    //   console.log(this.role);
+    // },
 
     // TO FORMAT DATE
     formatDate(dateString: {
@@ -513,20 +510,20 @@ export default {
     },
 
     // TO GET POSITION NAME
-    getId(name: any) {
-      const typePosition = this.typePositionOptions.find(
-        (option) => option.label === name
-      );
-      return typePosition ? typePosition.value : null;
-    },
+    // getId(name: any) {
+    //   const typePosition = this.typePositionOptions.find(
+    //     (option) => option.label === name
+    //   );
+    //   return typePosition ? typePosition.value : null;
+    // },
     // TO GET ROLE NAME
-    getRoleId(role: any) {
-      const roleTypeOptions = this.roleTypeOptions.find(
-        (option) => option.label === role
-      );
+    // getRoleId(role: any) {
+    //   const roleTypeOptions = this.roleTypeOptions.find(
+    //     (option) => option.label === role
+    //   );
 
-      return roleTypeOptions ? roleTypeOptions.value : null;
-    },
+    //   return roleTypeOptions ? roleTypeOptions.value : null;
+    // },
     // TO EDIT
     async edit() {
       this.showLoading();
@@ -535,14 +532,14 @@ export default {
           `/employee/update/${this.id}`,
           {
             name: this.name,
-            positionId: this.positionId,
+            positionId: this.typePosition,
             gender: this.gender,
             typeOfEmployee: {
               isContract: this.contractBoolean,
               endContract: this.exp,
               newContract: this.contract,
             },
-            roleId: this.role,
+            roleId: this.roleType,
           },
           {
             withCredentials: true,
@@ -557,7 +554,7 @@ export default {
           this.saveNotif(resp.data.message);
           setInterval(() => {
             document.location.reload();
-          }, 3000);
+          }, 1500);
         })
         .catch((err) => {
           console.error(err);

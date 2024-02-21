@@ -115,7 +115,7 @@ export default {
       // FOR SELECT IN Q-SELECT, THE DATA IS GAINED FROM API
       roleOptions: [],
 
-      selectedRole: ref([]),
+      selectedRole: ref([9, 5, 18, 17, 19, 20, 22]),
     };
   },
   props: {
