@@ -169,7 +169,7 @@
     <template v-slot:body-cell-setleave="props">
       <q-td :props="props" v-if="roleId !== '1'">
         <div v-if="props.row.isWorking === true">
-          <SetLeave :id="props.row.nik" />
+          <SetLeave :id="props.row.nik" page="dashboard" text="Set" />
         </div>
         <div v-else>
           <p>-</p>
@@ -522,7 +522,7 @@ export default {
       position: any
     ) {
       this.load = true;
-      const perPage = window.innerWidth >= 768 ? 10 : 9;
+      const perPage = window.innerWidth >= 768 ? 10 : 7;
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(

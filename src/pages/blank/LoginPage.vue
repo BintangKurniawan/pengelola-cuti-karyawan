@@ -11,6 +11,7 @@
         rounded
         v-model="email"
         outlined
+        autofocus
         color="dark"
         bg-color="white"
         label="Email"

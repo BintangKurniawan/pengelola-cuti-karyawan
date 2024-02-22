@@ -66,6 +66,7 @@
             label="Confirm"
             color="primary"
             unelevated
+            :disable="selectedRole.length < 1"
             @click="addRole"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"

@@ -6,14 +6,16 @@
     @click="openDialog(id)"
   >
     <div class="flex items-center justify-center gap-1">
-      <p>Set</p>
+      <p>{{ text }}</p>
     </div>
   </q-btn>
   <div>
     <q-dialog v-model="dialog">
       <q-card class="bg-white w-full px-4 pb-4">
         <q-card-section>
-          <h6 class="font-bold text-center">Set Leave</h6>
+          <h6 class="font-bold text-center">
+            {{ page === 'dashboard' ? 'Set Leave' : 'Leave Application' }}
+          </h6>
         </q-card-section>
 
         <div class="flex justify-between items-end gap-2 w-full">
@@ -91,7 +93,7 @@
           </p>
         </div>
 
-        <q-card-section class="flex items-center gap-4 w-full justify-between">
+        <div class="flex items-center gap-2 w-full justify-between mt-4">
           <div
             class="text-secondary rounded-lg flex items-center gap-2 cursor-pointer"
             @click="dialog = false"
@@ -103,12 +105,12 @@
             label="Confirm"
             color="primary"
             unelevated
-            :disable="totalDays > 8"
+            :disable="totalDays > 8 || totalDays === 0"
             @click="setLeave(id)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
           />
-        </q-card-section>
+        </div>
       </q-card>
     </q-dialog>
   </div>
@@ -151,7 +153,7 @@ export default {
       reason: '',
       startLeave: '',
       endLeave: '',
-      totalDays: '',
+      totalDays: 0,
       typeLeave: 'Personal',
       typeLeaveOptions: ['Personal', 'Special'],
       special: false,
@@ -162,6 +164,8 @@ export default {
   },
   props: {
     id: String,
+    page: String,
+    text: String,
   },
   components: {
     Icon,
@@ -171,6 +175,7 @@ export default {
     openDialog(id) {
       this.dialog = true;
       this.getSpecialLeaveList(id);
+      console.log(this.page);
     },
     typeLeaveUpdate() {
       this.special = !this.special;
@@ -222,7 +227,9 @@ export default {
             this.dialog = false;
 
             setInterval(() => {
-              this.$router.push('/admin/list-leave?type=Ordinary');
+              if (this.page === 'dashboard') {
+                this.$router.push('/admin/list-leave?type=Ordinary');
+              }
               setInterval(() => {
                 window.location.reload();
               }, 1000);
@@ -252,7 +259,9 @@ export default {
             this.startLeave = '';
             this.dialog = false;
             setInterval(() => {
-              this.$router.push('/admin/list-leave?type=Special');
+              if (this.page === 'dashboard') {
+                this.$router.push('/admin/list-leave?type=Special');
+              }
               setInterval(() => {
                 window.location.reload();
               }, 1000);

@@ -98,6 +98,7 @@ export default {
           v-if="roleId !== '1'"
         />
         <AdminLinkBtn
+          v-if="roleId !== '2'"
           title="Role"
           link="/admin/role"
           icon="worker-outline"
