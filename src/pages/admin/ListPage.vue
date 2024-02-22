@@ -137,45 +137,55 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td
-        :props="props"
-        class="flex gap-1 justify-center items-center text-center w-custom"
-      >
-        <div
-          v-if="
-            ((props.row.status === 'REJECT' ||
-              props.row.status === 'WAITING') &&
-              props.row.typeOfLeave.name === 'Personal') ||
-            ((props.row.status === 'REJECT' ||
-              props.row.status === 'WAITING') &&
-              props.row.typeOfLeave.name === 'Special')
-          "
-        >
-          <Approve
-            :type="switchTable ? 'personal' : 'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
-        </div>
-        <div
-          v-if="
-            (props.row.status === 'APPROVE' ||
-              props.row.status === 'WAITING') &&
-            props.row.typeOfLeave.name !== 'Mandatory'
-          "
-        >
-          <Reject
-            v-if="props.row.typeOfLeave.name !== 'Optional'"
-            :type="switchTable ? 'personal' : 'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
-          <Reject
-            v-else
-            :type="switchTable ? 'optional' : 'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
-        </div>
-        <div v-if="props.row.note && props.row.status === 'REJECT'">
-          <NoteBtn :text="props.row.note" />
+      <q-td :props="props" class="flex-row h-[50px]">
+        <div class="flex gap-1 justify-center items-center text-center">
+          <div
+            v-if="
+              props.row.typeOfLeave.name === 'Mandatory' &&
+              props.row.status === 'APPROVE'
+            "
+          >
+            hi
+          </div>
+          <div
+            v-if="
+              ((props.row.status === 'REJECT' ||
+                props.row.status === 'WAITING') &&
+                props.row.typeOfLeave.name === 'Personal') ||
+              ((props.row.status === 'REJECT' ||
+                props.row.status === 'WAITING') &&
+                props.row.typeOfLeave.name === 'Special')
+            "
+          >
+            <Approve
+              :type="switchTable ? 'personal' : 'employee-special-leave'"
+              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+            />
+          </div>
+          <div
+            v-if="
+              (props.row.status === 'APPROVE' ||
+                props.row.status === 'WAITING') &&
+              props.row.typeOfLeave.name !== 'Mandatory'
+            "
+          >
+            <Reject
+              v-if="props.row.typeOfLeave.name !== 'Optional'"
+              :type="switchTable ? 'personal' : 'employee-special-leave'"
+              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+            />
+            <Reject
+              v-else
+              :type="switchTable ? 'optional' : 'employee-special-leave'"
+              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+            />
+          </div>
+          <div v-if="props.row.note && props.row.status === 'REJECT'">
+            <NoteBtn :text="props.row.note" />
+          </div>
+          <!-- <div v-if="props.row.status === 'APPROVE' && props.row">
+          <NoteBtn/>
+        </div> -->
         </div>
       </q-td>
     </template>
@@ -235,13 +245,6 @@ export default {
     const roleId = localStorage.getItem('role');
     const column = [
       {
-        name: 'id',
-        label: 'NIK',
-        align: 'center',
-        field: 'nik',
-        style: 'width: 80px;',
-      },
-      {
         name: 'name',
         label: 'Name',
         align: 'center',
@@ -298,13 +301,6 @@ export default {
 
     const column2 = [
       {
-        name: 'id',
-        label: 'NIK',
-        align: 'center',
-        field: 'nik',
-        style: 'width: 80px;',
-      },
-      {
         name: 'name',
         label: 'Name',
         align: 'center',
@@ -318,7 +314,7 @@ export default {
         label: 'Start Leave',
         align: 'center',
         field: 'start',
-        style: 'width: 250px;',
+        style: 'width: 100px;',
       },
       {
         name: 'end',
@@ -546,9 +542,7 @@ export default {
   margin: 10px 0 !important;
 }
 
-@media (max-width: 768px) {
-  .w-custom {
-    width: 100px;
-  }
+.w-custom {
+  width: 100px;
 }
 </style>
