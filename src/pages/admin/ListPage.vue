@@ -141,14 +141,6 @@
         <div class="flex gap-1 justify-center items-center text-center">
           <div
             v-if="
-              props.row.typeOfLeave.name === 'Mandatory' &&
-              props.row.status === 'APPROVE'
-            "
-          >
-            hi
-          </div>
-          <div
-            v-if="
               ((props.row.status === 'REJECT' ||
                 props.row.status === 'WAITING') &&
                 props.row.typeOfLeave.name === 'Personal') ||
@@ -180,12 +172,12 @@
               :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
             />
           </div>
-          <div v-if="props.row.note && props.row.status === 'REJECT'">
-            <NoteBtn :text="props.row.note" />
+          <div v-if="props.row.note != null && props.row.status === 'REJECT'">
+            <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
           </div>
-          <!-- <div v-if="props.row.status === 'APPROVE' && props.row">
-          <NoteBtn/>
-        </div> -->
+          <div v-if="props.row.status === 'APPROVE' && props.row.approveBy">
+            <NoteBtn :approveBy="props.row.approveBy" />
+          </div>
         </div>
       </q-td>
     </template>

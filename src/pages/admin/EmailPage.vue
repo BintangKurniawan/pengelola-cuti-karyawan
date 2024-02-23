@@ -63,6 +63,14 @@
         </div>
       </q-td>
     </template>
+    <template v-slot:body-cell-action="props">
+      <q-td
+        :props="props"
+        class="flex items-center gap-1 justify-center md:w-full w-[200px]"
+      >
+        <SendEmailBtn />
+      </q-td>
+    </template>
   </q-table>
   <div class="row justify-center mt-4" v-if="pagination.rowsNumber > 1">
     <q-pagination
@@ -82,6 +90,7 @@
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
+import SendEmailBtn from 'src/components/Set_Components/SendEmailBtn.vue';
 export default {
   setup() {
     const $q = useQuasar();
@@ -180,6 +189,7 @@ export default {
       return date.toLocaleDateString('en-UK', options);
     },
   },
+  components: { SendEmailBtn },
 };
 </script>
 

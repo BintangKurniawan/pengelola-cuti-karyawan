@@ -57,9 +57,15 @@
             class="w-fill rounded-3xl px-3 py-2"
             v-if="props.row.note && props.row.status === 'REJECT'"
           >
-            <NoteBtn :text="props.row.note" />
+            <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
           </div>
-          <div v-else>
+          <div
+            class="w-fill rounded-3xl px-3 py-2"
+            v-if="props.row.status === 'APPROVE'"
+          >
+            <NoteBtn :approveBy="props.row.approveBy" />
+          </div>
+          <div v-if="props.row.status === 'WAITING'">
             <p>Note not found</p>
           </div>
         </q-td>
@@ -136,7 +142,7 @@ export default {
       },
       {
         name: 'note',
-        label: 'Reject Note',
+        label: 'Note',
         align: 'center',
         field: 'note',
       },

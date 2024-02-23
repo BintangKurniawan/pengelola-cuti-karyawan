@@ -105,7 +105,7 @@
             label="Confirm"
             color="primary"
             unelevated
-            :disable="totalDays > 8 || totalDays === 0"
+            :disable="totalDays > 8 || (totalDays === 0 && !special)"
             @click="setLeave(id)"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"

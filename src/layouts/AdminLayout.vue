@@ -88,7 +88,7 @@ export default {
           v-if="roleId !== '1'"
           title="Email Organizer"
           link="/admin/email"
-          icon="email"
+          icon="email-outline"
           width="full"
         />
         <AdminLinkBtn

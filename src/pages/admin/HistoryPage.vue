@@ -1,4 +1,15 @@
 <template>
+  <q-btn
+    dense
+    flat
+    @click="$router.back()"
+    class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4 text-black self-start"
+  >
+    <div class="flex items-center gap-4">
+      <Icon icon="mdi:arrow-left-circle-outline" width="24" />
+      <p class="capitalize">Back</p>
+    </div>
+  </q-btn>
   <h1
     class="mx-4 md:text-3xl text-xl font-bold text-start"
     v-if="data && data.length > 0"
@@ -126,25 +137,16 @@
       </q-td>
     </template>
     <template v-slot:body-cell-note="props">
-      <q-td class="text-center" :props="props" v-if="props.row.note">
-        <div
-          class="w-fill rounded-3xl px-3 py-2"
-          v-if="props.row.note && props.row.status === 'REJECT'"
-        >
-          <q-btn color="primary" label="Note" class="rounded-xl capitalize">
-            <q-popup-proxy class="text-wrap">
-              <q-banner class="max-w-[300px] text-wrap">
-                <p class="max-w[300px] text-wrap">{{ props.row.note }}</p>
-              </q-banner>
-            </q-popup-proxy>
-          </q-btn>
+      <q-td class="text-center" :props="props">
+        <div v-if="props.row.note != null && props.row.status === 'REJECT'">
+          <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
         </div>
-        <div v-else>
+        <div v-if="props.row.status === 'APPROVE' && props.row.approveBy">
+          <NoteBtn :approveBy="props.row.approveBy" />
+        </div>
+        <div v-if="props.row.status === 'WAITING'">
           <p>Note not found</p>
         </div>
-      </q-td>
-      <q-td class="text-center" v-else>
-        <p>Note not found</p>
       </q-td>
     </template>
   </q-table>
@@ -168,7 +170,13 @@
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import { useRoute } from 'vue-router';
+import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
+import { Icon } from '@iconify/vue';
 export default {
+  components: {
+    NoteBtn,
+    Icon,
+  },
   setup() {
     const column = [
       {
@@ -213,7 +221,7 @@ export default {
       },
       {
         name: 'note',
-        label: 'Reject Note',
+        label: 'Note',
         align: 'center',
         field: 'note',
       },

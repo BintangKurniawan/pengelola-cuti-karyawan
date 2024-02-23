@@ -46,13 +46,13 @@
       </template>
       <template v-slot:body-cell-note="props">
         <q-td class="text-center" :props="props">
-          <div
-            class="w-fill rounded-3xl px-3 py-2"
-            v-if="props.row.note && props.row.status === 'REJECT'"
-          >
-            <NoteBtn :text="props.row.note" />
+          <div v-if="props.row.note != null && props.row.status === 'REJECT'">
+            <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
           </div>
-          <div v-else>
+          <div v-if="props.row.status === 'APPROVE' && props.row.approveBy">
+            <NoteBtn :approveBy="props.row.approveBy" />
+          </div>
+          <div v-if="props.row.status === 'WAITING'">
             <p>Note not found</p>
           </div>
         </q-td>
