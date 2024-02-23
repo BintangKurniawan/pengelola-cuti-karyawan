@@ -1,11 +1,11 @@
 <template>
-  <div class="flex items-center m-4 flex-nowrap justify-between">
+  <div class="flex flex-row items-center m-4 flex-nowrap justify-between">
     <div class="flex items-center gap-2">
       <div class="px-2 rounded-lg border-2 border-secondary">
         <q-input
           borderless
           dense
-          class="w-[160px]"
+          class="md:w-[160px] w-[100px]"
           v-model="search"
           debounce="700"
           clearable
@@ -23,7 +23,7 @@
           </template>
         </q-input>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex md:items-center gap-4 md:flex-row flex-col">
         <div class="flex items-center gap-1">
           <q-select
             class="rounded-lg w-[110px]"
@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div class="w-[60%] border-b-2 md:flex items-center justify-center gap-4">
+    <div class="w-[60%] border-b-2 flex items-center justify-center gap-4">
       <div
         class="cursor-pointer group relative transition-all"
         @click="toggleTable1"
@@ -444,7 +444,7 @@ export default {
     },
     // TO GETD ATA
     async getData(page) {
-      const perPage = window.innerWidth >= 768 ? 10 : 9;
+      const perPage = window.innerWidth >= 768 ? 10 : 7;
       this.load = true;
       await api
         .get(`/leave/all?page=${page}&perPage=${perPage}`, {
@@ -477,8 +477,10 @@ export default {
     },
 
     async getDataSpecial(page) {
+      const perPage = window.innerWidth >= 768 ? 10 : 7;
+
       await api
-        .get(`/leave/employee-special-leaves?page=${page}&perPage=10`, {
+        .get(`/leave/employee-special-leaves?page=${page}&perPage=${perPage}`, {
           params: {
             search: this.search,
             status: this.status,

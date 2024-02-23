@@ -3,7 +3,7 @@
 <template>
   <div
     @click="router.push(link)"
-    :class="`relative group transition-all md:w-${width} w-${width} flex items-center  cursor-pointer pb-1 md:justify-start ${
+    :class="`relative group transition-all md:w-${width} w-${width} flex items-center gap-1 cursor-pointer pb-1 md:justify-start ${
       $route.path === link ? 'text-primary' : ''
     }`"
   >

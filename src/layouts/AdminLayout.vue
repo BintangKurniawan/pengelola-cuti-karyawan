@@ -85,6 +85,13 @@ export default {
           width="full"
         />
         <AdminLinkBtn
+          v-if="roleId !== '1'"
+          title="Email Organizer"
+          link="/admin/email"
+          icon="email"
+          width="full"
+        />
+        <AdminLinkBtn
           title="List of Position"
           link="/admin/positions"
           icon="family-tree"

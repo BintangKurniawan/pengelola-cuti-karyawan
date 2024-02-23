@@ -41,6 +41,14 @@ const admin_routes = [
     },
   },
   {
+    path: '/admin/email',
+    component: () => import('pages/admin/EmailPage.vue'),
+    meta: {
+      title: 'Email',
+      protected: true,
+    },
+  },
+  {
     path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),
     meta: {

@@ -43,6 +43,7 @@
           </div>
           <div class="flex justify-around items-end gap-5 w-full">
             <q-toggle
+              v-if="role === 2"
               color="primary"
               v-model="emailNotif"
               label="Turn on email notification"
@@ -177,7 +178,6 @@ export default {
   },
   data() {
     const nik = localStorage.getItem('nik');
-
     return {
       dialog: ref(false),
       modal: ref(false),
@@ -306,15 +306,17 @@ export default {
           }
         });
 
-      await api
-        .get('/leave/receive-email', { withCredentials: true })
-        .then((res) => {
-          console.log(res);
-          this.emailNotif = res.data.data.receiveEmail;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      if (this.role === 2) {
+        await api
+          .get('/leave/receive-email', { withCredentials: true })
+          .then((res) => {
+            console.log(res);
+            this.emailNotif = res.data.data.receiveEmail;
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
     },
     async turnOnOffEmail() {
       await api

@@ -100,6 +100,9 @@ export default {
           this.dialog = false;
           this.rejectNotif();
           this.$emit('get-data');
+          setInterval(() => {
+            window.location.reload();
+          }, 1000);
         })
         .catch((err) => {
           console.error(err);
