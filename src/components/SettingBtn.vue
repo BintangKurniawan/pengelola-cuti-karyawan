@@ -33,29 +33,6 @@
               />
             </div>
 
-            <div class="flex flex-col items-start gap-1">
-              <p class="text-primary font-semibold">Password</p>
-              <q-input
-                v-model="password"
-                outlined
-                color="dark"
-                bg-color="white"
-                label="Password"
-                :type="showPw ? 'text' : 'password'"
-                for="password"
-                placeholder="Password"
-                class="w-44 drop-shadow-sm outline-none focus:bg-transparent active:bg-transparent"
-              >
-                <template v-slot:append>
-                  <Icon
-                    :icon="showPw ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
-                    @click="showPw = !showPw"
-                    class="cursor-pointer text-secondary"
-                  /> </template
-              ></q-input>
-            </div>
-          </div>
-          <div class="flex justify-around items-end gap-5 w-full">
             <q-btn
               label="Save Change"
               unelevated
@@ -63,18 +40,24 @@
               text-color="positive"
               class="font-bold round text-center capitalize px-4 py-2"
             />
-            <!-- <q-btn
-              @click="modal = true"
-              label="Change"
+          </div>
+          <div class="flex justify-around items-end gap-5 w-full">
+            <q-toggle
+              color="primary"
+              v-model="emailNotif"
+              label="Turn on email notification"
+              @update:model-value="turnOnOffEmail"
+            />
+            <q-btn
+              label="Change Password"
               unelevated
+              @click="changepw = true"
               color="primary"
               text-color="white"
-              class="font-bold round text-center capitalize px-4 py-2 w-[120px]"
-            /> -->
+              class="font-bold round text-center capitalize px-4 py-2"
+            />
           </div>
-          <q-card-section
-            class="flex items-center gap-4 w-full justify-between"
-          >
+          <div class="flex items-center gap-4 w-full justify-between">
             <div
               class="text-secondary rounded-lg flex items-center gap-2 cursor-pointer"
               @click="dialog = false"
@@ -82,7 +65,47 @@
               <Icon icon="mdi:arrow-collapse-left" size="24" />
               Back
             </div>
-          </q-card-section>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="changepw">
+      <q-card class="bg-white w-[30%]">
+        <q-card-section class="flex items-center gap-4 w-full justify-between">
+          <div class="flex flex-col items-start gap-1 w-full">
+            <p class="text-primary font-semibold">Password</p>
+
+            <q-input
+              v-model="password"
+              outlined
+              color="dark"
+              bg-color="white"
+              label="Password"
+              :type="showPw ? 'text' : 'password'"
+              for="password"
+              placeholder="Password"
+              class="w-full drop-shadow-sm outline-none focus:bg-transparent active:bg-transparent"
+            >
+              <template v-slot:append>
+                <Icon
+                  :icon="showPw ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
+                  @click="showPw = !showPw"
+                  class="cursor-pointer text-secondary"
+                /> </template
+            ></q-input>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <q-btn
+            @click="modal = true"
+            label="Change"
+            unelevated
+            color="primary"
+            :disable="password.length < 6"
+            text-color="white"
+            class="font-bold round text-center capitalize px-4 py-2 w-[120px]"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -107,13 +130,13 @@
             <Icon icon="mdi:arrow-collapse-left" size="24" />
             Back
           </div>
-          <!-- <q-btn
+          <q-btn
             label="Yes"
             @click="changePassword"
             unelevated
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
-          /> -->
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -158,6 +181,8 @@ export default {
     return {
       dialog: ref(false),
       modal: ref(false),
+      changepw: ref(false),
+      emailNotif: ref(),
       name: '',
       password: '',
       nik,
@@ -280,90 +305,95 @@ export default {
             document.location.reload();
           }
         });
+
+      await api
+        .get('/leave/receive-email', { withCredentials: true })
+        .then((res) => {
+          console.log(res);
+          this.emailNotif = res.data.data.receiveEmail;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
-    // VALIDATE PW
-    validatePw() {
-      if (this.password.length < 6) {
-        this.pwErr = 'Password must be 6 characters';
-        this.shadow = true;
-      } else {
-        this.pwErr = '';
-        this.shadow = false;
-      }
+    async turnOnOffEmail() {
+      await api
+        .patch('/leave/receive-email', {}, { withCredentials: true })
+        .then((res) => {
+          if (res.data.message) {
+            this.successNotif(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     // FOR CHANGE PASSWORD
-    // async changePassword() {
-
-    // },
+    async changePassword() {
+      await api
+        .post(
+          '/employee/change-password',
+          { newPassword: this.password },
+          { withCredentials: true }
+        )
+        .then((resp) => {
+          console.log(resp);
+          const msg = resp.data.message;
+          this.successNotif(msg);
+          this.dialog = false;
+          this.modal = false;
+          localStorage.setItem('firstLogin', 'false');
+          setInterval(() => {
+            window.location.reload();
+          }, 1500);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
     // FOR EDIT NAME
     async save() {
-      if (this.password) {
-        await api
-          .post(
-            '/employee/change-password',
-            { newPassword: this.password },
-            { withCredentials: true }
-          )
-          .then((resp) => {
-            console.log(resp);
-            const msg = resp.data.message;
-            this.successNotif(msg);
-            this.dialog = false;
-            this.modal = false;
-            localStorage.setItem('firstLogin', 'false');
-            setInterval(() => {
-              window.location.reload();
-            }, 1500);
-          })
-          .catch((err) => {
-            if (err.response) {
-              const msg = err.response.data.message;
-              this.failedNotif(msg);
-            }
-          });
-      } else {
-        await api
-          .put(
-            `/employee/update/${this.nik}`,
-            {
-              name: this.name,
-              positionId: this.positionId,
-              gender: this.gender,
-              typeOfEmployee: {
-                newContract: this.contract,
-                endContract: this.exp,
-                isContract: this.contractBoolean,
-              },
-              roleId: this.role,
+      await api
+        .put(
+          `/employee/update/${this.nik}`,
+          {
+            name: this.name,
+            positionId: this.positionId,
+            gender: this.gender,
+            typeOfEmployee: {
+              newContract: this.contract,
+              endContract: this.exp,
+              isContract: this.contractBoolean,
             },
-            {
-              withCredentials: true,
-              headers: {
-                Accept: '*/*',
-                'Content-Type': 'application/json',
-              },
-            }
-          )
-          .then((resp) => {
-            console.log(resp);
-            const msg = resp.data.message;
-            this.successNotif(msg);
-            this.getData();
-            setInterval(() => {
-              document.location.reload();
-            }, 1500);
-          })
-          .catch((err) => {
-            if (err.response) {
-              const msg = err.response.data.message;
-              this.failedNotif(msg);
-            }
-          });
-      }
+            roleId: this.role,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((resp) => {
+          console.log(resp);
+          const msg = resp.data.message;
+          this.successNotif(msg);
+          this.getData();
+          setInterval(() => {
+            document.location.reload();
+          }, 1500);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
     },
-  },
-  watch: {
-    password: 'validatePw',
   },
 };
 </script>
