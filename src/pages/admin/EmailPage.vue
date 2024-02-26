@@ -68,7 +68,13 @@
         :props="props"
         class="flex items-center gap-1 justify-center md:w-full w-[200px]"
       >
-        <SendEmailBtn />
+        <SendEmailBtn
+          :id="props.row.id"
+          :type="props.row.name"
+          v-if="props.row.emailSent === false"
+          @get-data="getData()"
+        />
+        <p v-else>Email has been sent</p>
       </q-td>
     </template>
   </q-table>

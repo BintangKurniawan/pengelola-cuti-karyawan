@@ -6,7 +6,7 @@ import Setting from 'src/components/SettingBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
-import SetLeaveBtn from 'src/components/Set_Components/SetLeaveBtn.vue';
+import ApplyLeaveBtn from 'src/components/Set_Components/ApplyLeaveBtn.vue';
 export default {
   setup() {
     const role = localStorage.getItem('role');
@@ -95,7 +95,7 @@ export default {
     Logout,
     Setting,
     AdminLinkBtn,
-    SetLeaveBtn,
+    ApplyLeaveBtn,
   },
 };
 </script>
@@ -256,7 +256,7 @@ export default {
         <router-view />
       </div>
       <q-page-sticky :offset="[18, 18]">
-        <SetLeaveBtn text="Apply" page="user" />
+        <ApplyLeaveBtn />
       </q-page-sticky>
     </q-page-container>
 

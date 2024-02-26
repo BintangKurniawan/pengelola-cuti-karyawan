@@ -195,7 +195,7 @@ export default {
     async getData(page: number | undefined) {
       const perPage = window.innerWidth >= 768 ? 8 : 5;
       await api
-        .get(`/leave/history/me?page=${page}&perPage=${perPage}`, {
+        .get(`/leave/history/self?page=${page}&perPage=${perPage}`, {
           withCredentials: true,
         })
         .then((res) => {

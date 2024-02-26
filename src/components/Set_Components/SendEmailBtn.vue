@@ -33,8 +33,9 @@
           </div>
 
           <q-btn
-            label="Delete"
+            label="Send"
             unelevated
+            @click="sendEmail(type, id)"
             color="primary"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -56,7 +57,7 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      deleteNotif(msg) {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
@@ -83,17 +84,20 @@ export default {
   },
   props: {
     id: String,
+    type: String,
   },
   components: {
     Icon,
   },
   methods: {
     // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
-    remove(id) {
+    sendEmail(type, id) {
       api
-        .post(`/employee/disable/${id}`, { withCredentials: true })
+        .post(`/leave/send-leave-email/${type}/${id}`, {
+          withCredentials: true,
+        })
         .then((resp) => {
-          this.deleteNotif(resp.data.message);
+          this.successNotif(resp.data.message);
           this.dialog = false;
 
           this.$emit('get-data');
@@ -104,9 +108,6 @@ export default {
             this.failedNotif(msg);
           }
         });
-    },
-    acc(id) {
-      console.log(id);
     },
   },
 };
