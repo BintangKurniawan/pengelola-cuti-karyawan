@@ -34,6 +34,7 @@
 
           <q-btn
             label="Send"
+            :loading="load"
             unelevated
             @click="sendEmail(type, id)"
             color="primary"
@@ -51,12 +52,27 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
+import { onBeforeUnmount } from 'vue';
 export default {
   emits: ['get-data'],
 
   setup() {
     const $q = useQuasar();
+    let timer;
+    onBeforeUnmount(() => {
+      if (timer !== void 0) {
+        clearTimeout(timer);
+        $q.loading.hide();
+      }
+    });
     return {
+      showLoading() {
+        $q.loading.show();
+        timer = setTimeout(() => {
+          $q.loading.hide();
+          timer = void 0;
+        }, 1500);
+      },
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -80,6 +96,7 @@ export default {
   data() {
     return {
       dialog: ref(false),
+      load: false,
     };
   },
   props: {
@@ -92,6 +109,8 @@ export default {
   methods: {
     // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
     sendEmail(type, id) {
+      this.showLoading();
+      this.load = true;
       api
         .post(`/leave/send-leave-email/${type}/${id}`, {
           withCredentials: true,

@@ -27,6 +27,7 @@
           <q-btn
             label="Accept"
             unelevated
+            :loading="loading"
             @click="approve(type, id)"
             text-color="positive"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -38,14 +39,28 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
+    let timer;
+    onBeforeUnmount(() => {
+      if (timer !== void 0) {
+        clearTimeout(timer);
+        $q.loading.hide();
+      }
+    });
     return {
+      showLoading() {
+        $q.loading.show();
+        timer = setTimeout(() => {
+          $q.loading.hide();
+          timer = void 0;
+        }, 1500);
+      },
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -69,6 +84,7 @@ export default {
   data() {
     return {
       dialog: ref(false),
+      loading: ref(false),
     };
   },
 
@@ -82,6 +98,8 @@ export default {
   methods: {
     // TO APPROVE LEAVE IN LIST PAGE
     async approve(type, id) {
+      this.showLoading();
+      this.loading = true;
       await api
         .patch(`/leave/${type}/${id}/approve`, {}, { withCredentials: true })
         .then((resp) => {

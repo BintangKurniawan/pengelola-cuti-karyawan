@@ -39,6 +39,7 @@
           <q-btn
             label="Reject"
             unelevated
+            :loading="load"
             @click="reject(type.toLowerCase(), id)"
             text-color="negative"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -50,14 +51,28 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
+    let timer;
+    onBeforeUnmount(() => {
+      if (timer !== void 0) {
+        clearTimeout(timer);
+        $q.loading.hide();
+      }
+    });
     return {
+      showLoading() {
+        $q.loading.show();
+        timer = setTimeout(() => {
+          $q.loading.hide();
+          timer = void 0;
+        }, 1500);
+      },
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -82,6 +97,7 @@ export default {
     return {
       dialog: ref(false),
       note: '',
+      load: false,
     };
   },
 
@@ -100,6 +116,8 @@ export default {
 
     // TO REJECT LEAVE IN LISTPAGE
     async reject(type, id) {
+      this.showLoading();
+      this.load = true;
       await api
         .patch(
           `/leave/${type}/${id}/reject`,
