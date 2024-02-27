@@ -68,7 +68,12 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('role');
     const color = localStorage.getItem('color');
-    setCssVar('primary', color);
+    // if(to.path !== '/login') {
+
+    // }
+    if (color) {
+      setCssVar('primary', color);
+    }
     if (!role && to.path != '/login') {
       next('/login');
     } else if (role === '3' && to.path.includes('/admin')) {

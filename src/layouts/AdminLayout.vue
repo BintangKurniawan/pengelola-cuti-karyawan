@@ -113,6 +113,12 @@ export default {
           icon="worker-outline"
           width="full"
         />
+        <AdminLinkBtn
+          title="Web Setting"
+          link="/admin/settings"
+          icon="web"
+          width="full"
+        />
       </div>
 
       <div class="">

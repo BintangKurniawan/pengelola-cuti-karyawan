@@ -49,6 +49,14 @@ const admin_routes = [
     },
   },
   {
+    path: '/admin/settings',
+    component: () => import('pages/admin/SettingPage.vue'),
+    meta: {
+      title: 'Setting',
+      protected: true,
+    },
+  },
+  {
     path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),
     meta: {
