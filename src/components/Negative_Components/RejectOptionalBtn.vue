@@ -44,6 +44,7 @@
             label="Reject"
             @click="reject(id)"
             unelevated
+            :disable="isTomorrow(date)"
             text-color="negative"
             class="font-bold round text-center capitalize px-10 py-2"
           />
@@ -72,6 +73,15 @@ export default {
           multiLine: true,
         });
       },
+      errorNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
     };
   },
   data() {
@@ -82,9 +92,14 @@ export default {
   },
   props: {
     id: Number,
+    date: String,
   },
   components: {
     Icon,
+  },
+  mounted() {
+    console.log(this.isTomorrow());
+    console.log(this.date);
   },
   methods: {
     // TO REJECT OPTIONAL LEAVE
@@ -106,9 +121,24 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          if (err.response.data.message) {
+            this.errorNotif(err.response.data.message);
+          }
         });
     },
+    isTomorrow(date) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() - 1);
+      const givenDate = new Date(date);
+
+      // Assuming you have id and other relevant data defined in your component
+      // Replace with appropriate logic to access the date relevant to your context
+
+      // Compare the dates
+      return tomorrow.getDate() === givenDate.getDate();
+    },
   },
+  computed: {},
 };
 </script>
 

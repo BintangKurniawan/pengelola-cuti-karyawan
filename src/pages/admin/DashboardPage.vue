@@ -184,7 +184,11 @@
           class=""
           @click="goToDetail(props.row.nik)"
         >
-          <Icon icon="mdi:information-outline" width="24" class="text-info" />
+          <Icon
+            icon="mdi:information-outline"
+            width="24"
+            class="text-primary"
+          />
         </q-btn>
         <q-btn
           v-if="roleId !== '1'"

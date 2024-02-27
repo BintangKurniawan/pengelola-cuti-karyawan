@@ -14,7 +14,11 @@
           <p class="px-4 text-xs">
             {{ formatDate(data.startLeave) }} - {{ formatDate(data.endLeave) }}
           </p>
-          <RejcBtn :id="data.leaveEmployeeId" @get-data="handleChildEvent" />
+          <RejcBtn
+            :id="data.leaveEmployeeId"
+            @get-data="handleChildEvent"
+            :date="data.startLeave"
+          />
         </div>
       </q-expansion-item>
     </div>
