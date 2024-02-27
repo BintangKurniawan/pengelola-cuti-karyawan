@@ -1,7 +1,7 @@
 <template>
   <q-btn
-    color="primary"
     text-color="white"
+    color="primary"
     class="capitalize rounded-3xl"
     @click="openDialog(id)"
   >
@@ -18,21 +18,24 @@
 
         <div class="flex justify-between items-end gap-2 w-full">
           <div class="flex flex-col items-start gap-2 w-full">
-            <p class="text-primary font-semibold">Type</p>
+            <p class="font-semibold" :style="{ color: color }">Type</p>
             <q-select
               outlined
               class="w-full"
-              label-color="Primary"
               v-model="typeLeave"
               :options="typeLeaveOptions"
               @update:model-value="typeLeaveUpdate"
               label="Type Leave"
+              color="primary"
+              :style="{ color: color }"
             >
             </q-select>
           </div>
 
           <div class="flex flex-col items-start gap-2 w-full" v-if="special">
-            <p class="text-primary font-semibold">Special Leave List</p>
+            <p class="font-semibold" :style="{ color: color }">
+              Special Leave List
+            </p>
             <q-select
               outlined
               class="w-full"
@@ -47,7 +50,7 @@
           </div>
 
           <div class="flex flex-col items-start gap-2 w-full" v-if="!special">
-            <p class="text-primary font-semibold">Reason</p>
+            <p class="font-semibold" :style="{ color: color }">Reason</p>
             <q-input
               v-model="reason"
               outlined
@@ -60,7 +63,7 @@
           </div>
 
           <div class="flex flex-col items-start gap-2 w-full">
-            <p class="text-primary font-semibold">Start Leave</p>
+            <p class="font-semibold" :style="{ color: color }">Start Leave</p>
             <q-input
               outlined
               for="date"
@@ -73,7 +76,7 @@
           </div>
 
           <div class="flex flex-col items-start gap-2 w-full" v-if="!special">
-            <p class="text-primary font-semibold">End Leave</p>
+            <p class="font-semibold" :style="{ color: color }">End Leave</p>
             <q-input
               outlined
               for="date"
@@ -101,9 +104,9 @@
           </div>
           <q-btn
             label="Confirm"
-            color="primary"
             unelevated
-            :disable="totalDays > 8 || (totalDays === 0 && !special)"
+            :style="{ backgroundColor: color }"
+            :disable="totalDays > 8 || totalDays === 0"
             @click="setLeave()"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -118,10 +121,12 @@
 import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
-import { useQuasar } from 'quasar';
+import { setCssVar, useQuasar } from 'quasar';
+import { useColorStore } from 'src/stores/colorStore';
 export default {
   setup() {
     const $q = useQuasar();
+    const store = useColorStore();
     let timer;
     onBeforeUnmount(() => {
       if (timer !== void 0) {
@@ -130,6 +135,8 @@ export default {
       }
     });
     return {
+      store,
+      color: '',
       showLoading() {
         $q.loading.show();
         timer = setTimeout(() => {
@@ -182,7 +189,12 @@ export default {
   components: {
     Icon,
   },
-
+  mounted() {
+    const clr = localStorage.getItem('color');
+    this.color = clr;
+    setCssVar('primary', this.color);
+    console.log(this.color);
+  },
   methods: {
     openDialog(id) {
       this.dialog = true;

@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col overflow-x-scroll w-full hide-scroll">
+    <p>{{ color }}</p>
     <q-table
       v-if="data && data.length > 0"
       class="my-table table-rounded"
@@ -93,11 +94,15 @@ import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
+import { useColorStore } from 'src/stores/colorStore';
 export default {
   components: {
     NoteBtn,
   },
   setup() {
+    const store = useColorStore();
+
+    // const color = store.primaryColor;
     const column = [
       {
         name: 'status',
@@ -149,6 +154,8 @@ export default {
     ];
     const $q = useQuasar();
     return {
+      store,
+      color: '',
       column,
       current: ref(1),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -189,6 +196,9 @@ export default {
   },
   mounted() {
     this.getData(this.pagination.page);
+    const color = localStorage.getItem('color');
+    this.store.setColor(color);
+    this.color = this.store.primaryColor;
   },
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -66,6 +66,7 @@ import { colors, getCssVar, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { onBeforeUnmount } from 'vue';
 import { setCssVar } from 'quasar';
+import { useColorStore } from 'src/stores/colorStore';
 export default {
   components: {
     Icon,
@@ -73,6 +74,7 @@ export default {
   setup() {
     // FOR LOADING
     const $q = useQuasar();
+    const store = useColorStore();
     const route = useRouter();
     setCssVar('primary', `${localStorage.getItem('color')}`);
     let timer: string | number | NodeJS.Timeout | undefined;
@@ -83,6 +85,7 @@ export default {
       }
     });
     return {
+      store,
       route,
       showLoading() {
         $q.loading.show();
@@ -146,10 +149,12 @@ export default {
           this.color = setting.webColorCode;
           console.log(this.color);
           localStorage.setItem('color', this.color);
-
+          localStorage.setItem('logo', this.img);
           setCssVar('--q-primary', `${this.color}`);
           setCssVar('primary', this.color);
           console.log(setting);
+
+          this.store.setColor(this.color);
           // setTimeout(() => {
           // }, 2000);
           this.isFetched = true;

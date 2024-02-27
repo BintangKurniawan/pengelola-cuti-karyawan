@@ -102,6 +102,8 @@ export default {
             localStorage.removeItem('token');
             localStorage.removeItem('position');
             localStorage.removeItem('userData');
+            localStorage.removeItem('color');
+            localStorage.removeItem('logo');
             const msg = resp.data.message;
             this.successNotif(msg);
             this.$router.push('/login');

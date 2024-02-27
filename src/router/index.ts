@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import { setCssVar } from 'quasar';
 
 /*
  * If not building with SSR mode, you can
@@ -66,7 +67,8 @@ export default route(function (/* { store, ssrContext } */) {
   // FOR PROTECT ROUTE
   Router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('role');
-
+    const color = localStorage.getItem('color');
+    setCssVar('primary', color);
     if (!role && to.path != '/login') {
       next('/login');
     } else if (role === '3' && to.path.includes('/admin')) {

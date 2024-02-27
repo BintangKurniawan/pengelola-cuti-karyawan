@@ -10,7 +10,9 @@ export default {
     const page = window.innerWidth >= 1280 ? true : false;
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
+    const img = localStorage.getItem('logo');
     return {
+      img,
       roleId,
       route: useRoute(),
       router: useRouter(),
@@ -35,7 +37,7 @@ export default {
     <q-header reveal class="bg-white text-black" bordered>
       <q-toolbar class="flex items-center justify-between">
         <q-img
-          src="../assets/img/logo_wgs_fullBlack.svg"
+          :src="img"
           loading="lazy"
           alt="wgs"
           class="w-[130px] h-[29px]"

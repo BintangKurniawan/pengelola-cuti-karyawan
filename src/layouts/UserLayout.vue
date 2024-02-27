@@ -7,14 +7,41 @@ import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 import ApplyLeaveBtn from 'src/components/Set_Components/ApplyLeaveBtn.vue';
+import { useColorStore } from 'src/stores/colorStore';
 export default {
   setup() {
     const role = localStorage.getItem('role');
     const $q = useQuasar();
     const nik = localStorage.getItem('nik');
+    const store = useColorStore();
+    const link = [
+      {
+        title: 'History',
+        link: '/',
+      },
+      {
+        title: 'Special',
+        link: '/special',
+      },
+      {
+        title: 'Mandatory',
+        link: '/mandatory',
+      },
+      {
+        title: 'Optional',
+        link: '/optional',
+      },
+    ];
+
+    const img = localStorage.getItem('logo');
+
     return {
+      link,
       nik,
+      store,
+      color: '',
       role,
+      img,
       route: useRoute(),
       router: useRouter(),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,6 +79,11 @@ export default {
   },
   mounted() {
     this.getData();
+
+    const color = localStorage.getItem('color');
+    this.store.setColor(color);
+    this.color = this.store.primaryColor;
+    console.log(this.color);
   },
   methods: {
     showNav() {
@@ -104,10 +136,7 @@ export default {
   <q-layout view="lHh lpR fFf">
     <q-header reveal class="bg-white text-black">
       <q-toolbar class="flex justify-between p-4 items-center">
-        <q-img
-          src="../assets/img/logo_wgs_fullBlack.svg"
-          class="w-[130px] h-[29px]"
-        />
+        <q-img :src="img" class="w-[130px] h-[29px]" />
 
         <div class="md:hidden">
           <q-btn dense flat class="" @click="showNav">
@@ -198,59 +227,23 @@ export default {
         <div
           class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
         >
-          <div
-            class="group relative transition-all"
-            :class="{ 'text-primary font-semibold': $route.path === '/' }"
-          >
-            <span
-              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
-              :class="{ 'w-full': $route.path === '/' }"
+          <div v-for="item in link" :key="item.link">
+            <div
+              class="group relative transition-all"
+              :class="`${
+                $route.path === item.link ? `text-[${color}] font-semibold` : ''
+              }`"
+              :style="{ color: $route.path === item.link ? color : '' }"
             >
-              &nbsp;
-            </span>
-            <a href="/">History</a>
-          </div>
-          <div
-            class="group relative transition-all"
-            :class="{
-              'text-primary font-semibold': $route.path === '/special',
-            }"
-          >
-            <span
-              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
-              :class="{ 'w-full': $route.path === '/special' }"
-            >
-              &nbsp;
-            </span>
-            <a href="/special">Special</a>
-          </div>
-          <div
-            class="group relative transition-all"
-            :class="{
-              'text-primary font-semibold': $route.path === '/mandatory',
-            }"
-          >
-            <span
-              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
-              :class="{ 'w-full': $route.path === '/mandatory' }"
-            >
-              &nbsp;
-            </span>
-            <a href="/mandatory">Mandatory</a>
-          </div>
-          <div
-            class="group relative transition-all"
-            :class="{
-              'text-primary font-semibold': $route.path === '/optional',
-            }"
-          >
-            <span
-              class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
-              :class="{ 'w-full': $route.path === '/optional' }"
-            >
-              &nbsp;
-            </span>
-            <a href="/optional">Optional</a>
+              <span
+                class="h-[2px] inline-block absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+                :class="{ 'w-full': $route.path === item.link }"
+                :style="{ backgroundColor: color }"
+              >
+                &nbsp;
+              </span>
+              <a :href="item.link">{{ item.title }}</a>
+            </div>
           </div>
         </div>
         <router-view />
