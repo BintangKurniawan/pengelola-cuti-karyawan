@@ -115,15 +115,28 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
-
+    let timer;
+    onBeforeUnmount(() => {
+      if (timer !== void 0) {
+        clearTimeout(timer);
+        $q.loading.hide();
+      }
+    });
     return {
+      showLoading() {
+        $q.loading.show();
+        timer = setTimeout(() => {
+          $q.loading.hide();
+          timer = void 0;
+        }, 1500);
+      },
       successNotif() {
         $q.notify({
           progress: true,
@@ -203,9 +216,10 @@ export default {
     },
 
     // TO SET PERSONAL LEAVEE
-    async setLeave() {
+    setLeave() {
+      this.showLoading();
       if (!this.special) {
-        await api
+        api
           .post(
             '/leave/personal/self',
             {
@@ -236,9 +250,9 @@ export default {
             }
           });
       } else {
-        await api
+        api
           .post(
-            '/leave/employee-special-leave/me',
+            '/leave/employee-special-leave/self',
             {
               specialLeaveId: this.specialLeaveSelected,
               startLeave: this.startLeave,

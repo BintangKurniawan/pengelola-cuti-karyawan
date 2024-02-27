@@ -1,9 +1,6 @@
 <template>
   <q-page class="flex justify-center gap-16 flex-col items-center text-center">
-    <q-img
-      src="../../assets/img/logo_wgs_fullBlack.svg"
-      class="w-[276px] h-[62px]"
-    />
+    <q-img :src="img" class="w-[276px] h-auto" fetchpriority="low" />
 
     <div class="flex flex-col gap-8 items-center">
       <q-input
@@ -43,6 +40,7 @@
       ></q-input>
 
       <q-btn
+        v-if="isFetched"
         id="login"
         text-color="white"
         unelevated
@@ -50,10 +48,10 @@
         rounded
         @click="login"
         padding="sm"
-        color="primary"
         label="login"
         :loading="loading"
         class="px-[88px] py-4 w-60 text-2xl items-center text-bold"
+        :style="{ backgroundColor: isFetched ? color : 'initial' }"
       >
       </q-btn>
     </div>
@@ -64,9 +62,10 @@
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
+import { colors, getCssVar, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { onBeforeUnmount } from 'vue';
+import { setCssVar } from 'quasar';
 export default {
   components: {
     Icon,
@@ -75,6 +74,7 @@ export default {
     // FOR LOADING
     const $q = useQuasar();
     const route = useRouter();
+    setCssVar('primary', `${localStorage.getItem('color')}`);
     let timer: string | number | NodeJS.Timeout | undefined;
     onBeforeUnmount(() => {
       if (timer !== void 0) {
@@ -101,7 +101,7 @@ export default {
         });
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-      failedNotif(msg: any) {
+      failedNotif(msg: any, color: any) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
@@ -115,15 +115,49 @@ export default {
     };
   },
   data() {
+    const bgColor = localStorage.getItem('bgcolor');
+
     return {
+      bgColor,
       email: '',
       password: '',
       passwordFieldType: 'password',
       response: [],
       role: '',
+      img: '',
+      color: '',
+
+      isFetched: false,
     };
   },
+  mounted() {
+    this.getSetting();
+    console.log(getCssVar('--q-primary'));
+    setCssVar('primary', `${localStorage.getItem('color')}`);
+  },
   methods: {
+    async getSetting() {
+      await api
+        .get('/webSetting', { withCredentials: true })
+        .then((res) => {
+          const setting = res.data.data[0];
+
+          this.img = setting.picture;
+          this.color = setting.webColorCode;
+          console.log(this.color);
+          localStorage.setItem('color', this.color);
+
+          setCssVar('--q-primary', `${this.color}`);
+          setCssVar('primary', this.color);
+          console.log(setting);
+          // setTimeout(() => {
+          // }, 2000);
+          this.isFetched = true;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     // TO GET POSITION AND SAVE IT TO LOCALSTORAGE. IDK WILL I USE THIS AGAIN OR NO
     getPosition() {
       api
@@ -194,7 +228,7 @@ export default {
         .catch((error) => {
           if (error.response) {
             const msg = error.response.data.message;
-            this.failedNotif(msg);
+            this.failedNotif(msg, this.color);
           }
         });
 
@@ -203,3 +237,5 @@ export default {
   },
 };
 </script>
+
+<style></style>
