@@ -1,28 +1,54 @@
 <template>
-  <div class="m-4">
-    <div class="flex items-start gap-4">
-      <q-color v-model="hex" no-header-tabs class="my-picker" flat />
-      <q-btn
-        label="Save"
-        class="capitalize"
-        color="primary"
-        @click="saveColor"
-      />
+  <div class="m-4 flex flex-col justify-center items-center">
+    <div>
+      <div class="text-2xl text-start border-b-2 border-primary w-fit">
+        Color option
+      </div>
+      <div class="flex items-start gap-4 p-4">
+        <q-color
+          v-model="hex"
+          no-header-tabs
+          no-footer
+          class="my-picker w-[276px]"
+          flat
+        />
+        <q-btn
+          label="Save"
+          class="capitalize"
+          color="primary"
+          @click="saveColor"
+        />
+      </div>
     </div>
 
-    <q-file
-      v-model="img"
-      accept="image/*"
-      max-files="1"
-      label="CLick to Upload"
-      type="file"
-      filled
-      @update:model-value="handleUpload()"
-      class="w-[300px]"
-    />
-    <q-img :src="imgURL" class="w-[276px] h-auto" />
-
-    <q-btn label="Save" class="capitalize" color="primary" @click="saveImg" />
+    <div>
+      <div class="text-2xl text-start border-b-2 border-primary w-fit">
+        Logo
+      </div>
+      <div class="flex flex-row gap-4 p-4">
+        <div class="flex items-center flex-col justify-center">
+          <q-file
+            v-model="img"
+            accept="image/*"
+            max-files="1"
+            label="Click to Upload"
+            type="file"
+            filled
+            @update:model-value="handleUpload()"
+            class="w-[276px]"
+          />
+          <q-img :src="imgURL" class="w-[276px] h-auto" />
+        </div>
+        <div>
+          <q-btn
+            label="Save"
+            class="capitalize"
+            color="primary"
+            @click="saveImg"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,6 +80,7 @@ export default {
 
           this.hex = setting.webColorCode;
           this.imgURL = setting.picture;
+          localStorage.setItem('logo', setting.picture);
         })
         .catch((err) => {
           console.error(err);

@@ -1,6 +1,11 @@
 <template>
   <q-page class="flex justify-center gap-16 flex-col items-center text-center">
-    <q-img :src="img" class="w-[276px] h-auto" fetchpriority="low" />
+    <q-img :src="img" class="w-[276px] h-auto" fetchpriority="low" v-if="img" />
+    <q-img
+      v-else
+      src="../../assets/img/logo_vimarcha.png"
+      class="w-[276px] h-auto"
+    />
 
     <div class="flex flex-col gap-8 items-center">
       <q-input
@@ -67,6 +72,9 @@ import { useRouter } from 'vue-router';
 import { onBeforeUnmount } from 'vue';
 import { setCssVar } from 'quasar';
 import { useColorStore } from 'src/stores/colorStore';
+import { publicIpv4 } from 'public-ip';
+import os from 'os';
+import { networkInterfaces } from 'os';
 export default {
   components: {
     Icon,
@@ -84,6 +92,25 @@ export default {
         $q.loading.hide();
       }
     });
+
+    const nwIf = networkInterfaces;
+    let ipAddress;
+
+    for (const interfaceKey in nwIf) {
+      const networkInterface = nwIf[interfaceKey];
+      for (let i = 0; i < networkInterface.length; i++) {
+        const iface = networkInterface[i];
+        if (!iface.internal && iface.family === 'IPv4') {
+          ipAddress = iface.address;
+          break;
+        }
+      }
+      if (ipAddress) {
+        break;
+      }
+    }
+    console.log(ipAddress);
+
     return {
       store,
       route,
@@ -135,10 +162,15 @@ export default {
   },
   mounted() {
     this.getSetting();
-    console.log(getCssVar('--q-primary'));
+    // console.log(getCssVar('--q-primary'));
     setCssVar('primary', `${localStorage.getItem('color')}`);
+    this.kknjt();
+    console.log(location.host);
   },
   methods: {
+    async kknjt() {
+      console.log(await publicIpv4());
+    },
     async getSetting() {
       await api
         .get('/webSetting', { withCredentials: true })

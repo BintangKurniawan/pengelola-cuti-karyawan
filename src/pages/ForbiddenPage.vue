@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center flex-col justify-center gap-6 text-center">
     <q-img
-      src="src/assets/img/forbidden.svg"
+      src="../assets/img/forbidden.svg"
       alt="forbidden"
       class="w-96 h-72 md:w-[700px] md:h-auto"
       ratio=""

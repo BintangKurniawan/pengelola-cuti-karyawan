@@ -49,10 +49,10 @@ const admin_routes = [
     },
   },
   {
-    path: '/admin/settings',
-    component: () => import('pages/admin/SettingPage.vue'),
+    path: '/admin/config',
+    component: () => import('pages/admin/ConfigurationPage.vue'),
     meta: {
-      title: 'Setting',
+      title: 'Configuration',
       protected: true,
     },
   },

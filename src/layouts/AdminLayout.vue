@@ -33,16 +33,10 @@ export default {
 </script>
 
 <template>
-  <q-layout view="hHr lpr lFr">
+  <q-layout view="hHh Lpr lFf">
     <q-header reveal class="bg-white text-black" bordered>
       <q-toolbar class="flex items-center justify-between">
-        <q-img
-          :src="img"
-          loading="lazy"
-          alt="wgs"
-          class="w-[130px] h-[29px]"
-          fetchpriority="low"
-        />
+        <q-img :src="img" class="w-[130px] h-[29px]" ratio="16/9" />
         <div class="lg:hidden">
           <q-btn dense flat class="" @click="leftDrawerOpen = !leftDrawerOpen">
             <Icon icon="mdi:menu" width="24" />
@@ -114,8 +108,8 @@ export default {
           width="full"
         />
         <AdminLinkBtn
-          title="Web Setting"
-          link="/admin/settings"
+          title="Configuration"
+          link="/admin/config"
           icon="web"
           width="full"
         />
