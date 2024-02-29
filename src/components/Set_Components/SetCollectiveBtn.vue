@@ -176,7 +176,10 @@ export default {
           console.log(resp);
           this.successNotif(resp.data.message);
           setInterval(() => {
-            window.location.reload();
+            this.$router.push('/admin/email');
+            setInterval(() => {
+              window.location.reload();
+            }, 1000);
           }, 1500);
         })
         .catch((err) => {

@@ -150,6 +150,7 @@
             "
           >
             <Approve
+              v-if="permissions.includes('Approve and Reject Personal Leave')"
               :type="switchTable ? 'personal' : 'employee-special-leave'"
               :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
             />
@@ -161,16 +162,23 @@
               props.row.typeOfLeave.name !== 'Mandatory'
             "
           >
-            <Reject
-              v-if="props.row.typeOfLeave.name !== 'Optional'"
-              :type="switchTable ? 'personal' : 'employee-special-leave'"
-              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-            />
-            <Reject
-              v-else
-              :type="switchTable ? 'optional' : 'employee-special-leave'"
-              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-            />
+            <div
+              v-if="permissions.includes('Approve and Reject Personal Leave')"
+            >
+              <Reject
+                v-if="props.row.typeOfLeave.name !== 'Optional'"
+                :type="switchTable ? 'personal' : 'employee-special-leave'"
+                :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+              />
+            </div>
+            <div
+              v-if="permissions.includes('Approve and Reject Special Leave')"
+            >
+              <Reject
+                :type="'employee-special-leave'"
+                :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+              />
+            </div>
           </div>
           <div v-if="props.row.note != null && props.row.status === 'REJECT'">
             <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
@@ -340,7 +348,10 @@ export default {
         field: 'action',
       },
     ];
+
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       roleId,
       column,
       column2,

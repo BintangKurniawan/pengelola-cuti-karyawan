@@ -60,28 +60,24 @@ export default {
       class="p-5 flex flex-col justify-between"
     >
       <div class="flex flex-col md:items-start gap-4">
-        <AdminLinkBtn
-          title="Home"
-          link="/"
-          icon="home"
-          width="full"
-          v-if="roleId !== '1'"
-        />
+        <!-- tambahin v if lagi di sini -->
+        <AdminLinkBtn title="Home" link="/" icon="home" width="full" />
+        <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
           title="Dashboard"
           link="/admin/dashboard"
           icon="view-dashboard-outline"
           width="full"
         />
+        <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
-          v-if="roleId !== '1'"
           title="List of Leave"
           link="/admin/list-leave"
           icon="list-status"
           width="full"
         />
+        <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
-          v-if="roleId !== '1'"
           title="Email Organizer"
           link="/admin/email"
           icon="email-outline"
@@ -93,15 +89,15 @@ export default {
           icon="family-tree"
           width="full"
         />
+        <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
           title="Special Leave"
           link="/admin/special-leave"
           icon="list-box-outline"
           width="full"
-          v-if="roleId !== '1'"
         />
+        <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
-          v-if="roleId !== '2'"
           title="Role"
           link="/admin/role"
           icon="worker-outline"
