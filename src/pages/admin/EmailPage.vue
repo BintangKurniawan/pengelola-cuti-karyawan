@@ -71,7 +71,10 @@
         <SendEmailBtn
           :id="props.row.id"
           :type="props.row.name"
-          v-if="props.row.emailSent === false"
+          v-if="
+            props.row.emailSent === false &&
+            permissions.includes('Send Email for Leave')
+          "
           @get-data="getData()"
         />
         <p v-else>Email has been sent</p>
@@ -138,7 +141,10 @@ export default {
         field: 'action',
       },
     ];
+
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       column,
       current: ref(1),
     };
