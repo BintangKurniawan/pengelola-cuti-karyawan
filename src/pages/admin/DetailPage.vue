@@ -221,7 +221,7 @@
         class="flex flex-col h-[104px] justify-end"
         v-if="permissions.includes('Enable Employee')"
       >
-        <ActivateBtn :id="id" />
+        <ActivateBtn :id="id" v-if="status === 'Resign'" />
       </div>
     </div>
   </div>

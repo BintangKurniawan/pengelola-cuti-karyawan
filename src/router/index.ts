@@ -74,14 +74,22 @@ export default route(function (/* { store, ssrContext } */) {
     if (color) {
       setCssVar('primary', color);
     }
+    // if (!role && to.path != '/login') {
+    //   next('/login');
+    // } else if (role === '3' && to.path.includes('/admin')) {
+    //   next('/forbidden');
+    // } else if (role && to.path === '/login') {
+    //   next('/');
+    // } else if (role === '1' && to.path === '/') {
+    //   next('/admin/dashboard');
+    // } else {
+    //   next();
+    // }
+
     if (!role && to.path != '/login') {
       next('/login');
-    } else if (role === '3' && to.path.includes('/admin')) {
-      next('/forbidden');
     } else if (role && to.path === '/login') {
       next('/');
-    } else if (role === '1' && to.path === '/') {
-      next('/admin/dashboard');
     } else {
       next();
     }

@@ -86,6 +86,7 @@ export default {
         />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
+          v-if="permissions.includes('Send Email for Leave')"
           title="Email Organizer"
           link="/admin/email"
           icon="email-outline"

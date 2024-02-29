@@ -18,24 +18,70 @@ export default {
       {
         title: 'History',
         link: '/',
+        access: 'Get Leave History for Current User',
       },
       {
         title: 'Special',
         link: '/special',
+        access: 'View Special Leave History',
       },
       {
         title: 'Mandatory',
         link: '/mandatory',
+        access: 'View Mandatory Leave',
       },
       {
         title: 'Optional',
         link: '/optional',
+        access: 'View Optional Leave',
       },
     ];
 
     const img = localStorage.getItem('logo');
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+
+    const adminPage = [
+      {
+        title: 'Dashboard',
+        link: '/admin/dashboard',
+        icon: 'view-dashboard-outline',
+        access: 'dashboard',
+      },
+      {
+        title: 'List of Leave',
+        link: '/admin/list-leave',
+        icon: 'list-status',
+        access: 'list of leave',
+      },
+      {
+        title: 'Email Organizer',
+        link: '/admin/email',
+        icon: 'email-outline',
+        access: 'email organizer',
+      },
+      {
+        title: 'List of Position',
+        link: '/admin/positions',
+        icon: 'family-tree',
+        access: 'list of position',
+      },
+      {
+        title: 'Special Leave',
+        link: '/admin/special-leave',
+        icon: 'list-box-outline',
+        access: 'special leave',
+      },
+      {
+        title: 'Role',
+        link: '/admin/role',
+        icon: 'worker-outline',
+        access: 'role',
+      },
+    ];
 
     return {
+      adminPage,
+      permissions,
       link,
       nik,
       store,
@@ -89,6 +135,23 @@ export default {
     showNav() {
       this.nav = !this.nav;
     },
+    // shouldDisplayBtn(access: string) {
+    //   if (access === 'dashboard') {
+    //     return this.permissions.includes('Get Employee');
+    //   } else if (access === 'list of leave') {
+    //     return this.permissions.includes('View All Leave History');
+    //   } else if (access === 'email organizer') {
+    //     return this.permissions.includes('Send Email for Leave');
+    //   } else if (access === 'list of position') {
+    //     return this.permissions.includes('Get Position');
+    //   } else if (access === 'special leave') {
+    //     return this.permissions.includes('View All Special Leave History');
+    //   } else if (access === 'role') {
+    //     return this.permissions.includes('Get All Role');
+    //   } else {
+    //     return false;
+    //   }
+    // },
     async getData() {
       const token = localStorage.getItem('token');
       await api
@@ -145,8 +208,31 @@ export default {
         </div>
 
         <div class="md:flex hid">
+          <!-- <div v-for="item in adminPage" :key="item.link">
+            <q-btn
+              v-if="shouldDisplayBtn(item.access)"
+              dense
+              flat
+              id="dashboard"
+              :href="item.link"
+              class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
+            >
+              <div class="flex items-center gap-4">
+                <Icon :icon="`mdi:` + item.icon" width="24" />
+                <p class="capitalize">{{ item.title }}</p>
+              </div>
+            </q-btn>
+          </div> -->
           <q-btn
-            v-if="role != '3'"
+            v-if="
+              permissions.includes(
+                'Get Employee' ||
+                  'Send Email for Leave' ||
+                  'View All Leave History' ||
+                  'View All Employee Special Leave' ||
+                  'Get All Role'
+              )
+            "
             dense
             flat
             id="dashboard"
@@ -154,8 +240,8 @@ export default {
             class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4"
           >
             <div class="flex items-center gap-4">
-              <Icon icon="mdi:view-dashboard-outline" width="24" />
-              <p class="capitalize">Dashboard</p>
+              <Icon :icon="`mdi:view-dashboard-outline`" width="24" />
+              <p class="capitalize">Admin Side</p>
             </div>
           </q-btn>
           <Setting />
@@ -166,7 +252,15 @@ export default {
       <q-toolbar class="transition-all absolute" v-if="nav">
         <div class="w-full bg-white h-[150x]">
           <q-btn
-            v-if="role !== '3'"
+            v-if="
+              permissions.includes(
+                'Get Employee' ||
+                  'Send Email for Leave' ||
+                  'View All Leave History' ||
+                  'View All Employee Special Leave' ||
+                  'Get All Role'
+              )
+            "
             dense
             flat
             href="/admin/dashboard"
@@ -174,7 +268,7 @@ export default {
           >
             <div class="flex items-center gap-4">
               <Icon icon="mdi:view-dashboard-outline" width="24" />
-              <p class="capitalize">Dashboard</p>
+              <p class="capitalize">Admin Side</p>
             </div>
           </q-btn>
           <Setting />
@@ -229,6 +323,7 @@ export default {
         >
           <div v-for="item in link" :key="item.link">
             <div
+              v-if="permissions.includes(item.access)"
               class="group relative transition-all"
               :class="`${
                 $route.path === item.link ? `text-[${color}] font-semibold` : ''
@@ -256,10 +351,30 @@ export default {
     <q-footer reveal class="bg-white text-black md:hidden">
       <q-toolbar class="">
         <div class="flex justify-between items-center flex-row w-full">
-          <AdminLinkBtn title="History" link="/" width="auto" />
-          <AdminLinkBtn title="Special" link="/special" width="auto" />
-          <AdminLinkBtn title="Mandatory" link="/mandatory" width="auto" />
-          <AdminLinkBtn title="Optional" link="/optional" width="auto" />
+          <AdminLinkBtn
+            title="History"
+            link="/"
+            width="auto"
+            v-if="permissions.includes('Get Leave History for Current User')"
+          />
+          <AdminLinkBtn
+            title="Special"
+            link="/special"
+            width="auto"
+            v-if="permissions.includes('View Special Leave History')"
+          />
+          <AdminLinkBtn
+            title="Mandatory"
+            link="/mandatory"
+            width="auto"
+            v-if="permissions.includes('View Mandatory Leave')"
+          />
+          <AdminLinkBtn
+            title="Optional"
+            link="/optional"
+            width="auto"
+            v-if="permissions.includes('View Optional Leave')"
+          />
         </div>
       </q-toolbar>
     </q-footer>

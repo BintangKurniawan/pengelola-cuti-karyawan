@@ -15,6 +15,7 @@
             {{ formatDate(data.startLeave) }} - {{ formatDate(data.endLeave) }}
           </p>
           <RejcBtn
+            v-if="permissions.includes('Reject Optional Leave')"
             :id="data.leaveEmployeeId"
             @get-data="handleChildEvent"
             :date="data.startLeave"
@@ -46,7 +47,9 @@ import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar;
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       current: ref(1),
       failedNotif(msg) {
         $q.notify({
