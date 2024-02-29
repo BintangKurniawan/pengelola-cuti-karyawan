@@ -205,7 +205,10 @@
         />
       </div>
 
-      <div class="flex flex-col h-[104px] justify-end" v-if="roleId !== '1'">
+      <div
+        class="flex flex-col h-[104px] justify-end"
+        v-if="permissions.includes('Enable Employee')"
+      >
         <ActivateBtn :id="id" />
       </div>
     </div>
@@ -224,9 +227,11 @@ export default {
     const maxLengthMobile = 12;
     const roleId = localStorage.getItem('role');
     const route = useRoute();
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     //  TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
+      permissions,
       roleId,
       maxLengthMobile,
       id,
