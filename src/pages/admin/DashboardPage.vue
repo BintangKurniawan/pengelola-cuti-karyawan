@@ -528,6 +528,9 @@ export default {
             this.failedNotif(msg);
             document.location.reload();
           }
+          if (err.response.status === 403) {
+            this.$router.push('/forbidden');
+          }
         });
     },
     // TO GET DATA

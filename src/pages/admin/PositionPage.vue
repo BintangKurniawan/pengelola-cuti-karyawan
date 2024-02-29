@@ -198,6 +198,9 @@ export default {
             const msg = err.response.data.message;
             this.failedNotif(msg);
           }
+          if (err.response.status === 403) {
+            this.$router.push('/forbidden');
+          }
         });
     },
   },
