@@ -54,7 +54,10 @@
       <div
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
-        <AddSpecialLeave @get-data="handleChildEvent" />
+        <AddSpecialLeave
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Create Special Leave')"
+        />
       </div>
     </template>
     <template v-slot:body-cell-action="props">
@@ -62,8 +65,16 @@
         :props="props"
         class="flex gap-1 justify-center items-center text-center md:w-full w-[200px]"
       >
-        <EditSpecialLeave :id="props.row.id" @get-data="handleChildEvent" />
-        <DeleteSpecialLeave :id="props.row.id" @get-data="handleChildEvent" />
+        <EditSpecialLeave
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Update Special Leave')"
+        />
+        <DeleteSpecialLeave
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Delete Special Leave List')"
+        />
       </q-td>
     </template>
   </q-table>
@@ -139,8 +150,9 @@ export default {
         field: 'action',
       },
     ];
-
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       roleId,
       column,
       current: ref(1),
