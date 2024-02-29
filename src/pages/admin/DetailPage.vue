@@ -138,7 +138,7 @@
 
       <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl">Role</h5>
-        <q-input
+        <!-- <q-input
           outlined
           color="dark"
           bg-color="white"
@@ -147,6 +147,18 @@
           v-model="role"
           placeholder="Role"
           class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
+        /> -->
+
+        <q-select
+          :disable="!permissions.includes('Update Role')"
+          outlined
+          class="md:w-[270px] w-full"
+          v-model="roleType"
+          :options="roleTypeOptions"
+          @update:model-value="saveRole(roleType)"
+          label="Role"
+          emit-value
+          map-options
         />
       </div>
 
@@ -222,15 +234,35 @@ import { useRoute } from 'vue-router';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import moment from 'moment';
 import ActivateBtn from 'src/components/Positive_Components/ActivateBtn.vue';
+import { useQuasar } from 'quasar';
 export default {
   setup() {
     const maxLengthMobile = 12;
     const roleId = localStorage.getItem('role');
     const route = useRoute();
     const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const $q = useQuasar();
     //  TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
+      successNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
       permissions,
       roleId,
       maxLengthMobile,
@@ -240,6 +272,7 @@ export default {
   mounted() {
     // TO GET DATA
     this.getData();
+    this.getRole();
   },
   data() {
     return {
@@ -258,6 +291,8 @@ export default {
       employeeStstus: '',
       // FOR NEW CONTRACT, IS NEW OR FALSE
       expDate: false,
+      roleType: null,
+      roleTypeOptions: [],
     };
   },
   methods: {
@@ -270,6 +305,49 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    async getRole() {
+      await api
+        .get('/role/select', { withCredentials: true })
+        .then((res) => {
+          const roles = res.data.data;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mappedRoles = roles.map((roles) => {
+            return {
+              value: roles.id,
+              label: roles.name,
+            };
+          });
+
+          this.roleTypeOptions = mappedRoles;
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
+    async saveRole(roleType) {
+      await api
+        .patch(
+          `/employee/update-role/${this.nik}`,
+          {
+            roleId: roleType,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          this.successNotif(res.data.message);
+          this.getData();
+        })
+        .catch((err) => {
+          if (err.response.data.message) {
+            this.fail;
+          }
+        });
     },
     // TO GET DATA
     async getData() {
@@ -302,6 +380,7 @@ export default {
           this.type = this.getContractText(
             resp.data.data[0].typeOfEmployee.isContract
           );
+          this.roleType = resp.data.data[0].user.role.id;
           this.expDate = resp.data.data[0].typeOfEmployee.isContract;
           this.historicalName = resp.data.data[0].historicalName;
           this.historicalNik = resp.data.data[0].historicalNik;

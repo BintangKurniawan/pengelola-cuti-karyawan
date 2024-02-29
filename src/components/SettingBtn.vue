@@ -41,13 +41,15 @@
               class="font-bold round text-center capitalize px-4 py-2"
             />
           </div>
-          <div class="flex justify-around items-end gap-5 w-full">
-            <q-toggle
-              v-if="role === 2"
+          <div class="flex justify-around items-end gap-9 w-full">
+            <q-btn
+              v-if="permissions.includes('Setting Website')"
+              label="Web Config"
+              unelevated
+              @click="openConfig"
               color="primary"
-              v-model="emailNotif"
-              label="Turn on email notification"
-              @update:model-value="turnOnOffEmail"
+              text-color="white"
+              class="font-bold round text-center capitalize px-4 py-2"
             />
             <q-btn
               label="Change Password"
@@ -56,6 +58,15 @@
               color="primary"
               text-color="white"
               class="font-bold round text-center capitalize px-4 py-2"
+            />
+          </div>
+          <div class="flex items-center gap-4 w-full justify-between">
+            <q-toggle
+              v-if="permissions.includes('Receiving Email Requests for Leave')"
+              color="primary"
+              v-model="emailNotif"
+              label="Turn on email notification"
+              @update:model-value="turnOnOffEmail"
             />
           </div>
           <div class="flex items-center gap-4 w-full justify-between">
@@ -69,6 +80,80 @@
           </div>
         </q-card-section>
       </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="webconfig">
+      <q-scroll-area style="height: 100%; width: 100%">
+        <q-card class="bg-white w-full">
+          <q-card-section>
+            <div
+              class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
+            >
+              <span
+                class="h-[2px] inline-block bg-primary absolute left-0 bottom-0.5 w-full transition-[width] ease duration-300"
+                >&nbsp;</span
+              >
+              <p class="capitalize">Color Option</p>
+            </div>
+          </q-card-section>
+
+          <q-card-section>
+            <div class="flex items-start gap-4 p-4">
+              <q-color
+                v-model="hex"
+                no-header-tabs
+                no-footer
+                class="my-picker w-[276px]"
+                flat
+              />
+              <q-btn
+                label="Save"
+                class="capitalize"
+                color="primary"
+                @click="saveColor"
+              />
+            </div>
+          </q-card-section>
+
+          <q-card-section>
+            <div
+              class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
+            >
+              <span
+                class="h-[2px] inline-block bg-primary absolute left-0 bottom-0.5 w-full transition-[width] ease duration-300"
+                >&nbsp;</span
+              >
+              <p class="capitalize">Logo</p>
+            </div>
+          </q-card-section>
+
+          <q-card-section>
+            <div class="flex flex-row gap-4 p-4">
+              <div class="flex items-center flex-col justify-center">
+                <q-file
+                  v-model="img"
+                  accept="image/*"
+                  max-files="1"
+                  label="Click to Upload"
+                  type="file"
+                  filled
+                  @update:model-value="handleUpload()"
+                  class="w-[276px]"
+                />
+                <q-img :src="imgURL" class="w-[276px] h-auto" />
+              </div>
+              <div>
+                <q-btn
+                  label="Save"
+                  class="capitalize"
+                  color="primary"
+                  @click="saveImg"
+                />
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-scroll-area>
     </q-dialog>
 
     <q-dialog v-model="changepw">
@@ -148,11 +233,25 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
-import { useQuasar } from 'quasar';
+import { setCssVar, useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const imgURL = ref('');
+    const img = ref(null);
+    const handleUpload = () => {
+      console.log('handleUpload is triggered');
+      if (img.value) {
+        imgURL.value = URL.createObjectURL(img.value);
+      }
+    };
     return {
+      hex: ref(),
+      img,
+      imgURL,
+      handleUpload,
+      permissions,
       showPw: ref(false),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
@@ -182,6 +281,7 @@ export default {
       dialog: ref(false),
       modal: ref(false),
       changepw: ref(false),
+      webconfig: ref(false),
       emailNotif: ref(),
       name: '',
       password: '',
@@ -213,6 +313,10 @@ export default {
       // this.getPosition();
       this.getData();
       this.dialog = true;
+    },
+    openConfig() {
+      this.getSetting();
+      this.webconfig = true;
     },
     //  TO GET POSITION ID
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -248,34 +352,6 @@ export default {
       const options = { day: 'numeric', month: 'short', year: 'numeric' };
       return date.toLocaleDateString('en-UK', options);
     },
-    // TO GET POSITION
-    async getPosition() {
-      await api
-        .get('/position?page=1&perPage=100', { withCredentials: true })
-        .then((resp) => {
-          const positions = resp.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const mappedPositions = positions.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (position: { id: any; name: any }) => {
-              return {
-                value: position.id,
-                label: position.name,
-              };
-            }
-          );
-          const positionDataString = JSON.stringify(positions);
-          localStorage.setItem('position', positionDataString);
-          this.typePositionOptions = mappedPositions;
-          console.log(this.typePositionOptions);
-        })
-        .catch((err) => {
-          if (err.response) {
-            const msg = err.response.data.message;
-            this.failedNotif(msg);
-          }
-        });
-    },
 
     //  TO GET LOGGED IN USER DATA
     async getData() {
@@ -306,7 +382,7 @@ export default {
           }
         });
 
-      if (this.role === 2) {
+      if (this.permissions.includes('Receiving Email Requests for Leave')) {
         await api
           .get('/leave/receive-email', { withCredentials: true })
           .then((res) => {
@@ -359,18 +435,10 @@ export default {
     // FOR EDIT NAME
     async save() {
       await api
-        .put(
-          `/employee/update/${this.nik}`,
+        .patch(
+          `/employee/update-name/${this.nik}`,
           {
             name: this.name,
-            positionId: this.positionId,
-            gender: this.gender,
-            typeOfEmployee: {
-              newContract: this.contract,
-              endContract: this.exp,
-              isContract: this.contractBoolean,
-            },
-            roleId: this.role,
           },
           {
             withCredentials: true,
@@ -388,6 +456,66 @@ export default {
           setInterval(() => {
             document.location.reload();
           }, 1500);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
+
+    async getSetting() {
+      await api
+        .get('/webSetting', { withCredentials: true })
+        .then((res) => {
+          const setting = res.data.data[0];
+
+          this.hex = setting.webColorCode;
+          this.imgURL = setting.picture;
+          localStorage.setItem('logo', setting.picture);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    async saveColor() {
+      await api
+        .put(
+          '/siteSetting/update-color/1',
+          { colorCode: this.hex },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem('color', this.hex);
+          setCssVar('primary', this.hex);
+          this.successNotif(res.data.message);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
+
+    async saveImg() {
+      await api
+        .patch(
+          '/siteSetting/update-image/1',
+          { picture: this.img },
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem('logo', res.data.data.picture);
+          this.successNotif(res.data.message);
         })
         .catch((err) => {
           if (err.response) {

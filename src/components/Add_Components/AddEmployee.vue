@@ -271,7 +271,9 @@ export default {
     // TO GET POSITION
     async getPosition() {
       await api
-        .get('/position?page=1&perPage=100', { withCredentials: true })
+        .get('/position/filter-leaves?page=1&perPage=100', {
+          withCredentials: true,
+        })
         .then((resp) => {
           const positions = resp.data.data;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

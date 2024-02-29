@@ -506,7 +506,9 @@ export default {
     },
     async getPosition() {
       await api
-        .get('/position?page=1&perPage=100', { withCredentials: true })
+        .get('/position/filter-leaves?page=1&perPage=100', {
+          withCredentials: true,
+        })
         .then((resp) => {
           const positions = resp.data.data;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -526,7 +528,6 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            document.location.reload();
           }
           if (err.response.status === 403) {
             this.$router.push('/forbidden');

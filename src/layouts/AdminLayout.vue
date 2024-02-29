@@ -113,12 +113,6 @@ export default {
           icon="worker-outline"
           width="full"
         />
-        <AdminLinkBtn
-          title="Configuration"
-          link="/admin/config"
-          icon="web"
-          width="full"
-        />
       </div>
 
       <div class="">

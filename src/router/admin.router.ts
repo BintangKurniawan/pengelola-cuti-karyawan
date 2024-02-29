@@ -48,14 +48,7 @@ const admin_routes = [
       protected: true,
     },
   },
-  {
-    path: '/admin/config',
-    component: () => import('pages/admin/ConfigurationPage.vue'),
-    meta: {
-      title: 'Configuration',
-      protected: true,
-    },
-  },
+
   {
     path: '/admin/history/:id',
     component: () => import('pages/admin/HistoryPage.vue'),

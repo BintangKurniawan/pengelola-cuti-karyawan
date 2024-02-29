@@ -559,7 +559,6 @@ export default {
               endContract: this.exp,
               newContract: this.contract,
             },
-            roleId: this.roleType,
           },
           {
             withCredentials: true,
