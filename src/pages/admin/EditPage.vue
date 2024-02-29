@@ -19,7 +19,7 @@
           color="dark"
           bg-color="grey-2"
           for="nik"
-          :disable="roleId === '1'"
+          disable
           v-model="nik"
           placeholder="NIK"
           class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
@@ -31,8 +31,10 @@
         <q-input
           outlined
           color="dark"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           for="name"
           v-model="name"
           placeholder="Name"
@@ -46,8 +48,10 @@
           outlined
           class="md:w-[270px] w-full"
           label-color="Primary"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           v-model="typePosition"
           :options="typePositionOptions"
           emit-value
@@ -75,8 +79,10 @@
           outlined
           class="md:w-[270px] w-full"
           label-color="Primary"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           v-model="gender"
           :options="genderOptions"
           label="Position"
@@ -91,7 +97,10 @@
           :bg-color="contractBoolean === false ? 'grey-2' : 'white'"
           for="startWork"
           v-model="start"
-          :disable="contractBoolean === false"
+          :disable="
+            contractBoolean === false ||
+            !permissions.includes('Update Employee')
+          "
           placeholder="Start Working"
           class="drop-shadow-sm md:w-[270px] w-full outline-none focus:bg-transparent active:bg-transparent"
         >
@@ -116,8 +125,10 @@
           outlined
           for="date"
           color="dark"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           class="md:w-[270px] w-full"
           v-model="exp"
         >
@@ -141,8 +152,10 @@
         <q-select
           outlined
           class="md:w-[270px] w-full"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           v-model="contractType"
           :options="contractTypeOptions"
           @update:model-value="contractTypeUpdate"
@@ -155,8 +168,10 @@
         <q-select
           outlined
           class="md:w-[270px] w-full"
-          :bg-color="roleId === '1' ? 'grey-2' : 'white'"
-          :disable="roleId === '1'"
+          :bg-color="
+            permissions.includes('Update Employee') ? 'white' : 'grey-2'
+          "
+          :disable="!permissions.includes('Update Employee')"
           v-model="typeContract"
           :options="typeContractOptions"
           @update:model-value="updateContractId"
@@ -199,7 +214,10 @@
           class="md:w-[270px] h-[56px] capitalize rounded-3xl"
         />
       </div>
-      <div class="flex flex-col h-[104px] justify-end" v-if="roleId !== '1'">
+      <div
+        class="flex flex-col h-[104px] justify-end"
+        v-if="permissions.includes('Reset Password')"
+      >
         <Reset :id="id" />
       </div>
     </div>
@@ -238,7 +256,9 @@ export default {
         $q.loading.hide();
       }
     });
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       roleId,
       id,
       showLoading() {
