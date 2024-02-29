@@ -31,7 +31,10 @@
       </div>
     </template>
     <template v-slot:top-right>
-      <AddPosition @get-data="handleChildEvent" />
+      <AddPosition
+        @get-data="handleChildEvent"
+        v-if="permissions.includes('Add Positions')"
+      />
     </template>
     <template v-slot:body-cell-id="props">
       <q-td :props="props" class="">
@@ -58,8 +61,16 @@
         :props="props"
         class="flex items-center gap-1 justify-center md:w-full w-[200px]"
       >
-        <EditPosition :id="props.row.id" @get-data="handleChildEvent" />
-        <DeletePositionBtn :id="props.row.id" @get-data="handleChildEvent" />
+        <EditPosition
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Update Positions')"
+        />
+        <DeletePositionBtn
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Delete Positions')"
+        />
       </q-td>
     </template>
   </q-table>
@@ -118,7 +129,9 @@ export default {
         field: 'action',
       },
     ];
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       column,
       current: ref(1),
       successNotif(msg) {
