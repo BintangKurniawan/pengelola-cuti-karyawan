@@ -30,7 +30,10 @@
       </div>
     </template>
     <template v-slot:top-right>
-      <AddRole @get-data="handleChildEvent" />
+      <AddRole
+        @get-data="handleChildEvent"
+        v-if="permissions.includes('Create Role')"
+      />
     </template>
 
     <template v-slot:body-cell-action="props">
@@ -42,8 +45,16 @@
           :id="props.row.id"
           :count="props.row.rolePermissionCount"
         />
-        <EditRole :id="props.row.id" @get-data="handleChildEvent" />
-        <DeleteRole :id="props.row.id" @get-data="handleChildEvent" />
+        <EditRole
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Update Role')"
+        />
+        <DeleteRole
+          :id="props.row.id"
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Delete Role')"
+        />
       </q-td>
     </template>
   </q-table>
@@ -110,7 +121,10 @@ export default {
         field: 'action',
       },
     ];
+
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       column,
       current: ref(1),
       successNotif(msg) {
