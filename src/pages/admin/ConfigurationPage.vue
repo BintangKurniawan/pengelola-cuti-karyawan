@@ -56,8 +56,11 @@
 import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import { setCssVar } from 'quasar';
+import { useQuasar } from 'quasar';
 export default {
   setup() {
+    const $q = useQuasar();
+
     const imgURL = ref('');
     const img = ref(null);
     const handleUpload = () => {
@@ -66,7 +69,30 @@ export default {
         imgURL.value = URL.createObjectURL(img.value);
       }
     };
-    return { hex: ref(), img, imgURL, handleUpload };
+    return {
+      hex: ref(),
+      img,
+      imgURL,
+      handleUpload,
+      successNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'primary',
+          multiLine: true,
+        });
+      },
+      failedNotif(msg) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
+    };
   },
   mounted() {
     this.getSetting();
@@ -97,9 +123,13 @@ export default {
           console.log(res);
           localStorage.setItem('color', this.hex);
           setCssVar('primary', this.hex);
+          this.successNotif(res.data.message);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
 
@@ -118,9 +148,13 @@ export default {
         .then((res) => {
           console.log(res);
           localStorage.setItem('logo', res.data.data.picture);
+          this.successNotif(res.data.message);
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
         });
     },
   },

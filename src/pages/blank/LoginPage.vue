@@ -225,6 +225,21 @@ export default {
           console.error(err);
         });
     },
+    getPermission(roleId: any) {
+      api
+        .get(`/role/${roleId}`, { withCredentials: true })
+        .then((res) => {
+          const permission = res.data.data.rolePermissions.map(
+            (permission: { permission: { name: any } }) =>
+              permission.permission.name
+          );
+
+          localStorage.setItem('permissions', JSON.stringify(permission));
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     async login() {
       this.loading = true;
       await api
@@ -256,6 +271,7 @@ export default {
 
           this.getPosition();
           this.getLoginData(resp.data.data.employee.nik);
+          this.getPermission(resp.data.data.user.roleId);
 
           setInterval(() => {
             window.location.reload();

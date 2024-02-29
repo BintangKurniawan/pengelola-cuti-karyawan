@@ -81,12 +81,17 @@
         </div>
       </div>
     </template>
-    <template v-slot:top-right v-if="roleId !== '1'">
+    <!-- taro v if lagi nanti di sini -->
+    <!-- sementara done -->
+    <template v-slot:top-right>
       <div
         class="flex items-center md:justify-center md:gap-2 gap-1 md:mt-0 mt-4"
       >
-        <SetCollective />
-        <AddEmployee @get-data="handleChildEvent" />
+        <SetCollective v-if="permissions.includes('Create Collective Leave')" />
+        <AddEmployee
+          @get-data="handleChildEvent"
+          v-if="permissions.includes('Add Employee')"
+        />
       </div>
     </template>
     <template v-slot:header-cell-nik="props">
@@ -116,8 +121,10 @@
       </q-th>
     </template>
 
+    <!-- taro v if lagi di sini -->
+    <!-- sementara done -->
     <template v-slot:header-cell-setleave="props">
-      <q-th :props="props" v-if="roleId !== '1'">
+      <q-th :props="props" v-if="permissions.includes('Create Personal Leave')">
         <p>{{ props.col.label }}</p>
       </q-th>
     </template>
@@ -167,7 +174,9 @@
       </q-td>
     </template>
     <template v-slot:body-cell-setleave="props">
-      <q-td :props="props" v-if="roleId !== '1'">
+      <!-- taro v if lagi di sini -->
+      <!-- sementara done -->
+      <q-td :props="props" v-if="permissions.includes('Create Personal Leave')">
         <div v-if="props.row.isWorking === true">
           <SetLeave :id="props.row.nik" page="dashboard" text="Set" />
         </div>
@@ -190,8 +199,10 @@
             class="text-primary"
           />
         </q-btn>
+        <!-- taro v if lagi di sini -->
+        <!-- sementara done -->
         <q-btn
-          v-if="roleId !== '1'"
+          v-if="permissions.includes('View Leave History by Employee ID')"
           flat
           text-color="white"
           class=""
@@ -199,10 +210,12 @@
         >
           <Icon icon="mdi:history" width="24" class="text-dark" />
         </q-btn>
+        <!-- taro v if lagi di sini -->
+        <!-- sementara done -->
         <Delete
           :id="props.row.nik"
-          v-if="roleId !== '1'"
           @get-data="handleChildEvent"
+          v-if="permissions.includes('Disable Employee')"
         />
       </q-td>
     </template>
@@ -305,7 +318,12 @@ export default {
     ];
     const roleId = localStorage.getItem('role');
     const $q = useQuasar();
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+
+    console.log(permissions);
+
     return {
+      permissions,
       roleId,
       column,
       current: ref(1),

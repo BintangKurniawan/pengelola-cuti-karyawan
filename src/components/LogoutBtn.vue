@@ -104,6 +104,7 @@ export default {
             localStorage.removeItem('userData');
             localStorage.removeItem('color');
             localStorage.removeItem('logo');
+            localStorage.removeItem('permissions');
             const msg = resp.data.message;
             this.successNotif(msg);
             this.$router.push('/login');
