@@ -471,10 +471,6 @@ export default {
             const msg = err.response.data.message;
             this.failedNotif(msg);
           }
-
-          if (err.response.status === 403) {
-            this.$router.push('/forbidden');
-          }
         });
       this.load = false;
     },
@@ -498,8 +494,8 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          if (err.response.status === 403) {
-            this.$router.push('/forbidden');
+          if (err.response.data.message) {
+            this.failedNotif(err.response.data.message);
           }
         });
     },

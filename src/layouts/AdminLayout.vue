@@ -11,7 +11,9 @@ export default {
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
     const img = localStorage.getItem('logo');
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
+      permissions,
       img,
       roleId,
       route: useRoute(),
@@ -64,6 +66,7 @@ export default {
         <AdminLinkBtn title="Home" link="/" icon="home" width="full" />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
+          v-if="permissions.includes('Get Employee')"
           title="Dashboard"
           link="/admin/dashboard"
           icon="view-dashboard-outline"
@@ -71,6 +74,11 @@ export default {
         />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
+          v-if="
+            permissions.includes(
+              'View All Leave History' || 'View All Employee Special Leave'
+            )
+          "
           title="List of Leave"
           link="/admin/list-leave"
           icon="list-status"
@@ -91,6 +99,7 @@ export default {
         />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
+          v-if="permissions.includes('View All Special Leave History')"
           title="Special Leave"
           link="/admin/special-leave"
           icon="list-box-outline"
@@ -98,6 +107,7 @@ export default {
         />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
+          v-if="permissions.includes('Get All Role')"
           title="Role"
           link="/admin/role"
           icon="worker-outline"
