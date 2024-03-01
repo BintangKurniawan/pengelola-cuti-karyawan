@@ -86,6 +86,9 @@
       <q-scroll-area style="height: 100%; width: 100%">
         <q-card class="bg-white w-full">
           <q-card-section>
+            <q-input v-model="port" @update:model-value="savePort" />
+          </q-card-section>
+          <q-card-section>
             <div
               class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
             >
@@ -234,6 +237,9 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { setCssVar, useQuasar } from 'quasar';
+import fs from 'fs';
+import tes from 'src/tsx.json';
+
 export default {
   setup() {
     const $q = useQuasar();
@@ -246,7 +252,10 @@ export default {
         imgURL.value = URL.createObjectURL(img.value);
       }
     };
+
+    let port = localStorage.getItem('port');
     return {
+      port,
       hex: ref(),
       img,
       imgURL,
@@ -309,6 +318,9 @@ export default {
     // this.getData();
   },
   methods: {
+    savePort() {
+      localStorage.setItem('port', this.port);
+    },
     openDialog() {
       // this.getPosition();
       this.getData();

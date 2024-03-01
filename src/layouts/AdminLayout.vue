@@ -7,7 +7,7 @@ import SettingBtn from 'src/components/SettingBtn.vue';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 export default {
   setup() {
-    const page = window.innerWidth >= 1280 ? true : false;
+    const page = window.innerWidth >= 1024 ? true : false;
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
     const img = localStorage.getItem('logo') || undefined;
@@ -110,7 +110,7 @@ export default {
         />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
-          v-if="permissions.includes('View All Special Leave History')"
+          v-if="permissions.includes('View All The List Of Special Leave')"
           title="Special Leave"
           link="/admin/special-leave"
           icon="list-box-outline"

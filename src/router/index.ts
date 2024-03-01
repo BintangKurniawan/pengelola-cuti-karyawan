@@ -72,6 +72,8 @@ export default route(function (/* { store, ssrContext } */) {
 
     // }
     const permissions = JSON.parse(localStorage.getItem('permissions'));
+
+    const setPort = localStorage.setItem('port', 9000);
     if (color) {
       setCssVar('primary', color);
     }

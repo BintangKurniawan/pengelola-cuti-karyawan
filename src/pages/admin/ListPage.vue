@@ -139,55 +139,58 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props" class="flex-row h-[50px]">
-        <div class="flex gap-1 justify-center items-center text-center">
-          <div
+      <q-td
+        :props="props"
+        class="flex-row lg:w-full w-[200px] flex gap-1 h-[50px]"
+      >
+        <div
+          class="flex gap-1 justify-center items-center text-center lg:w-full w-[200px]"
+        >
+          <Approve
             v-if="
-              ((props.row.status === 'REJECT' ||
-                props.row.status === 'WAITING') &&
+              (permissions.includes('Approve and Reject Personal Leave') &&
+                (props.row.status === 'REJECT' ||
+                  props.row.status === 'WAITING') &&
                 props.row.typeOfLeave.name === 'Personal') ||
               ((props.row.status === 'REJECT' ||
                 props.row.status === 'WAITING') &&
                 props.row.typeOfLeave.name === 'Special')
             "
-          >
-            <Approve
-              v-if="permissions.includes('Approve and Reject Personal Leave')"
-              :type="switchTable ? 'personal' : 'employee-special-leave'"
-              :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-            />
-          </div>
-          <div
+            :type="switchTable ? 'personal' : 'employee-special-leave'"
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+          />
+
+          <Reject
             v-if="
+              props.row.typeOfLeave.name !== 'Optional' &&
+              (props.row.status === 'APPROVE' ||
+                props.row.status === 'WAITING') &&
+              props.row.typeOfLeave.name !== 'Mandatory' &&
+              permissions.includes('Approve and Reject Personal Leave')
+            "
+            :type="switchTable ? 'personal' : 'employee-special-leave'"
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+          />
+
+          <Reject
+            v-if="
+              permissions.includes('Approve and Reject Special Leave') &&
               (props.row.status === 'APPROVE' ||
                 props.row.status === 'WAITING') &&
               props.row.typeOfLeave.name !== 'Mandatory'
             "
-          >
-            <div
-              v-if="permissions.includes('Approve and Reject Personal Leave')"
-            >
-              <Reject
-                v-if="props.row.typeOfLeave.name !== 'Optional'"
-                :type="switchTable ? 'personal' : 'employee-special-leave'"
-                :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-              />
-            </div>
-            <div
-              v-if="permissions.includes('Approve and Reject Special Leave')"
-            >
-              <Reject
-                :type="'employee-special-leave'"
-                :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-              />
-            </div>
-          </div>
-          <div v-if="props.row.note != null && props.row.status === 'REJECT'">
-            <NoteBtn :note="props.row.note" :rejectBy="props.row.rejectBy" />
-          </div>
-          <div v-if="props.row.status === 'APPROVE' && props.row.approveBy">
-            <NoteBtn :approveBy="props.row.approveBy" />
-          </div>
+            :type="'employee-special-leave'"
+            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+          />
+          <NoteBtn
+            :note="props.row.note"
+            :rejectBy="props.row.rejectBy"
+            v-if="props.row.note != null && props.row.status === 'REJECT'"
+          />
+          <NoteBtn
+            :approveBy="props.row.approveBy"
+            v-if="props.row.status === 'APPROVE' && props.row.approveBy"
+          />
         </div>
       </q-td>
     </template>
@@ -294,6 +297,7 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
+        style: 'width: 100px;',
       },
     ];
 
@@ -344,6 +348,7 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
+        style: 'width: 100px',
       },
     ];
 

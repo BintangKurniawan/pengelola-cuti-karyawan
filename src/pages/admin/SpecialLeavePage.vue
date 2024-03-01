@@ -63,7 +63,7 @@
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
-        class="flex gap-1 justify-center items-center text-center md:w-full w-[200px]"
+        class="flex gap-1 justify-center items-center text-center lg::w-full w-[200px]"
       >
         <EditSpecialLeave
           :id="props.row.id"
@@ -257,7 +257,7 @@ export default {
   margin: 10px 0 !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .w-custom {
     width: 100px;
   }

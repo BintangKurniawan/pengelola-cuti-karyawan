@@ -93,7 +93,7 @@
     </div>
   </div>
   <q-table
-    v-if="data && data.length >= 2"
+    v-if="data && data.length >= 1"
     class="my-table table-rounded mx-4"
     flat
     :columns="switchTable ? column : column2"
