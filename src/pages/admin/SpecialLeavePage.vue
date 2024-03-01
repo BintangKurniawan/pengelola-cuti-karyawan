@@ -90,10 +90,6 @@
       boundary-links
     />
   </div>
-
-  <div v-if="roleId === '1'">
-    <h1 class="text-center">You're not allowed to access this page</h1>
-  </div>
 </template>
 
 <script>

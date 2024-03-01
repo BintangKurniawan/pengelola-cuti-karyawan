@@ -229,6 +229,7 @@
     class="absolute top-[50%] left-[50%]"
   />
 </template>
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script lang="ts">
 import Reset from 'src/components/ResetBtn.vue';
@@ -237,7 +238,7 @@ import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
-import moment from 'moment';
+// import moment from 'moment';
 import 'moment/locale/en-ca';
 
 export default {
@@ -256,7 +257,7 @@ export default {
         $q.loading.hide();
       }
     });
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
     return {
       permissions,
       roleId,
@@ -270,7 +271,6 @@ export default {
         }, 500);
       },
       date: ref('2023-11-20'),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       saveNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -280,7 +280,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -361,12 +360,12 @@ export default {
   methods: {
     async getPosition() {
       await api
-        .get('/position?page=1&perPage=100', { withCredentials: true })
+        .get('/position/filter-leaves?page=1&perPage=100', {
+          withCredentials: true,
+        })
         .then((resp) => {
           const positions = resp.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedPositions = positions.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (position: { id: any; name: any }) => {
               return {
                 value: position.id,
@@ -387,7 +386,6 @@ export default {
         .get('/role/select', { withCredentials: true })
         .then((res) => {
           const roles = res.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedRoles = roles.map((roles: { id: any; name: any }) => {
             return {
               value: roles.id,
@@ -454,7 +452,6 @@ export default {
       console.log(this.contract);
     },
     // TO GET STATUS TEXT IS ACTIVE OR RESIGN
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {
       return status ? 'Active' : 'Resign';
     },
@@ -474,7 +471,6 @@ export default {
       return contractOption ? contractOption.label : null;
     },
     // TO GET TYPE CONTRACT TEXT, IS PERMANENT OR NOT
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getContractText(status: any) {
       const statusOption = this.typeContractOptions.find(
         (option) => option.status === status
@@ -514,11 +510,8 @@ export default {
     // TO FORMAT DATE
     formatDate(dateString: {
       split: (arg0: string) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
       };
     }) {

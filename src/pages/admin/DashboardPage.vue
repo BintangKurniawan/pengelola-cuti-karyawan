@@ -202,7 +202,7 @@
         <!-- taro v if lagi di sini -->
         <!-- sementara done -->
         <q-btn
-          v-if="permissions.includes('View Leave History by Employee ID')"
+          v-if="permissions.includes('View Leave History by Employee NIK')"
           flat
           text-color="white"
           class=""
@@ -233,7 +233,7 @@
     />
   </div>
 </template>
-
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
@@ -318,7 +318,7 @@ export default {
     ];
     const roleId = localStorage.getItem('role');
     const $q = useQuasar();
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
 
     console.log(permissions);
 
@@ -327,7 +327,6 @@ export default {
       roleId,
       column,
       current: ref(1),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -427,7 +426,6 @@ export default {
         this.position
       );
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     goToDetail(nik: any) {
       this.$router.push({
         path: `/admin/detail/${nik}`,
@@ -511,9 +509,7 @@ export default {
         })
         .then((resp) => {
           const positions = resp.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedPositions = positions.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (position: { id: any; name: any }) => {
               return {
                 value: position.id,
@@ -535,16 +531,11 @@ export default {
         });
     },
     // TO GET DATA
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getData(
       page: number | undefined,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sort: any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       label: any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       search: any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       position: any
     ) {
       this.load = true;
@@ -594,7 +585,6 @@ export default {
         });
     },
     // TO FILTER BY STATUS, IS ACTIVE OR RESIGN
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateStatus() {
       this.statusWork = this.status.value;
       this.current = 1;
@@ -625,7 +615,6 @@ export default {
     },
 
     // TO GET ACTIVE/ RESIGN TEXT FROM API
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStatusText(status: any) {
       return status ? 'Active' : 'Resign';
     },

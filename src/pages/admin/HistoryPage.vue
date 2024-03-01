@@ -93,7 +93,7 @@
     </div>
   </div>
   <q-table
-    v-if="data && data.length >= 1"
+    v-if="data && data.length >= 2"
     class="my-table table-rounded mx-4"
     flat
     :columns="switchTable ? column : column2"
@@ -165,6 +165,7 @@
     />
   </div>
 </template>
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script lang="ts">
 import { ref } from 'vue';
@@ -172,6 +173,7 @@ import api from 'src/AxiosInterceptors';
 import { useRoute } from 'vue-router';
 import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
 import { Icon } from '@iconify/vue';
+import { useQuasar } from 'quasar';
 export default {
   components: {
     NoteBtn,
@@ -283,9 +285,19 @@ export default {
       },
     ];
     const route = useRoute();
+    const $q = useQuasar();
     // TO GET ID FROM ROUTE
     const id = route.params.id;
     return {
+      failedNotif(msg: any) {
+        $q.notify({
+          progress: true,
+          position: 'bottom-right',
+          message: `${msg}`,
+          color: 'negative',
+          multiLine: true,
+        });
+      },
       column,
       column2,
       id,
@@ -359,6 +371,9 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          if (err.response.status == 403) {
+            this.failedNotif(err.response.data.message);
+          }
         });
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -379,6 +394,9 @@ export default {
         })
         .catch((err) => {
           console.error(err);
+          if (err.response.status == 403) {
+            this.failedNotif(err.response.data.message);
+          }
         });
     },
     // TO FORMAT DATE

@@ -41,7 +41,6 @@ export default {
     const $q = useQuasar;
     return {
       current: ref(1),
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       failedNotif(msg) {
         $q.notify({
           progress: true,

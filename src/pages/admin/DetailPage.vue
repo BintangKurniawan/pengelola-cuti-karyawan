@@ -311,7 +311,6 @@ export default {
         .get('/role/select', { withCredentials: true })
         .then((res) => {
           const roles = res.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedRoles = roles.map((roles) => {
             return {
               value: roles.id,

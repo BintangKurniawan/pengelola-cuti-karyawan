@@ -37,8 +37,8 @@ export default {
       },
     ];
 
-    const img = localStorage.getItem('logo');
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const img = localStorage.getItem('logo') || undefined;
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
 
     const adminPage = [
       {
@@ -126,10 +126,10 @@ export default {
   mounted() {
     this.getData();
 
-    const color = localStorage.getItem('color');
-    this.store.setColor(color);
-    this.color = this.store.primaryColor;
-    console.log(this.color);
+    // const color = localStorage.getItem('color');
+    // this.store.setColor(color);
+    // this.color = this.store.primaryColor;
+    // console.log(this.color);
   },
   methods: {
     showNav() {
@@ -326,15 +326,15 @@ export default {
               v-if="permissions.includes(item.access)"
               class="group relative transition-all"
               :class="`${
-                $route.path === item.link ? `text-[${color}] font-semibold` : ''
+                $route.path === item.link ? `text-primary font-semibold` : ''
               }`"
-              :style="{ color: $route.path === item.link ? color : '' }"
             >
+              <!-- :style="{ color: $route.path === item.link ? color : '' }" -->
               <span
-                class="h-[2px] inline-block absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
+                class="h-[2px] inline-block absolute bg-primary left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300 w-0"
                 :class="{ 'w-full': $route.path === item.link }"
-                :style="{ backgroundColor: color }"
               >
+                <!-- :style="{ backgroundColor: color }" -->
                 &nbsp;
               </span>
               <a :href="item.link">{{ item.title }}</a>

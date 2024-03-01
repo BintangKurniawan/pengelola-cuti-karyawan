@@ -71,6 +71,7 @@ export default route(function (/* { store, ssrContext } */) {
     // if(to.path !== '/login') {
 
     // }
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
     if (color) {
       setCssVar('primary', color);
     }
@@ -90,6 +91,14 @@ export default route(function (/* { store, ssrContext } */) {
       next('/login');
     } else if (role && to.path === '/login') {
       next('/');
+    } else if (
+      to.path === '/' &&
+      (!permissions.includes('Get Leave History for Current User') ||
+        !permissions.includes('View Special Leave History') ||
+        !permissions.includes('View Optional Leave') ||
+        !permissions.includes('View Mandatory Leave'))
+    ) {
+      next('/admin/dashboard');
     } else {
       next();
     }

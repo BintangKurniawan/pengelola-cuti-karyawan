@@ -136,7 +136,6 @@ export default {
     return {
       column,
       current: ref(1),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -146,7 +145,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       failedNotif(msg) {
         $q.notify({
           progress: true,

@@ -10,8 +10,8 @@ export default {
     const page = window.innerWidth >= 1280 ? true : false;
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
-    const img = localStorage.getItem('logo');
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const img = localStorage.getItem('logo') || undefined;
+    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
     return {
       permissions,
       img,
@@ -63,7 +63,18 @@ export default {
     >
       <div class="flex flex-col md:items-start gap-4">
         <!-- tambahin v if lagi di sini -->
-        <AdminLinkBtn title="Home" link="/" icon="home" width="full" />
+        <AdminLinkBtn
+          title="Home"
+          link="/"
+          icon="home"
+          width="full"
+          v-if="
+            permissions.includes('Get Leave History for Current User') ||
+            permissions.includes('View Special Leave History') ||
+            permissions.includes('View Optional Leave') ||
+            permissions.includes('View Mandatory Leave')
+          "
+        />
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
           v-if="permissions.includes('Get Employee')"
@@ -75,9 +86,8 @@ export default {
         <!-- tambahin v if lagi di sini -->
         <AdminLinkBtn
           v-if="
-            permissions.includes(
-              'View All Leave History' || 'View All Employee Special Leave'
-            )
+            permissions.includes('View All Leave History') ||
+            permissions.includes('View All Employee Special Leaves')
           "
           title="List of Leave"
           link="/admin/list-leave"

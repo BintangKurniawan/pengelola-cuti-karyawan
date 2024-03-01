@@ -67,6 +67,7 @@
     </div>
     <div class="w-[60%] border-b-2 flex items-center justify-center gap-4">
       <div
+        v-if="permissions.includes('View All Leave History')"
         class="cursor-pointer group relative transition-all"
         @click="toggleTable1"
         :class="{ 'text-primary font-semibold': switchTable }"
@@ -79,6 +80,7 @@
         Ordinary
       </div>
       <div
+        v-if="permissions.includes('View All Employee Special Leaves')"
         class="cursor-pointer group relative transition-all"
         @click="toggleTable"
         :class="{ 'text-primary font-semibold': !switchTable }"
@@ -220,10 +222,6 @@
       direction-links
       boundary-links
     />
-  </div>
-
-  <div v-if="roleId === '1'">
-    <h1 class="text-center">You're not allowed to access this page</h1>
   </div>
 </template>
 
@@ -391,14 +389,24 @@ export default {
     };
   },
   mounted() {
-    // FOR SPECIFIC TABLE WHEN REJECTED OR APPROVED THE LEAVE, SO IT'S STILL STAY IN THAT TABLE
-    if (this.$route.query.type === 'Special') {
+    if (this.permissions.includes('View All Leave History')) {
+      this.getData(this.pagination.page);
+      this.switchTable = true;
+    } else if (
+      this.permissions.includes('View All Employee Special Leaves') ||
+      this.$route.query.type === 'Special'
+    ) {
       this.switchTable = false;
       this.getDataSpecial(this.pagination.page);
-    } else {
-      this.switchTable = true;
-      this.getData(this.pagination.page);
     }
+    // FOR SPECIFIC TABLE WHEN REJECTED OR APPROVED THE LEAVE, SO IT'S STILL STAY IN THAT TABLE
+    // if (this.$route.query.type === 'Special' || this.permissions.includes('View All Employee Special Leaves')) {
+    //   this.switchTable = false;
+    //   this.getDataSpecial(this.pagination.page);
+    // } else {
+    //   this.switchTable = true;
+    //   this.getData(this.pagination.page);
+    // }
     // TO GET DATA
     // this.getData(this.pagination.page);
   },
