@@ -170,6 +170,7 @@
   </div>
 </template>
 
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
@@ -188,7 +189,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -276,9 +276,7 @@ export default {
         })
         .then((resp) => {
           const positions = resp.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mappedPositions = positions.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (position: { id: any; name: any }) => {
               return {
                 value: position.id,

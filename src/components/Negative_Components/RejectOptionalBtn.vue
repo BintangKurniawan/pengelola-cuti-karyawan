@@ -131,10 +131,6 @@ export default {
       tomorrow.setDate(tomorrow.getDate() - 1);
       const givenDate = new Date(date);
 
-      // Assuming you have id and other relevant data defined in your component
-      // Replace with appropriate logic to access the date relevant to your context
-
-      // Compare the dates
       return tomorrow.getDate() === givenDate.getDate();
     },
   },

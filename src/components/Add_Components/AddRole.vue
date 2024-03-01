@@ -77,6 +77,7 @@
   </div>
 </template>
 
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
@@ -86,7 +87,6 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       addNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -96,7 +96,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -131,22 +130,17 @@ export default {
       this.dialog = true;
       this.getRole();
     },
-    // TO GET POSITION
     async getRole() {
       await api
         .get('/role/permissions?page=1&perPage=100', { withCredentials: true })
         .then((resp) => {
           const roles = resp.data.data;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const mappedRoles = roles.map(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (role: { id: any; name: any }) => {
-              return {
-                value: role.id,
-                label: role.name,
-              };
-            }
-          );
+          const mappedRoles = roles.map((role: { id: any; name: any }) => {
+            return {
+              value: role.id,
+              label: role.name,
+            };
+          });
 
           this.roleOptions = mappedRoles;
         })
@@ -157,7 +151,6 @@ export default {
           }
         });
     },
-    // TO ADD EMPLOYEE
     async addRole() {
       await api
         .post(

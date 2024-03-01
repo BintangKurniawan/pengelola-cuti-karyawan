@@ -145,7 +145,6 @@ export default {
   },
 
   methods: {
-    // TO UPDATE THE POSITION
     async create() {
       await api
         .post(

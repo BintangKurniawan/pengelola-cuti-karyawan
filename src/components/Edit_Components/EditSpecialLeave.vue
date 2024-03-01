@@ -142,7 +142,7 @@ export default {
       this.dialog = true;
       this.getData(this.id);
     },
-    // TO GET POSITION BY ID
+    // TO GET SPECIAL LEAVE BY ID
     async getData(id) {
       await api
         .get(`/leave/special-leave/${id}`, { withCredentials: true })
@@ -157,7 +157,7 @@ export default {
           console.error(err);
         });
     },
-    // TO UPDATE THE POSITION
+    // TO UPDATE THE SPECIAL LEAVE
     async update(id) {
       await api
         .patch(

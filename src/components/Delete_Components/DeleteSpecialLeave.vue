@@ -81,7 +81,6 @@ export default {
     Icon,
   },
   methods: {
-    // TO DELETE POSITION
     remove(id) {
       api
         .patch(`/leave/special-leave/delete/${id}`, { withCredentials: true })
@@ -97,9 +96,6 @@ export default {
             this.failedNotif(msg);
           }
         });
-    },
-    acc(id) {
-      console.log(id);
     },
   },
 };

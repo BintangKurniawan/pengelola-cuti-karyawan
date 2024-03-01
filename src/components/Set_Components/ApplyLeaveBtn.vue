@@ -196,7 +196,7 @@ export default {
     console.log(this.color);
   },
   methods: {
-    openDialog(id) {
+    openDialog() {
       this.dialog = true;
       this.getSpecialLeaveList(this.nik);
       console.log(this.page);

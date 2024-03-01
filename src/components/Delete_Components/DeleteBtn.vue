@@ -99,9 +99,6 @@ export default {
           }
         });
     },
-    acc(id) {
-      console.log(id);
-    },
   },
 };
 </script>

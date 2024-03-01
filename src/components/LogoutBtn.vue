@@ -49,7 +49,7 @@
 import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
-import { Cookies } from 'quasar';
+// import { Cookies } from 'quasar';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
@@ -65,7 +65,6 @@ export default {
         });
       },
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       failedNotif(msg) {
         $q.notify({
           progress: true,
@@ -89,8 +88,7 @@ export default {
   methods: {
     // LOGOUT
     async logout() {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const refreshToken = Cookies.get('refreshToken');
+      // const refreshToken = Cookies.get('refreshToken');
 
       try {
         await api

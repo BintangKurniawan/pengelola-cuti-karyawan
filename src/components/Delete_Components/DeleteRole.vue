@@ -80,7 +80,7 @@ export default {
     Icon,
   },
   methods: {
-    // TO DELETE POSITION
+    // TO DELETE ROLE
     remove(id) {
       api
         .delete(`/role/delete/${id}`, { withCredentials: true })
@@ -96,9 +96,6 @@ export default {
             this.failedNotif(msg);
           }
         });
-    },
-    acc(id) {
-      console.log(id);
     },
   },
 };

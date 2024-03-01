@@ -107,7 +107,6 @@ export default {
     Icon,
   },
   methods: {
-    // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
     sendEmail(type, id) {
       this.showLoading();
       this.load = true;

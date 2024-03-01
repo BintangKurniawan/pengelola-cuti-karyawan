@@ -145,7 +145,6 @@ export default {
         { value: 1, label: 'Mandatory' },
         { value: 2, label: 'Optional' },
       ],
-      // TO RECEIVE typeLeave ID
     };
   },
 
