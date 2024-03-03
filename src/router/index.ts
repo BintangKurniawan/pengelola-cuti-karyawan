@@ -8,6 +8,9 @@ import {
 
 import routes from './routes';
 import { setCssVar } from 'quasar';
+import dotenv from 'dotenv';
+dotenv.config;
+console.log(process.env);
 
 /*
  * If not building with SSR mode, you can
@@ -68,6 +71,8 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('role');
     const color = localStorage.getItem('color');
+    console.log(process.env.port);
+
     // if(to.path !== '/login') {
 
     // }

@@ -156,7 +156,6 @@ export default {
       const token = localStorage.getItem('token');
       await api
         .get('/employee/me', {
-          withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,
           },

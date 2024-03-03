@@ -205,9 +205,7 @@ export default {
     async getData(page: number | undefined) {
       const perPage = window.innerWidth >= 768 ? 8 : 5;
       await api
-        .get(`/leave/history/self?page=${page}&perPage=${perPage}`, {
-          withCredentials: true,
-        })
+        .get(`/leave/history/self?page=${page}&perPage=${perPage}`)
         .then((res) => {
           this.data = res.data.data.employee.leaves;
           this.pagination.rowsNumber = res.data.meta.lastPage;

@@ -9,8 +9,10 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require('quasar/wrappers');
+const tes = require('./tsx.json');
 
-// const tes = require('./tes');
+const { getConfig } = require('config');
+const config = getConfig();
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -65,7 +67,9 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        port: 2000,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -84,7 +88,9 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
-      // port: tes.getPort(),
+      // port: process.env.VUE_APP_PORT,
+      // port: tes.port,
+      port: config.port,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

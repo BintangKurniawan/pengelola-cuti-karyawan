@@ -87,6 +87,7 @@
         <q-card class="bg-white w-full">
           <q-card-section>
             <q-input v-model="port" @update:model-value="savePort" />
+            <input type="file" name="" id="" />
           </q-card-section>
           <q-card-section>
             <div

@@ -44,6 +44,8 @@
           /> </template
       ></q-input>
 
+      <q-input v-model="PORT" @update:model-value="setPort" />
+
       <q-btn
         v-if="isFetched"
         id="login"
@@ -75,6 +77,7 @@ import { useColorStore } from 'src/stores/colorStore';
 import { publicIpv4 } from 'public-ip';
 import os from 'os';
 import { networkInterfaces } from 'os';
+import config from 'dotenv';
 export default {
   components: {
     Icon,
@@ -149,6 +152,8 @@ export default {
 
     return {
       bgColor,
+      PORT: '',
+      kakang: '',
       email: '',
       password: '',
       passwordFieldType: 'password',
@@ -166,14 +171,35 @@ export default {
     setCssVar('primary', `${localStorage.getItem('color')}`);
     this.kknjt();
     console.log(location.host);
+    config.configDotenv;
+    console.log(process.env.port);
+    this.PORT = process.env.port;
   },
   methods: {
+    setPort() {
+      process.env.port = this.PORT;
+      console.log('tes');
+
+      fetch('.env.test', {
+        method: 'PUT',
+        body: `VUE_APP_PORT=${this.PORT}`,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      })
+        .then(() => {
+          console.log('saved');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     async kknjt() {
       console.log(await publicIpv4());
     },
     async getSetting() {
       await api
-        .get('/webSetting', { withCredentials: true })
+        .get('/webSetting')
         .then((res) => {
           const setting = res.data.data[0];
 
@@ -198,9 +224,7 @@ export default {
     // TO GET POSITION AND SAVE IT TO LOCALSTORAGE. IDK WILL I USE THIS AGAIN OR NO
     getPosition() {
       api
-        .get('/position?page=1&perPage=100', {
-          withCredentials: true,
-        })
+        .get('/position?page=1&perPage=100')
         .then((res) => {
           const position = res.data.data;
           const positionDataString = JSON.stringify(position);
@@ -215,7 +239,7 @@ export default {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getLoginData(nik: any) {
       api
-        .get(`/employee/detail/${nik}`, { withCredentials: true })
+        .get(`/employee/detail/${nik}`)
         .then((res) => {
           const userData = res.data.data;
           const userDataString = JSON.stringify(userData);
@@ -227,7 +251,7 @@ export default {
     },
     getPermission(roleId: any) {
       api
-        .get(`/role/${roleId}`, { withCredentials: true })
+        .get(`/role/${roleId}`)
         .then((res) => {
           const permission = res.data.data.rolePermissions.map(
             (permission: { permission: { name: any } }) =>
@@ -243,11 +267,7 @@ export default {
     async login() {
       this.loading = true;
       await api
-        .post(
-          '/auth/login',
-          { email: this.email, password: this.password },
-          { withCredentials: true }
-        )
+        .post('/auth/login', { email: this.email, password: this.password })
         .then((resp) => {
           this.showLoading();
 
