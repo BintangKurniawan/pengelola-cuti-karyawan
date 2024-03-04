@@ -79,6 +79,25 @@
             class="cursor-pointer"
           />
         </div>
+        <div class="flex items-center">
+          <!-- FILTER -->
+          <q-select
+            class="rounded-lg w-[130px]"
+            outlined
+            v-model="amountType"
+            :options="amountTypeOptions"
+            @update:model-value="updateStatus3"
+            label="Amount"
+          ></q-select>
+
+          <q-icon
+            @click="reset3"
+            v-if="amountType"
+            size="16px"
+            name="close"
+            class="cursor-pointer"
+          />
+        </div>
       </div>
     </template>
     <!-- taro v if lagi nanti di sini -->
@@ -202,9 +221,7 @@
           @get-data="handleChildEvent"
           v-if="
             props.row.isWorking === true &&
-            props.row.amountOfLeave[1] &&
-            (props.row.amountOfLeave[0].amount < 0 ||
-              props.row.amountOfLeave[1].amount < 0)
+            props.row.amountOfLeave[0].amount < 0
           "
         />
         <q-btn
@@ -408,6 +425,9 @@ export default {
 
       positionOptions: [],
       positionStatus: null,
+
+      amountType: '',
+      amountTypeOptions: ['Positive', 'Negative'],
     };
   },
   mounted() {
@@ -481,6 +501,21 @@ export default {
     reset2() {
       this.current = 1;
       this.position = '';
+      this.positionStatus = null;
+      this.$router.push({ query: { page: this.current } });
+
+      this.getData(
+        this.current,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
+    },
+    reset3() {
+      this.current = 1;
+      this.position = '';
+      this.amountType = '';
       this.positionStatus = null;
       this.$router.push({ query: { page: this.current } });
 
@@ -570,6 +605,7 @@ export default {
           {
             params: {
               isWorking: this.statusWork,
+              amountType: this.amountType,
             },
           }
         )
@@ -634,6 +670,19 @@ export default {
       );
       this.$router.push({ query: { page: this.curentPageRes } });
       console.log(this.statusWork);
+    },
+
+    updateStatus3() {
+      this.current = 1;
+
+      this.getData(
+        this.pagination.page,
+        this.sort,
+        this.sortLabel,
+        this.searchQuery,
+        this.position
+      );
+      this.$router.push({ query: { page: this.curentPageRes } });
     },
 
     // TO GET ACTIVE/ RESIGN TEXT FROM API

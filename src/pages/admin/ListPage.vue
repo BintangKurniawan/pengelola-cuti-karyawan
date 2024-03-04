@@ -139,59 +139,52 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td
-        :props="props"
-        class="flex-row lg:w-full w-[200px] flex gap-1 h-[50px]"
-      >
-        <div
-          class="flex gap-1 justify-center items-center text-center lg:w-full w-[200px]"
-        >
-          <Approve
-            v-if="
-              (permissions.includes('Approve and Reject Personal Leave') &&
-                (props.row.status === 'REJECT' ||
-                  props.row.status === 'WAITING') &&
-                props.row.typeOfLeave.name === 'Personal') ||
-              ((props.row.status === 'REJECT' ||
+      <q-td :props="props" class="flex justify-center items-center gap-1">
+        <Approve
+          v-if="
+            (permissions.includes('Approve and Reject Personal Leave') &&
+              (props.row.status === 'REJECT' ||
                 props.row.status === 'WAITING') &&
-                props.row.typeOfLeave.name === 'Special')
-            "
-            :type="switchTable ? 'personal' : 'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
+              props.row.typeOfLeave.name === 'Personal') ||
+            ((props.row.status === 'REJECT' ||
+              props.row.status === 'WAITING') &&
+              props.row.typeOfLeave.name === 'Special')
+          "
+          :type="switchTable ? 'personal' : 'employee-special-leave'"
+          :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+        />
 
-          <Reject
-            v-if="
-              props.row.typeOfLeave.name !== 'Optional' &&
-              (props.row.status === 'APPROVE' ||
-                props.row.status === 'WAITING') &&
-              props.row.typeOfLeave.name !== 'Mandatory' &&
-              permissions.includes('Approve and Reject Personal Leave')
-            "
-            :type="switchTable ? 'personal' : 'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
+        <Reject
+          v-if="
+            props.row.typeOfLeave.name !== 'Optional' &&
+            (props.row.status === 'APPROVE' ||
+              props.row.status === 'WAITING') &&
+            props.row.typeOfLeave.name !== 'Mandatory' &&
+            permissions.includes('Approve and Reject Personal Leave')
+          "
+          :type="switchTable ? 'personal' : 'employee-special-leave'"
+          :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+        />
 
-          <Reject
-            v-if="
-              permissions.includes('Approve and Reject Special Leave') &&
-              (props.row.status === 'APPROVE' ||
-                props.row.status === 'WAITING') &&
-              props.row.typeOfLeave.name !== 'Mandatory'
-            "
-            :type="'employee-special-leave'"
-            :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
-          />
-          <NoteBtn
-            :note="props.row.note"
-            :rejectBy="props.row.rejectBy"
-            v-if="props.row.note != null && props.row.status === 'REJECT'"
-          />
-          <NoteBtn
-            :approveBy="props.row.approveBy"
-            v-if="props.row.status === 'APPROVE' && props.row.approveBy"
-          />
-        </div>
+        <Reject
+          v-if="
+            permissions.includes('Approve and Reject Special Leave') &&
+            (props.row.status === 'APPROVE' ||
+              props.row.status === 'WAITING') &&
+            props.row.typeOfLeave.name !== 'Mandatory'
+          "
+          :type="'employee-special-leave'"
+          :id="switchTable ? props.row.leaveEmployeeId : props.row.id"
+        />
+        <NoteBtn
+          :note="props.row.note"
+          :rejectBy="props.row.rejectBy"
+          v-if="props.row.note != null && props.row.status === 'REJECT'"
+        />
+        <NoteBtn
+          :approveBy="props.row.approveBy"
+          v-if="props.row.status === 'APPROVE' && props.row.approveBy"
+        />
       </q-td>
     </template>
   </q-table>
@@ -250,41 +243,44 @@ export default {
         label: 'Name',
         align: 'center',
         field: 'name',
-
-        style: 'width: 150px;',
+        style: 'width: 100px;',
       },
       {
         name: 'type',
         label: 'Type',
         align: 'center',
         field: 'type',
-        style: 'width: 150px;',
+        style: 'width: 300px;',
       },
+
       {
         name: 'start',
         label: 'Start Leave',
         align: 'center',
         field: 'start',
-        style: 'width: 250px;',
       },
+
       {
         name: 'end',
         label: 'End Leave',
         align: 'center',
         field: 'end',
-        style: 'width: 100px;',
+        style: 'width: 250px;',
       },
       {
         name: 'amountleave',
         label: 'Leave Used',
         align: 'center',
         field: 'leaveUse',
+        style: 'width: 250px;',
       },
+
       {
         name: 'status',
         label: 'Status',
         align: 'center',
         field: 'statust',
+        style: 'width: 100px;',
       },
       {
         name: 'reason',
@@ -292,13 +288,16 @@ export default {
         align: 'center',
         field: 'reason',
       },
+
       {
         name: 'action',
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 100px;',
+        style: 'width: 200px;',
       },
+
+      // here
     ];
 
     const column2 = [

@@ -83,8 +83,31 @@
     </q-dialog>
 
     <q-dialog v-model="webconfig">
-      <q-scroll-area style="height: 100%; width: 100%">
+      <!-- <q-scroll-area style="height: 100%; width: 100%">
         <q-card class="bg-white w-full">
+          
+
+          
+        </q-card>
+      </q-scroll-area> -->
+
+      <q-layout view="Lhh lpR fff" container class="bg-white text-dark">
+        <q-header class="bg-primary">
+          <q-toolbar>
+            <q-toolbar-title>Setting</q-toolbar-title>
+            <q-btn flat @click="drawerR = !drawerR" round dense icon="menu" />
+            <q-btn flat v-close-popup round dense icon="close" />
+          </q-toolbar>
+        </q-header>
+
+        <q-drawer
+          side="right"
+          bordered
+          v-model="drawerR"
+          :width="200"
+          :breakpoint="300"
+          class="bg-grey-3 text-dark q-pa-sm"
+        >
           <q-card-section>
             <div
               class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
@@ -97,8 +120,8 @@
             </div>
           </q-card-section>
 
-          <q-card-sectin>
-            <div class="flex items-start gap-4 p-4">
+          <q-card-section>
+            <div class="flex items-start gap-4">
               <q-input
                 v-model="port"
                 id="port"
@@ -106,9 +129,40 @@
                 color="dark"
                 bg-color="white"
                 label="Port"
+                type="number"
                 for="port"
                 placeholder="9000"
               />
+              <q-input
+                v-model="gmail"
+                id="gmail"
+                outlined
+                color="dark"
+                bg-color="white"
+                label="Gmail"
+                for="gmail"
+                placeholder="5XpUQ@example.com"
+              />
+              <q-input
+                v-model="passUser"
+                id="pass"
+                outlined
+                :type="showPw2 ? 'text' : 'password'"
+                color="dark"
+                bg-color="white"
+                label="Password"
+                for="passUser"
+                placeholder="5XpUQ@example.com"
+              >
+                <template v-slot:append>
+                  <Icon
+                    :icon="showPw2 ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
+                    @click="showPw2 = !showPw2"
+                    class="cursor-pointer text-secondary"
+                  />
+                </template>
+              </q-input>
+              <p class="italic underline cursor-pointer">How to get password</p>
               <q-btn
                 label="Save"
                 class="capitalize"
@@ -116,8 +170,10 @@
                 @click="savePort"
               />
             </div>
-          </q-card-sectin>
+          </q-card-section>
+        </q-drawer>
 
+        <q-page-container>
           <q-card-section>
             <div
               class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
@@ -185,8 +241,8 @@
               </div>
             </div>
           </q-card-section>
-        </q-card>
-      </q-scroll-area>
+        </q-page-container>
+      </q-layout>
     </q-dialog>
 
     <q-dialog v-model="changepw">
@@ -292,7 +348,9 @@ export default {
       imgURL,
       handleUpload,
       permissions,
+      drawerR: ref(false),
       showPw: ref(false),
+      showPw2: ref(false),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
         $q.notify({

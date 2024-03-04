@@ -307,6 +307,7 @@ export default {
   mounted() {
     // TO GET DATA
     this.getData(this.pagination.page);
+    this.getHistoryAdjustData(this.pagination.page);
   },
   data() {
     return {
@@ -316,6 +317,7 @@ export default {
       // FOR DATA FROM API
       data: [],
       specialData: [],
+      adjustData: [],
       // FOR PAGINATION
       pagination: {
         rowsPerPage: 10,
@@ -355,7 +357,7 @@ export default {
     // TO GET DATA
     async getData(page: number | undefined) {
       await api
-        .get(`/leave/history/${this.id}?page=${page}&perPage=10`, {
+        .get(`/leave/history/${this.id}?page=${page}&perPage=8`, {
           params: {
             status: this.status,
             typeOfLeave: this.typeLeave,
@@ -375,11 +377,10 @@ export default {
           }
         });
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getSpecialData(page: any) {
       await api
         .get(
-          `/leave/employee-special-leave/history/${this.id}?page=${page}&perPage=10`,
+          `/leave/employee-special-leave/history/${this.id}?page=${page}&perPage=8`,
           {
             params: {
               status: this.status,
@@ -388,6 +389,20 @@ export default {
         )
         .then((res) => {
           this.specialData = res.data.data;
+          this.pagination.rowsNumber = res.data.meta.lastPage;
+        })
+        .catch((err) => {
+          console.error(err);
+          if (err.response.status == 403) {
+            this.failedNotif(err.response.data.message);
+          }
+        });
+    },
+    async getHistoryAdjustData(page: any) {
+      await api
+        .get(`/leave/adjust-leave/${this.id}?page=${page}&perPage=8`)
+        .then((res) => {
+          this.adjustData = res.data.data;
           this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
