@@ -198,7 +198,6 @@ export default {
             search: this.search,
             gender: this.gender,
           },
-          withCredentials: true,
         })
         .then((res) => {
           this.data = res.data.data;

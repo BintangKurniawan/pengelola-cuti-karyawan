@@ -147,18 +147,12 @@ export default {
   methods: {
     async create() {
       await api
-        .post(
-          '/leave/special-leave/',
-          {
-            leaveTitle: this.leaveTitle,
-            gender: this.gender,
-            amount: this.amount,
-            leaveInformation: this.info,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+        .post('/leave/special-leave/', {
+          leaveTitle: this.leaveTitle,
+          gender: this.gender,
+          amount: this.amount,
+          leaveInformation: this.info,
+        })
         .then((res) => {
           console.log(res);
           this.successNotif(res.data.message);

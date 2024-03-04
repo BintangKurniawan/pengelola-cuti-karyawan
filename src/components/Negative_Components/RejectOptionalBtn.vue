@@ -105,11 +105,7 @@ export default {
     // TO REJECT OPTIONAL LEAVE
     async reject(id) {
       await api
-        .patch(
-          `/leave/optional/${id}/reject`,
-          { note: this.note },
-          { withCredentials: true }
-        )
+        .patch(`/leave/optional/${id}/reject`, { note: this.note })
         .then((resp) => {
           console.log(resp);
           this.dialog = false;

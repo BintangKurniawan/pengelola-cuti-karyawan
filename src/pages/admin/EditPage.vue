@@ -360,9 +360,7 @@ export default {
   methods: {
     async getPosition() {
       await api
-        .get('/position/filter-leaves?page=1&perPage=100', {
-          withCredentials: true,
-        })
+        .get('/position/filter-leaves?page=1&perPage=100')
         .then((resp) => {
           const positions = resp.data.data;
           const mappedPositions = positions.map(
@@ -383,7 +381,7 @@ export default {
     },
     async getRole() {
       await api
-        .get('/role/select', { withCredentials: true })
+        .get('/role/select')
         .then((res) => {
           const roles = res.data.data;
           const mappedRoles = roles.map((roles: { id: any; name: any }) => {
@@ -404,43 +402,39 @@ export default {
     },
     async getData() {
       try {
-        await api
-          .get(`/employee/detail/${this.id}`, {
-            withCredentials: true,
-          })
-          .then((resp) => {
-            this.nik = resp.data.data[0].nik;
-            this.name = resp.data.data[0].name;
-            // this.position = resp.data.data[0].positions.name;
-            this.email = resp.data.data[0].user.email;
-            this.start = this.formatDate(
-              resp.data.data[0].typeOfEmployee.startContract
-            );
-            this.contractType = this.getContractTypeText(
-              resp.data.data[0].typeOfEmployee.newContract
-            );
-            this.gender = resp.data.data[0].gender;
-            this.contract = resp.data.data[0].typeOfEmployee.newContract;
-            this.expires = resp.data.data[0].typeOfEmployee.endContract;
-            this.status = this.getStatusText(resp.data.data[0].isWorking);
-            this.statusBoolean = resp.data.data[0].isWorking;
-            this.typeContract = this.getContractText(
-              resp.data.data[0].typeOfEmployee.isContract
-            );
+        await api.get(`/employee/detail/${this.id}`).then((resp) => {
+          this.nik = resp.data.data[0].nik;
+          this.name = resp.data.data[0].name;
+          // this.position = resp.data.data[0].positions.name;
+          this.email = resp.data.data[0].user.email;
+          this.start = this.formatDate(
+            resp.data.data[0].typeOfEmployee.startContract
+          );
+          this.contractType = this.getContractTypeText(
+            resp.data.data[0].typeOfEmployee.newContract
+          );
+          this.gender = resp.data.data[0].gender;
+          this.contract = resp.data.data[0].typeOfEmployee.newContract;
+          this.expires = resp.data.data[0].typeOfEmployee.endContract;
+          this.status = this.getStatusText(resp.data.data[0].isWorking);
+          this.statusBoolean = resp.data.data[0].isWorking;
+          this.typeContract = this.getContractText(
+            resp.data.data[0].typeOfEmployee.isContract
+          );
 
-            this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
-            // this.role = this.getRoleId(resp.data.data[0].user.role.name);
-            // this.roleType = this.getRoleText(resp.data.data[0].user.role.name);
-            this.roleType = resp.data.data[0].user.role.id;
-            console.log(this.role);
+          this.contractBoolean = resp.data.data[0].typeOfEmployee.isContract;
+          // this.role = this.getRoleId(resp.data.data[0].user.role.name);
+          // this.roleType = this.getRoleText(resp.data.data[0].user.role.name);
+          this.roleType = resp.data.data[0].user.role.id;
+          console.log(this.role);
 
-            if (resp.data.data[0].typeOfEmployee.endContract) {
-              this.exp = this.formatDate(
-                resp.data.data[0].typeOfEmployee.endContract
-              );
-            }
-            this.typePosition = resp.data.data[0].positions.id;
-          });
+          if (resp.data.data[0].typeOfEmployee.endContract) {
+            this.exp = this.formatDate(
+              resp.data.data[0].typeOfEmployee.endContract
+            );
+          }
+          this.typePosition = resp.data.data[0].positions.id;
+        });
       } catch (err) {
         console.error(err);
       }
@@ -554,7 +548,6 @@ export default {
             },
           },
           {
-            withCredentials: true,
             headers: {
               Accept: '*/*',
               'Content-Type': 'application/json',

@@ -111,9 +111,7 @@ export default {
       this.showLoading();
       this.load = true;
       api
-        .post(`/leave/send-leave-email/${type}/${id}`, {
-          withCredentials: true,
-        })
+        .post(`/leave/send-leave-email/${type}/${id}`)
         .then((resp) => {
           this.successNotif(resp.data.message);
           this.dialog = false;

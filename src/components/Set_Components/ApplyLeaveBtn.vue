@@ -208,7 +208,7 @@ export default {
     },
     async getSpecialLeaveList(nik) {
       await api
-        .get(`leave/special-leave/gender/${nik}`, { withCredentials: true })
+        .get(`leave/special-leave/gender/${nik}`)
         .then((res) => {
           const leaveList = res.data.data;
 
@@ -232,17 +232,11 @@ export default {
       this.showLoading();
       if (!this.special) {
         api
-          .post(
-            '/leave/personal/self',
-            {
-              reason: this.reason,
-              startLeave: this.startLeave,
-              endLeave: this.endLeave,
-            },
-            {
-              withCredentials: true,
-            }
-          )
+          .post('/leave/personal/self', {
+            reason: this.reason,
+            startLeave: this.startLeave,
+            endLeave: this.endLeave,
+          })
           .then((res) => {
             console.log(res);
             this.successNotif();
@@ -263,16 +257,10 @@ export default {
           });
       } else {
         api
-          .post(
-            '/leave/employee-special-leave/self',
-            {
-              specialLeaveId: this.specialLeaveSelected,
-              startLeave: this.startLeave,
-            },
-            {
-              withCredentials: true,
-            }
-          )
+          .post('/leave/employee-special-leave/self', {
+            specialLeaveId: this.specialLeaveSelected,
+            startLeave: this.startLeave,
+          })
           .then((res) => {
             this.successNotif();
             this.specialLeaveId = '';

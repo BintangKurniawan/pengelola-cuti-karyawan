@@ -101,7 +101,7 @@ export default {
     // TO GET POSITION BY ID
     async getData(id) {
       await api
-        .get(`/position/${id}`, { withCredentials: true })
+        .get(`/position/${id}`)
         .then((resp) => {
           console.log(resp);
           this.name = resp.data.data.name;
@@ -113,15 +113,9 @@ export default {
     // TO UPDATE THE POSITION
     async update(id) {
       await api
-        .put(
-          `/position/update/${id}`,
-          {
-            name: this.name,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+        .put(`/position/update/${id}`, {
+          name: this.name,
+        })
         .then((res) => {
           console.log(res);
           this.successNotif(res.data.message);

@@ -85,7 +85,7 @@ export default {
     },
     async getData(id) {
       await api
-        .get(`/role/${id}`, { withCredentials: true })
+        .get(`/role/${id}`)
         .then((res) => {
           console.log(res);
           this.name = res.data.data.name;

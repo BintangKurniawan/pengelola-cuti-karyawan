@@ -84,7 +84,7 @@ export default {
     // TO DELETE POSITION
     remove(id) {
       api
-        .delete(`/position/delete/${id}`, { withCredentials: true })
+        .delete(`/position/delete/${id}`)
         .then((resp) => {
           this.deleteNotif(resp.data.message);
           this.dialog = false;

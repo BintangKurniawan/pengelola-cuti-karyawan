@@ -1,19 +1,19 @@
 <template>
   <q-btn flat text-color="white" class="" @click="dialog = true">
-    <Icon icon="mdi:delete-outline" width="24" class="text-negative" />
+    <Icon icon="mdi:restart" width="24" class="text-primary" />
   </q-btn>
 
   <div>
     <q-dialog v-model="dialog">
-      <q-card class="bg-white">
+      <q-card class="bg-white w-full">
         <q-card-section>
-          <h6 class="font-bold text-center">Delete Data</h6>
+          <h6 class="font-bold text-center">Adjust Leave</h6>
         </q-card-section>
 
         <q-card-section>
           <p class="text-center text-[#a0a0a0]">
-            Are you sure want to delete this data? <br />
-            It will change it's status into resign
+            Are you sure want to <br />
+            adjust leave this employee?
           </p>
         </q-card-section>
 
@@ -27,10 +27,11 @@
           </div>
 
           <q-btn
-            label="Delete"
+            label="Adjust"
             unelevated
-            text-color="negative"
-            @click="remove(id)"
+            color="primary"
+            text-color="white"
+            @click="adjust(id)"
             class="font-bold round text-center capitalize px-10 py-2"
           />
         </q-card-section>
@@ -50,7 +51,7 @@ export default {
   setup() {
     const $q = useQuasar();
     return {
-      deleteNotif(msg) {
+      successNotif(msg) {
         $q.notify({
           progress: true,
           position: 'bottom-right',
@@ -83,11 +84,11 @@ export default {
   },
   methods: {
     // TO DISABLE ACCOUNT WHEN EMPLOYEE RESIGN
-    remove(id) {
+    adjust(id) {
       api
-        .post(`/employee/disable/${id}`)
+        .post(`leave/adjust-leave/${id}`)
         .then((resp) => {
-          this.deleteNotif(resp.data.message);
+          this.successNotif(resp.data.message);
           this.dialog = false;
 
           this.$emit('get-data');

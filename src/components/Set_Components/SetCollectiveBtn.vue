@@ -156,16 +156,12 @@ export default {
     // SET COLLECTIVE LEAVE
     async setCollectiveLeave() {
       await api
-        .post(
-          '/leave/collective',
-          {
-            typeOfLeaveId: this.typeLeave,
-            reason: this.reason,
-            startLeave: this.startLeave,
-            endLeave: this.endLeave,
-          },
-          { withCredentials: true }
-        )
+        .post('/leave/collective', {
+          typeOfLeaveId: this.typeLeave,
+          reason: this.reason,
+          startLeave: this.startLeave,
+          endLeave: this.endLeave,
+        })
         .then((resp) => {
           this.dialog = false;
           this.leaveId = '';

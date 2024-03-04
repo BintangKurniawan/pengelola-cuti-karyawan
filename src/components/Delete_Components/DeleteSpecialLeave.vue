@@ -83,7 +83,7 @@ export default {
   methods: {
     remove(id) {
       api
-        .patch(`/leave/special-leave/delete/${id}`, { withCredentials: true })
+        .patch(`/leave/special-leave/delete/${id}`)
         .then((resp) => {
           this.deleteNotif(resp.data.message);
           this.dialog = false;

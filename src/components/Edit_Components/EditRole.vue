@@ -127,7 +127,7 @@ export default {
     // TO GET PERMISSIONS
     async getRole() {
       await api
-        .get('/role/permissions?page=1&perPage=100', { withCredentials: true })
+        .get('/role/permissions?page=1&perPage=100')
         .then((resp) => {
           const roles = resp.data.data;
           const mappedRoles = roles.map((role: { id: any; name: any }) => {
@@ -149,7 +149,7 @@ export default {
 
     async getRoleById(id: any) {
       await api
-        .get(`/role/${id}`, { withCredentials: true })
+        .get(`/role/${id}`)
         .then((res) => {
           this.name = res.data.data.name;
           this.selectedRole = res.data.data.rolePermissions.map(
@@ -171,7 +171,6 @@ export default {
             permissions: this.selectedRole,
           },
           {
-            withCredentials: true,
             headers: {
               Accept: '*/*',
               'Content-Type': 'application/json',

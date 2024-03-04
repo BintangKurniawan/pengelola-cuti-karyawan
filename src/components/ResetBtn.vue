@@ -86,7 +86,7 @@ export default {
     // TO RESET PASSWORD
     async reset(id) {
       await api
-        .post(`/employee/reset-password/${id}`, { withCredentials: true })
+        .post(`/employee/reset-password/${id}`)
         .then((resp) => {
           console.log(resp);
 

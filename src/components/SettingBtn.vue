@@ -86,9 +86,38 @@
       <q-scroll-area style="height: 100%; width: 100%">
         <q-card class="bg-white w-full">
           <q-card-section>
-            <q-input v-model="port" @update:model-value="savePort" />
-            <input type="file" name="" id="" />
+            <div
+              class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
+            >
+              <span
+                class="h-[2px] inline-block bg-primary absolute left-0 bottom-0.5 w-full transition-[width] ease duration-300"
+                >&nbsp;</span
+              >
+              <p class="capitalize">Port Option</p>
+            </div>
           </q-card-section>
+
+          <q-card-sectin>
+            <div class="flex items-start gap-4 p-4">
+              <q-input
+                v-model="port"
+                id="port"
+                outlined
+                color="dark"
+                bg-color="white"
+                label="Port"
+                for="port"
+                placeholder="9000"
+              />
+              <q-btn
+                label="Save"
+                class="capitalize"
+                color="primary"
+                @click="savePort"
+              />
+            </div>
+          </q-card-sectin>
+
           <q-card-section>
             <div
               class="relative group transition-all md:w-fit flex items-center gap-1 cursor-pointer pb-1 md:justify-start text-2xl"
@@ -238,8 +267,7 @@ import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { setCssVar, useQuasar } from 'quasar';
-import fs from 'fs';
-import tes from 'src/tsx.json';
+import { useConfigPortStore } from 'src/stores/configStore';
 
 export default {
   setup() {
@@ -253,10 +281,12 @@ export default {
         imgURL.value = URL.createObjectURL(img.value);
       }
     };
-
-    let port = localStorage.getItem('port');
+    const store = useConfigPortStore();
     return {
-      port,
+      store,
+      port: 0,
+      gmail: '',
+      passUser: '',
       hex: ref(),
       img,
       imgURL,
@@ -319,9 +349,6 @@ export default {
     // this.getData();
   },
   methods: {
-    savePort() {
-      localStorage.setItem('port', this.port);
-    },
     openDialog() {
       // this.getPosition();
       this.getData();
@@ -369,7 +396,7 @@ export default {
     //  TO GET LOGGED IN USER DATA
     async getData() {
       await api
-        .get(`/employee/detail/${this.nik}`, { withCredentials: true })
+        .get(`/employee/detail/${this.nik}`)
         .then((resp) => {
           // console.log(resp);
           this.name = resp.data.data[0].name;
@@ -397,7 +424,7 @@ export default {
 
       if (this.permissions.includes('Receiving Email Requests for Leave')) {
         await api
-          .get('/leave/receive-email', { withCredentials: true })
+          .get('/leave/receive-email')
           .then((res) => {
             console.log(res);
             this.emailNotif = res.data.data.receiveEmail;
@@ -409,7 +436,7 @@ export default {
     },
     async turnOnOffEmail() {
       await api
-        .patch('/leave/receive-email', {}, { withCredentials: true })
+        .patch('/leave/receive-email')
         .then((res) => {
           if (res.data.message) {
             this.successNotif(res.data.message);
@@ -422,11 +449,7 @@ export default {
     // FOR CHANGE PASSWORD
     async changePassword() {
       await api
-        .post(
-          '/employee/change-password',
-          { newPassword: this.password },
-          { withCredentials: true }
-        )
+        .post('/employee/change-password', { newPassword: this.password })
         .then((resp) => {
           console.log(resp);
           const msg = resp.data.message;
@@ -454,7 +477,6 @@ export default {
             name: this.name,
           },
           {
-            withCredentials: true,
             headers: {
               Accept: '*/*',
               'Content-Type': 'application/json',
@@ -480,7 +502,7 @@ export default {
 
     async getSetting() {
       await api
-        .get('/webSetting', { withCredentials: true })
+        .get('/webSetting')
         .then((res) => {
           const setting = res.data.data[0];
 
@@ -491,14 +513,22 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+
+      await api
+        .get('/webSetting/config')
+        .then((res) => {
+          this.port = res.data.PORT;
+          this.gmail = res.data.GMAIL_USER;
+          this.passUser = res.data.GMAIL_PASSWORD;
+          this.store.setPort(this.port);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     async saveColor() {
       await api
-        .put(
-          '/siteSetting/update-color/1',
-          { colorCode: this.hex },
-          { withCredentials: true }
-        )
+        .put('/siteSetting/update-color/1', { colorCode: this.hex })
         .then((res) => {
           console.log(res);
           localStorage.setItem('color', this.hex);
@@ -519,7 +549,6 @@ export default {
           '/siteSetting/update-image/1',
           { picture: this.img },
           {
-            withCredentials: true,
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -528,6 +557,27 @@ export default {
         .then((res) => {
           console.log(res);
           localStorage.setItem('logo', res.data.data.picture);
+          this.successNotif(res.data.message);
+        })
+        .catch((err) => {
+          if (err.response) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+          }
+        });
+    },
+
+    async savePort() {
+      await api
+        .put('/webSetting/update-config', {
+          PORT: this.port,
+          GMAIL_USER: this.gmail,
+          GMAIL_PASSWORD: this.passUser,
+        })
+        .then((res) => {
+          console.log(res);
+          this.store.setPort(this.port);
+          this.store.setConfig(this.port);
           this.successNotif(res.data.message);
         })
         .catch((err) => {

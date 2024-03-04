@@ -184,7 +184,7 @@ export default {
     },
     async getSpecialLeaveList(id) {
       await api
-        .get(`leave/special-leave/gender/${id}`, { withCredentials: true })
+        .get(`leave/special-leave/gender/${id}`)
         .then((res) => {
           const leaveList = res.data.data;
 
@@ -207,17 +207,11 @@ export default {
     async setLeave(id) {
       if (!this.special) {
         await api
-          .post(
-            `/leave/personal/${id}`,
-            {
-              reason: this.reason,
-              startLeave: this.startLeave,
-              endLeave: this.endLeave,
-            },
-            {
-              withCredentials: true,
-            }
-          )
+          .post(`/leave/personal/${id}`, {
+            reason: this.reason,
+            startLeave: this.startLeave,
+            endLeave: this.endLeave,
+          })
           .then((res) => {
             console.log(res);
             this.successNotif();
@@ -243,16 +237,10 @@ export default {
           });
       } else {
         await api
-          .post(
-            `/leave/employee-special-leave/${id}`,
-            {
-              specialLeaveId: this.specialLeaveSelected,
-              startLeave: this.startLeave,
-            },
-            {
-              withCredentials: true,
-            }
-          )
+          .post(`/leave/employee-special-leave/${id}`, {
+            specialLeaveId: this.specialLeaveSelected,
+            startLeave: this.startLeave,
+          })
           .then((res) => {
             this.successNotif();
             this.specialLeaveId = '';

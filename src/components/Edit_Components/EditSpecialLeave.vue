@@ -145,7 +145,7 @@ export default {
     // TO GET SPECIAL LEAVE BY ID
     async getData(id) {
       await api
-        .get(`/leave/special-leave/${id}`, { withCredentials: true })
+        .get(`/leave/special-leave/${id}`)
         .then((resp) => {
           console.log(resp);
           this.leaveTitle = resp.data.data.leaveTitle;
@@ -160,18 +160,12 @@ export default {
     // TO UPDATE THE SPECIAL LEAVE
     async update(id) {
       await api
-        .patch(
-          `/leave/special-leave/${id}`,
-          {
-            leaveTitle: this.leaveTitle,
-            gender: this.gender,
-            amount: this.amount,
-            leaveInformation: this.info,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+        .patch(`/leave/special-leave/${id}`, {
+          leaveTitle: this.leaveTitle,
+          gender: this.gender,
+          amount: this.amount,
+          leaveInformation: this.info,
+        })
         .then((res) => {
           console.log(res);
           this.successNotif(res.data.message);

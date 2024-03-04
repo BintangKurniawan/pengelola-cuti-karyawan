@@ -8,6 +8,7 @@ import { useQuasar } from 'quasar';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 import ApplyLeaveBtn from 'src/components/Set_Components/ApplyLeaveBtn.vue';
 import { useColorStore } from 'src/stores/colorStore';
+
 export default {
   setup() {
     const role = localStorage.getItem('role');

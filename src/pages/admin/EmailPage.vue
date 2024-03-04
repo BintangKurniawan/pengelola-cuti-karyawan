@@ -177,7 +177,6 @@ export default {
       this.load = true;
       await api
         .get(`/leave/collective-leave?page=${page}&perPage=${perPage}`, {
-          withCredentials: true,
           params: {
             search: this.search,
             typeOfLeave: this.typeLeave,

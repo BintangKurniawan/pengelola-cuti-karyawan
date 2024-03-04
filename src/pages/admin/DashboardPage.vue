@@ -120,6 +120,16 @@
         </p>
       </q-th>
     </template>
+    <template v-slot:header-cell-amountOfLeaveNow="props">
+      <q-th :props="props">
+        <p>{{ thisYear }} Leave</p>
+      </q-th>
+    </template>
+    <template v-slot:header-cell-amountOfLeaveThen="props">
+      <q-th :props="props">
+        <p>{{ lastYear }} Leave</p>
+      </q-th>
+    </template>
 
     <!-- taro v if lagi di sini -->
     <!-- sementara done -->
@@ -186,7 +196,17 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props">
+      <q-td :props="props" class="flex items-center justify-center">
+        <AdjustLeaveBtn
+          :id="props.row.nik"
+          @get-data="handleChildEvent"
+          v-if="
+            props.row.isWorking === true &&
+            props.row.amountOfLeave[1] &&
+            (props.row.amountOfLeave[0].amount < 0 ||
+              props.row.amountOfLeave[1].amount < 0)
+          "
+        />
         <q-btn
           flat
           text-color="white"
@@ -215,7 +235,10 @@
         <Delete
           :id="props.row.nik"
           @get-data="handleChildEvent"
-          v-if="permissions.includes('Disable Employee')"
+          v-if="
+            permissions.includes('Disable Employee') &&
+            props.row.isWorking === true
+          "
         />
       </q-td>
     </template>
@@ -243,6 +266,7 @@ import SetLeave from 'src/components/Set_Components/SetLeaveBtn.vue';
 import Delete from 'src/components/Delete_Components/DeleteBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
+import AdjustLeaveBtn from 'src/components/AdjustLeaveBtn.vue';
 export default {
   components: {
     SetCollective,
@@ -250,6 +274,7 @@ export default {
     SetLeave,
     Delete,
     AddEmployee,
+    AdjustLeaveBtn,
   },
   setup() {
     const column = [
@@ -258,14 +283,13 @@ export default {
         label: 'NIK',
         align: 'center',
         field: 'nik',
-        style: 'width: 160px;',
       },
       {
         name: 'name',
         label: 'Name',
         align: 'center',
         field: 'name',
-        style: 'width: 300px;',
+        style: 'width: 100px;',
       },
       {
         name: 'position',
@@ -313,7 +337,7 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 100px',
+        style: 'width: 260px',
       },
     ];
     const roleId = localStorage.getItem('role');
@@ -349,7 +373,8 @@ export default {
   },
   data() {
     return {
-      thisYear: new Date().getFullYear,
+      thisYear: new Date().getFullYear(),
+      lastYear: new Date().getFullYear() - 1,
       // FOR SEARCH
       searchQuery: '',
       // FOR FILTER
@@ -504,9 +529,7 @@ export default {
     },
     async getPosition() {
       await api
-        .get('/position/filter-leaves?page=1&perPage=100', {
-          withCredentials: true,
-        })
+        .get('/position/filter-leaves?page=1&perPage=100')
         .then((resp) => {
           const positions = resp.data.data;
           const mappedPositions = positions.map(
@@ -548,7 +571,6 @@ export default {
             params: {
               isWorking: this.statusWork,
             },
-            withCredentials: true,
           }
         )
         .then((res) => {
@@ -572,7 +594,7 @@ export default {
     // TO CHECK THE FIELD IN BACKEND, THEY TOLD ME TO WRITE THIS
     async async() {
       await api
-        .post('/employee/update-amount-of-leave', {}, { withCredentials: true })
+        .post('/employee/update-amount-of-leave', {})
         .then((res) => {
           const msg = res.data.message;
           this.successNotif(msg);

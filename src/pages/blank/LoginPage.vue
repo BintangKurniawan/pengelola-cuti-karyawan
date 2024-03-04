@@ -44,10 +44,7 @@
           /> </template
       ></q-input>
 
-      <q-input v-model="PORT" @update:model-value="setPort" />
-
       <q-btn
-        v-if="isFetched"
         id="login"
         text-color="white"
         unelevated
@@ -69,7 +66,7 @@
 import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
-import { colors, getCssVar, useQuasar } from 'quasar';
+import { Cookies, colors, getCssVar, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { onBeforeUnmount } from 'vue';
 import { setCssVar } from 'quasar';
@@ -78,6 +75,7 @@ import { publicIpv4 } from 'public-ip';
 import os from 'os';
 import { networkInterfaces } from 'os';
 import config from 'dotenv';
+import { useConfigPortStore } from 'src/stores/configStore';
 export default {
   components: {
     Icon,
@@ -86,6 +84,7 @@ export default {
     // FOR LOADING
     const $q = useQuasar();
     const store = useColorStore();
+    const configStore = useConfigPortStore();
     const route = useRouter();
     setCssVar('primary', `${localStorage.getItem('color')}`);
     let timer: string | number | NodeJS.Timeout | undefined;
@@ -115,6 +114,7 @@ export default {
     console.log(ipAddress);
 
     return {
+      configStore,
       store,
       route,
       showLoading() {
@@ -152,7 +152,6 @@ export default {
 
     return {
       bgColor,
-      PORT: '',
       kakang: '',
       email: '',
       password: '',
@@ -169,37 +168,17 @@ export default {
     this.getSetting();
     // console.log(getCssVar('--q-primary'));
     setCssVar('primary', `${localStorage.getItem('color')}`);
-    this.kknjt();
+    this.checkIp();
     console.log(location.host);
     config.configDotenv;
-    console.log(process.env.port);
-    this.PORT = process.env.port;
   },
   methods: {
-    setPort() {
-      process.env.port = this.PORT;
-      console.log('tes');
-
-      fetch('.env.test', {
-        method: 'PUT',
-        body: `VUE_APP_PORT=${this.PORT}`,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-      })
-        .then(() => {
-          console.log('saved');
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    async kknjt() {
+    async checkIp() {
       console.log(await publicIpv4());
     },
     async getSetting() {
       await api
-        .get('/webSetting')
+        .get('/webSetting', { withCredentials: true })
         .then((res) => {
           const setting = res.data.data[0];
 
@@ -216,6 +195,19 @@ export default {
           // setTimeout(() => {
           // }, 2000);
           this.isFetched = true;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      await api
+        .get('/webSetting/config', { withCredentials: true })
+        .then((res) => {
+          console.log(res);
+          this.configStore.setPort(res.data.PORT);
+
+          const configSetting = res.data;
+          // localStorage.setItem('config', JSON.stringify(configSetting));
         })
         .catch((err) => {
           console.error(err);
@@ -267,7 +259,11 @@ export default {
     async login() {
       this.loading = true;
       await api
-        .post('/auth/login', { email: this.email, password: this.password })
+        .post(
+          '/auth/login',
+          { email: this.email, password: this.password },
+          { withCredentials: true }
+        )
         .then((resp) => {
           this.showLoading();
 
@@ -288,6 +284,7 @@ export default {
           localStorage.setItem('token', token);
           localStorage.setItem('role', this.role);
           console.log(this.role);
+          // Cookies.set('refresh_token', resp.headers['set-cookie'][0]);
 
           this.getPosition();
           this.getLoginData(resp.data.data.employee.nik);

@@ -83,7 +83,7 @@ export default {
     // TO DELETE ROLE
     remove(id) {
       api
-        .delete(`/role/delete/${id}`, { withCredentials: true })
+        .delete(`/role/delete/${id}`)
         .then((resp) => {
           this.deleteNotif(resp.data.message);
           this.dialog = false;

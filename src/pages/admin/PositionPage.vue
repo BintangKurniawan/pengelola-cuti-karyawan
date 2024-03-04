@@ -183,7 +183,6 @@ export default {
           params: {
             search: this.search,
           },
-          withCredentials: true,
         })
         .then((resp) => {
           this.data = resp.data.data;

@@ -271,9 +271,7 @@ export default {
     // TO GET POSITION
     async getPosition() {
       await api
-        .get('/position/filter-leaves?page=1&perPage=100', {
-          withCredentials: true,
-        })
+        .get('/position/filter-leaves?page=1&perPage=100')
         .then((resp) => {
           const positions = resp.data.data;
           const mappedPositions = positions.map(
@@ -313,7 +311,6 @@ export default {
             newContract: this.employeeStatus,
           },
           {
-            withCredentials: true,
             headers: {
               Accept: '*/*',
               'Content-Type': 'application/json',

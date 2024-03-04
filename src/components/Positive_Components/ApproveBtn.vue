@@ -101,7 +101,7 @@ export default {
       this.showLoading();
       this.loading = true;
       await api
-        .patch(`/leave/${type}/${id}/approve`, {}, { withCredentials: true })
+        .patch(`/leave/${type}/${id}/approve`, {})
         .then((resp) => {
           console.log(resp);
           this.dialog = false;

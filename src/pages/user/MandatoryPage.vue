@@ -70,9 +70,7 @@ export default {
     async getData(page) {
       this.loading = true;
       await api
-        .get(`/leave/mandatory?page=${page}&perPage=10`, {
-          withCredentials: true,
-        })
+        .get(`/leave/mandatory?page=${page}&perPage=10`)
         .then((resp) => {
           this.data = resp.data.data;
           this.pagination.rowsNumber = resp.data.meta.lastPage;

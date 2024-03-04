@@ -119,11 +119,7 @@ export default {
       this.showLoading();
       this.load = true;
       await api
-        .patch(
-          `/leave/${type}/${id}/reject`,
-          { note: this.note },
-          { withCredentials: true }
-        )
+        .patch(`/leave/${type}/${id}/reject`, { note: this.note })
         .then((resp) => {
           console.log(resp);
           this.dialog = false;

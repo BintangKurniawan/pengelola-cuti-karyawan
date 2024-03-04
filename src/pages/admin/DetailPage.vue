@@ -308,7 +308,7 @@ export default {
     },
     async getRole() {
       await api
-        .get('/role/select', { withCredentials: true })
+        .get('/role/select')
         .then((res) => {
           const roles = res.data.data;
           const mappedRoles = roles.map((roles) => {
@@ -329,15 +329,9 @@ export default {
     },
     async saveRole(roleType) {
       await api
-        .patch(
-          `/employee/update-role/${this.nik}`,
-          {
-            roleId: roleType,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+        .patch(`/employee/update-role/${this.nik}`, {
+          roleId: roleType,
+        })
         .then((res) => {
           this.successNotif(res.data.message);
           this.getData();
@@ -351,9 +345,7 @@ export default {
     // TO GET DATA
     async getData() {
       await api
-        .get(`/employee/detail/${this.id}`, {
-          withCredentials: true,
-        })
+        .get(`/employee/detail/${this.id}`)
         .then((resp) => {
           this.nik = resp.data.data[0].nik;
           this.name = resp.data.data[0].name;

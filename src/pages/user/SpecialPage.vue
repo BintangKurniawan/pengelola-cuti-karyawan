@@ -177,10 +177,7 @@ export default {
       const perPage = window.innerWidth >= 768 ? 8 : 5;
       await api
         .get(
-          `/leave/employee-special-leave/history/me?page=${page}&perPage=${perPage}`,
-          {
-            withCredentials: true,
-          }
+          `/leave/employee-special-leave/history/me?page=${page}&perPage=${perPage}`
         )
         .then((res) => {
           this.data = res.data.data.employee.specialLeave;

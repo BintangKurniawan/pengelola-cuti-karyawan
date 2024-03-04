@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col overflow-x-scroll w-full hide-scroll">
-    <!-- <p>{{ color }}</p> -->
     <q-table
       v-if="data && data.length > 0"
       class="my-table table-rounded"

@@ -1,8 +1,14 @@
 import axios from 'axios';
 import { Cookies } from 'quasar';
 import { useRouter } from 'vue-router';
+import { useConfigPortStore } from './stores/configStore';
+const store = useConfigPortStore();
+
+const port = store.getPort;
+const ip = store.getIp;
+
 const api = axios.create({
-  baseURL: 'https://10.10.101.57:8080/api',
+  baseURL: `https://${ip}:${port}/api`,
 });
 api.interceptors.request.use(
   (config) => {

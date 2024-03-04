@@ -81,9 +81,7 @@ export default {
     },
     async getData(page) {
       await api
-        .get(`/leave/optional?page=${page}&perPage=10`, {
-          withCredentials: true,
-        })
+        .get(`/leave/optional?page=${page}&perPage=10`)
         .then((resp) => {
           const allLeave = resp.data.data.employee.leaves;
 

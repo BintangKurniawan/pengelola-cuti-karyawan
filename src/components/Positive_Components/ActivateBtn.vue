@@ -87,7 +87,7 @@ export default {
     // FOR ACTIVATE ACCOUNT
     activate(id) {
       api
-        .post(`/employee/enable/${id}`, { withCredentials: true })
+        .post(`/employee/enable/${id}`)
         .then((resp) => {
           const msg = resp.data.message;
           this.successNotif(msg);

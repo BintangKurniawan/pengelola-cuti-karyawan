@@ -469,7 +469,6 @@ export default {
             status: this.status,
             typeOfLeave: this.typeLeave,
           },
-          withCredentials: true,
         })
         .then((resp) => {
           this.data = resp.data.data;
@@ -497,8 +496,6 @@ export default {
             search: this.search,
             status: this.status,
           },
-
-          withCredentials: true,
         })
         .then((res) => {
           this.specialData = res.data.data;

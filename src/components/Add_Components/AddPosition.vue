@@ -103,15 +103,9 @@ export default {
     // TO CREATE POSITION
     async create() {
       await api
-        .post(
-          '/position/create/',
-          {
-            name: this.name,
-          },
-          {
-            withCredentials: true,
-          }
-        )
+        .post('/position/create/', {
+          name: this.name,
+        })
         .then((res) => {
           console.log(res);
           this.successNotif(res.data.message);
