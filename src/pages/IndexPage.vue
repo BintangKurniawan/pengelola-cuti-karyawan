@@ -87,6 +87,7 @@
     </div>
   </div>
 </template>
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script lang="ts">
 import { ref } from 'vue';
@@ -157,7 +158,6 @@ export default {
       color: '',
       column,
       current: ref(1),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -167,7 +167,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -218,7 +217,6 @@ export default {
     },
 
     // FORMAT DATE
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formatDate(dateString: any) {
       // const options = { day: 'numeric', month: 'short', year: 'numeric' };
       // const date = new Date(dateString);

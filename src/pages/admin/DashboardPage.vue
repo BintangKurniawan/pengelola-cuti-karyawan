@@ -221,7 +221,8 @@
           @get-data="handleChildEvent"
           v-if="
             props.row.isWorking === true &&
-            props.row.amountOfLeave[0].amount < 0
+            props.row.amountOfLeave[0].amount < 0 &&
+            permissions.includes('Adjust Leave')
           "
         />
         <q-btn

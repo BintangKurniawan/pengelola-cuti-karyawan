@@ -1,9 +1,7 @@
 export default {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getData(
     state: string,
     key: string | number,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     default_value: any,
     type = 'local'
   ) {
@@ -24,13 +22,10 @@ export default {
     }
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   saveData(
     state: string,
     key: string | number,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     default_data: any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any,
     type = 'local'
   ) {

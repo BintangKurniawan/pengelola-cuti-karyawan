@@ -35,7 +35,6 @@ export const authStore = defineStore({
       func.saveData(this.$id, 'accessToken', this.$state, accessToken, 'local');
       this.accessToken = accessToken;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setUser(data: any) {
       func.saveData(this.$id, 'user', this.$state, data, 'local');
       this.user = data;
@@ -43,7 +42,6 @@ export const authStore = defineStore({
     getData(index: string | number) {
       return func.getData(this.$id, index, this.$state, 'local');
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setData(index: string | number, data: any) {
       func.saveData(this.$id, index, this.$state, data, 'local');
     },

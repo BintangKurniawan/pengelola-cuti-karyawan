@@ -11,6 +11,9 @@ import { setCssVar } from 'quasar';
 import dotenv from 'dotenv';
 dotenv.config;
 console.log(process.env);
+import { onMounted, onUnmounted } from 'vue';
+import { share } from 'pinia-shared-state';
+import { useConfigPortStore } from 'src/stores/configStore';
 
 /*
  * If not building with SSR mode, you can
@@ -73,12 +76,21 @@ export default route(function (/* { store, ssrContext } */) {
     const color = localStorage.getItem('color');
     console.log(process.env.port);
 
+    // const configStore = useConfigPortStore();
+
+    // onMounted(() => {
+    //   const { unshare } = share('port', configStore, { initialize: true });
+
+    //   onUnmounted(() => {
+    //     unshare();
+    //   });
+    // });
     // if(to.path !== '/login') {
 
     // }
     const permissions = JSON.parse(localStorage.getItem('permissions'));
 
-    const setPort = localStorage.setItem('port', 9000);
+    // const setPort = localStorage.setItem('port', 9000);
     if (color) {
       setCssVar('primary', color);
     }

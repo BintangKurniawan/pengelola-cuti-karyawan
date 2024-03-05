@@ -106,7 +106,7 @@
           v-model="drawerR"
           :width="200"
           :breakpoint="300"
-          class="bg-grey-3 text-dark q-pa-sm"
+          class="text-dark"
         >
           <q-card-section>
             <div
@@ -317,6 +317,7 @@
     </q-dialog>
   </div>
 </template>
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script lang="ts">
 import { ref } from 'vue';
@@ -340,7 +341,7 @@ export default {
     const store = useConfigPortStore();
     return {
       store,
-      port: 0,
+      port: '',
       gmail: '',
       passUser: '',
       hex: ref(),
@@ -351,7 +352,6 @@ export default {
       drawerR: ref(false),
       showPw: ref(false),
       showPw2: ref(false),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -361,7 +361,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -417,16 +416,13 @@ export default {
       this.webconfig = true;
     },
     //  TO GET POSITION ID
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getId(name: any) {
     //   const typePosition = this.typePositionOptions.find(
-    //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //     (option: { label: any }) => option.label === name
     //   );
     //   return typePosition ? typePosition.value : null;
     // },
     // TO GET ROLE ID
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getRoleId(role: any) {
     //   const roleType = this.roleTypeOptions.find(
     //     (option: { label: any }) => option.label === role
@@ -436,11 +432,8 @@ export default {
     // },
     formatDate(dateString: {
       split: (arg0: string) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new (): any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map: { (arg0: NumberConstructor): [any, any, any]; new (): any };
       };
     }) {
@@ -633,9 +626,11 @@ export default {
           GMAIL_PASSWORD: this.passUser,
         })
         .then((res) => {
+          // JSON.stringify(localStorage.setItem('port', this.port));
+
           console.log(res);
           this.store.setPort(this.port);
-          this.store.setConfig(this.port);
+          // this.store.setConfig(this.port);
           this.successNotif(res.data.message);
         })
         .catch((err) => {

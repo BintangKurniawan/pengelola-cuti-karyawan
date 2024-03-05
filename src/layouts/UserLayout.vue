@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script lang="ts">
 import { Icon } from '@iconify/vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -91,7 +92,6 @@ export default {
       img,
       route: useRoute(),
       router: useRouter(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       successNotif(msg: any) {
         $q.notify({
           progress: true,
@@ -101,7 +101,6 @@ export default {
           multiLine: true,
         });
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
       failedNotif(msg: any) {
         $q.notify({
           progress: true,

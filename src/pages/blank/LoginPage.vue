@@ -61,6 +61,7 @@
     </div>
   </q-page>
 </template>
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 
 <script lang="ts">
 import { Icon } from '@iconify/vue';
@@ -228,7 +229,6 @@ export default {
     },
 
     // TO GET USER LOGIN DATA AND SAVE IT INTO LOCAL
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getLoginData(nik: any) {
       api
         .get(`/employee/detail/${nik}`)
