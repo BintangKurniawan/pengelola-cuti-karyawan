@@ -65,39 +65,79 @@
         />
       </div>
     </div>
-    <div class="w-[75%] border-b-2 md:flex items-center justify-center gap-4">
+    <div
+      class="xl:w-[75%] w-full border-b-2 flex items-center justify-center gap-4"
+    >
       <div
         class="cursor-pointer group relative transition-all"
-        @click="switchTable = true"
-        :class="{ 'text-primary font-semibold': switchTable }"
+        @click="switchTable = 'Ordinary'"
+        :class="switchTable === 'Ordinary' ? 'text-primary font-semibold' : ''"
       >
         <span
           class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300"
-          :class="switchTable ? 'w-full' : 'w-0'"
+          :class="switchTable === 'Ordinary' ? 'w-full' : 'w-0'"
           >&nbsp;</span
         >
         Ordinary
       </div>
       <div
         class="cursor-pointer group relative transition-all"
-        @click="toggleTable"
-        :class="{ 'text-primary font-semibold': !switchTable }"
+        @click="
+          switchTable = 'Special';
+          getSpecialData(pagination2.page);
+        "
+        :class="switchTable === 'Special' ? 'text-primary font-semibold' : ''"
       >
         <span
           class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300"
-          :class="!switchTable ? 'w-full' : 'w-0'"
+          :class="switchTable === 'Special' ? 'w-full' : 'w-0'"
           >&nbsp;</span
         >
         Special
       </div>
+      <div
+        class="cursor-pointer group relative transition-all"
+        @click="
+          switchTable = 'Adjust';
+          getHistoryAdjustData(pagination3.page);
+        "
+        :class="switchTable === 'Adjust' ? 'text-primary font-semibold' : ''"
+      >
+        <span
+          class="h-[2px] inline-block bg-primary absolute left-0 -bottom-0.5 group-hover:w-full transition-[width] ease duration-300"
+          :class="switchTable === 'Adjust' ? 'w-full' : 'w-0'"
+          >&nbsp;</span
+        >
+        Adjust History
+      </div>
     </div>
   </div>
   <q-table
-    v-if="data && data.length >= 1"
+    v-if="
+      (data && data.length >= 1) ||
+      (specialData && specialData.length >= 1) ||
+      (adjustData && adjustData.length >= 1)
+    "
     class="my-table table-rounded mx-4"
     flat
-    :columns="switchTable ? column : column2"
-    :rows="switchTable ? data : specialData"
+    :columns="
+      switchTable === 'Ordinary'
+        ? column
+        : switchTable === 'Special'
+        ? column2
+        : switchTable === 'Adjust'
+        ? column3
+        : []
+    "
+    :rows="
+      switchTable === 'Ordinary'
+        ? data
+        : switchTable === 'Special'
+        ? specialData
+        : switchTable === 'Adjust'
+        ? adjustData
+        : []
+    "
     v-model:pagination="pagination"
     hide-bottom
   >
@@ -149,11 +189,19 @@
         </div>
       </q-td>
     </template>
+    <template v-slot:body-cell-month="props">
+      <q-td :props="props" class="text-center">
+        <p>{{ formatMonth(props.row.month) }}</p>
+      </q-td>
+    </template>
   </q-table>
   <div v-else>
     <h1 class="text-center">No Data Available</h1>
   </div>
-  <div class="row justify-center" v-if="pagination.rowsNumber > 1">
+  <div
+    class="row justify-center"
+    v-if="pagination.rowsNumber > 1 && switchTable === 'Ordinary'"
+  >
     <q-pagination
       v-model="current"
       color="primary"
@@ -161,6 +209,20 @@
       :max-pages="5"
       :ellipses="false"
       @update:model-value="getData(current)"
+      :boundary-numbers="false"
+    />
+  </div>
+  <div
+    class="row justify-center"
+    v-if="pagination2.rowsNumber > 1 && switchTable === 'Special'"
+  >
+    <q-pagination
+      v-model="current2"
+      color="primary"
+      :max="pagination2.rowsNumber"
+      :max-pages="5"
+      :ellipses="false"
+      @update:model-value="getSpecialData(current2)"
       :boundary-numbers="false"
     />
   </div>
@@ -230,22 +292,6 @@ export default {
     ];
     const column2 = [
       {
-        name: 'id',
-        label: 'NIK',
-        align: 'center',
-        field: 'nik',
-        style: 'width: 80px;',
-      },
-      {
-        name: 'name',
-        label: 'Name',
-        align: 'center',
-        field: 'name',
-
-        style: 'width: 150px;',
-      },
-
-      {
         name: 'start',
         label: 'Start Leave',
         align: 'center',
@@ -279,9 +325,29 @@ export default {
       },
       {
         name: 'note',
-        label: 'Reject Note',
+        label: 'Note',
         align: 'center',
         field: 'note',
+      },
+    ];
+    const column3 = [
+      {
+        name: 'negativeLeave',
+        label: 'Negative Leave',
+        align: 'center',
+        field: 'negativeLeave',
+      },
+      {
+        name: 'adjustBy',
+        label: 'Adjust By',
+        align: 'center',
+        field: 'adjustBy',
+      },
+      {
+        name: 'month',
+        label: 'Month',
+        align: 'center',
+        field: 'month',
       },
     ];
     const route = useRoute();
@@ -300,14 +366,16 @@ export default {
       },
       column,
       column2,
+      column3,
       id,
       current: ref(1),
+      current2: ref(1),
+      current3: ref(1),
     };
   },
   mounted() {
     // TO GET DATA
     this.getData(this.pagination.page);
-    this.getHistoryAdjustData(this.pagination.page);
   },
   data() {
     return {
@@ -324,7 +392,17 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
-      switchTable: ref(true),
+      pagination2: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
+      pagination3: {
+        rowsPerPage: 10,
+        page: 1,
+        rowsNumber: 0,
+      },
+      switchTable: ref('Ordinary'),
       status: '',
       // FOR FILTER DATA
       statusOptions: ['Approve', 'Waiting', 'Reject'],
@@ -377,7 +455,7 @@ export default {
           }
         });
     },
-    async getSpecialData(page: any) {
+    async getSpecialData(page: number | undefined) {
       await api
         .get(
           `/leave/employee-special-leave/history/${this.id}?page=${page}&perPage=8`,
@@ -389,7 +467,7 @@ export default {
         )
         .then((res) => {
           this.specialData = res.data.data;
-          this.pagination.rowsNumber = res.data.meta.lastPage;
+          this.pagination2.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
           console.error(err);
@@ -402,7 +480,7 @@ export default {
       await api
         .get(`/leave/adjust-leave/${this.id}?page=${page}&perPage=8`)
         .then((res) => {
-          this.adjustData = res.data.data;
+          this.adjustData = res.data.data[0].leaveAdjustments;
           this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
@@ -418,6 +496,23 @@ export default {
       const date = new Date(dateString);
       return date.toLocaleDateString('en-UK', options);
       // return moment(dateString).format('ll');
+    },
+    formatMonth(monthNumber: number) {
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+      return months[monthNumber - 1];
     },
   },
   computed: {},

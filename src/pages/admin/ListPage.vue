@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center m-4 flex-nowrap justify-between">
+  <div class="flex items-center m-4 gap-4 justify-between">
     <div class="flex items-center gap-2">
       <div class="px-2 rounded-lg border-2 border-secondary">
         <q-input
@@ -23,7 +23,7 @@
           </template>
         </q-input>
       </div>
-      <div class="flex md:items-center gap-4 md:flex-row flex-col">
+      <div class="flex items-center gap-4 flex-row">
         <div class="flex items-center gap-1">
           <q-select
             class="rounded-lg w-[110px]"
@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div class="w-[60%] border-b-2 flex items-center justify-center gap-4">
+    <div class="w-full border-b-2 flex items-center justify-center gap-4">
       <div
         v-if="permissions.includes('View All Leave History')"
         class="cursor-pointer group relative transition-all"
@@ -459,7 +459,7 @@ export default {
     },
     // TO GETD ATA
     async getData(page) {
-      const perPage = window.innerWidth >= 768 ? 10 : 7;
+      const perPage = window.innerWidth >= 768 ? 8 : 7;
       this.load = true;
       await api
         .get(`/leave/all?page=${page}&perPage=${perPage}`, {
@@ -487,7 +487,7 @@ export default {
     },
 
     async getDataSpecial(page) {
-      const perPage = window.innerWidth >= 768 ? 10 : 7;
+      const perPage = window.innerWidth >= 768 ? 8 : 7;
 
       await api
         .get(`/leave/employee-special-leaves?page=${page}&perPage=${perPage}`, {

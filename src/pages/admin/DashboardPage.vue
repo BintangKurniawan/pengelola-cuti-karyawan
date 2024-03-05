@@ -427,7 +427,7 @@ export default {
       positionStatus: null,
 
       amountType: '',
-      amountTypeOptions: ['Positive', 'Negative'],
+      amountTypeOptions: ['', 'Negative'],
     };
   },
   mounted() {
@@ -605,7 +605,7 @@ export default {
           {
             params: {
               isWorking: this.statusWork,
-              amountType: this.amountType,
+              amountType: this.amountType.toLocaleLowerCase(),
             },
           }
         )
