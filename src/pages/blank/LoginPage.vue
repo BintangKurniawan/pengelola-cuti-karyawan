@@ -88,13 +88,6 @@ export default {
     const configStore = useConfigPortStore();
     const route = useRouter();
     setCssVar('primary', `${localStorage.getItem('color')}`);
-    let timer: string | number | NodeJS.Timeout | undefined;
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer);
-        $q.loading.hide();
-      }
-    });
 
     const nwIf = networkInterfaces;
     let ipAddress;
@@ -120,10 +113,6 @@ export default {
       route,
       showLoading() {
         $q.loading.show();
-        timer = setTimeout(() => {
-          $q.loading.hide();
-          timer = void 0;
-        }, 1500);
       },
       successNotif() {
         $q.notify({

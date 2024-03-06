@@ -124,10 +124,10 @@ export default {
     },
     isTomorrow(date) {
       const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() - 1);
+      tomorrow.setDate(tomorrow.getDate() + 1); // Menggunakan +1 karena kita ingin membandingkan dengan besok, bukan kemarin
       const givenDate = new Date(date);
 
-      return tomorrow.getDate() === givenDate.getDate();
+      return givenDate < tomorrow;
     },
   },
   computed: {},

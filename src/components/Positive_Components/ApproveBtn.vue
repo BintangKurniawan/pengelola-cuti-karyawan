@@ -46,20 +46,10 @@ import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
-    let timer;
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer);
-        $q.loading.hide();
-      }
-    });
+
     return {
       showLoading() {
         $q.loading.show();
-        timer = setTimeout(() => {
-          $q.loading.hide();
-          timer = void 0;
-        }, 1500);
       },
       successNotif(msg) {
         $q.notify({
@@ -119,6 +109,7 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            this.$q.loading.hide();
           }
         });
     },
