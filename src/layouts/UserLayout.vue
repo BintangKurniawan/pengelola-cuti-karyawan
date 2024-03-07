@@ -320,7 +320,11 @@ export default {
         <div
           class="w-full hid border-b-2 md:flex items-center justify-center gap-4"
         >
-          <div v-for="item in link" :key="item.link">
+          <div
+            v-for="item in link"
+            :key="item.link"
+            :class="!permissions.includes(item.access) ? 'hidden' : ''"
+          >
             <div
               v-if="permissions.includes(item.access)"
               class="group relative transition-all"
@@ -350,30 +354,18 @@ export default {
     <q-footer reveal class="bg-white text-black md:hidden">
       <q-toolbar class="">
         <div class="flex justify-between items-center flex-row w-full">
-          <AdminLinkBtn
-            title="History"
-            link="/"
-            width="auto"
-            v-if="permissions.includes('Get Leave History for Current User')"
-          />
-          <AdminLinkBtn
-            title="Special"
-            link="/special"
-            width="auto"
-            v-if="permissions.includes('View Special Leave History')"
-          />
-          <AdminLinkBtn
-            title="Mandatory"
-            link="/mandatory"
-            width="auto"
-            v-if="permissions.includes('View Mandatory Leave')"
-          />
-          <AdminLinkBtn
-            title="Optional"
-            link="/optional"
-            width="auto"
-            v-if="permissions.includes('View Optional Leave')"
-          />
+          <div
+            :class="!permissions.includes(item.access) ? 'hidden' : ''"
+            v-for="item in link"
+            :key="item.link"
+          >
+            <AdminLinkBtn
+              v-if="permissions.includes(item.access)"
+              :title="item.title"
+              :link="item.link"
+              width="auto"
+            />
+          </div>
         </div>
       </q-toolbar>
     </q-footer>

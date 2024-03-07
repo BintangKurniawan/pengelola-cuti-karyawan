@@ -1,6 +1,5 @@
 <template>
   <div class="flex justify-center items-center w-full">
-    <q-spinner color="primary" size="3em" v-if="loading" />
     <div
       v-if="data && data.length > 0"
       class="flex flex-wrap items-center w-full"
@@ -16,7 +15,7 @@
         </p>
       </q-expansion-item>
     </div>
-    <div v-else>
+    <div v-if="data.length === 0 && !msg">
       <h3 class="text-center">No Data Available</h3>
     </div>
     <q-pagination
@@ -29,6 +28,11 @@
       @update:model-value="getData(current)"
       :boundary-numbers="false"
     />
+    <div v-if="msg">
+      <h3 class="text-center text-negative font-bold text-2xl mt-5">
+        {{ msg }}
+      </h3>
+    </div>
   </div>
 </template>
 
@@ -38,7 +42,7 @@ import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
-    const $q = useQuasar;
+    const $q = useQuasar();
     return {
       current: ref(1),
       failedNotif(msg) {
@@ -61,6 +65,7 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      msg: null,
     };
   },
   async mounted() {
@@ -78,7 +83,11 @@ export default {
           this.loading = false;
         })
         .catch((err) => {
-          if (err.response) {
+          if (err.response.status === 403) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+            this.msg = msg;
+          } else if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
           }

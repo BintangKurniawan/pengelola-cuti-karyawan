@@ -23,7 +23,7 @@
         </div>
       </q-expansion-item>
     </div>
-    <div v-else>
+    <div v-if="data.length === 0 && !msg">
       <h3 class="text-center">No Data Available</h3>
     </div>
     <q-pagination
@@ -36,6 +36,11 @@
       @update:model-value="getData(current)"
       :boundary-numbers="false"
     />
+    <div v-if="msg">
+      <h3 class="text-center text-negative font-bold text-2xl mt-5">
+        {{ msg }}
+      </h3>
+    </div>
   </div>
 </template>
 
@@ -46,7 +51,7 @@ import RejcBtn from 'src/components/Negative_Components/RejectOptionalBtn.vue';
 import { useQuasar } from 'quasar';
 export default {
   setup() {
-    const $q = useQuasar;
+    const $q = useQuasar();
     const permissions = JSON.parse(localStorage.getItem('permissions'));
     return {
       permissions,
@@ -70,6 +75,7 @@ export default {
         page: 1,
         rowsNumber: 0,
       },
+      msg: null,
     };
   },
   mounted() {
@@ -89,7 +95,11 @@ export default {
           this.pagination.rowsNumber = resp.data.meta.lastPage;
         })
         .catch((err) => {
-          if (err.response) {
+          if (err.response.status === 403) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+            this.msg = msg;
+          } else if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
           }

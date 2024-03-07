@@ -621,9 +621,6 @@ export default {
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
-            setInterval(() => {
-              document.location.reload();
-            }, 5000);
           }
         });
     },

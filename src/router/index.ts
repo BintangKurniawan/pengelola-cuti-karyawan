@@ -112,6 +112,14 @@ export default route(function (/* { store, ssrContext } */) {
       next('/');
     } else if (
       to.path === '/' &&
+      (permissions.includes('Get Leave History for Current User') ||
+        permissions.includes('View Special Leave History') ||
+        permissions.includes('View Optional Leave') ||
+        permissions.includes('View Mandatory Leave'))
+    ) {
+      next();
+    } else if (
+      to.path === '/' &&
       (!permissions.includes('Get Leave History for Current User') ||
         !permissions.includes('View Special Leave History') ||
         !permissions.includes('View Optional Leave') ||

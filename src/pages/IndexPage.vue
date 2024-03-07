@@ -71,7 +71,7 @@
         </q-td>
       </template>
     </q-table>
-    <div v-else>
+    <div v-if="data.length === 0 && !msg">
       <h3 class="text-center">No Data Available</h3>
     </div>
     <div class="row justify-center" v-if="pagination.rowsNumber > 1">
@@ -84,6 +84,12 @@
         @update:model-value="getData(current)"
         :boundary-numbers="false"
       />
+    </div>
+
+    <div v-if="msg">
+      <h3 class="text-center text-negative font-bold text-2xl mt-5">
+        {{ msg }}
+      </h3>
     </div>
   </div>
 </template>
@@ -188,6 +194,7 @@ export default {
         rowsNumber: 0,
       },
       data: [],
+      msg: null,
       // TO GET FIRST LOGIN STATUS
       isFirst: localStorage.getItem('firstLogin'),
     };
@@ -209,7 +216,11 @@ export default {
           this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
-          if (err.response) {
+          if (err.response.status === 403) {
+            const msg = err.response.data.message;
+            this.failedNotif(msg);
+            this.msg = msg;
+          } else if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
           }
