@@ -12,7 +12,7 @@
 
   <div>
     <q-dialog v-model="dialog">
-      <q-card class="bg-white w-[30%]">
+      <q-card class="bg-white w-full">
         <q-card-section>
           <h6 class="font-bold text-center">Send Email</h6>
         </q-card-section>
@@ -58,20 +58,10 @@ export default {
 
   setup() {
     const $q = useQuasar();
-    let timer;
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer);
-        $q.loading.hide();
-      }
-    });
+
     return {
       showLoading() {
         $q.loading.show();
-        timer = setTimeout(() => {
-          $q.loading.hide();
-          timer = void 0;
-        }, 1500);
       },
       successNotif(msg) {
         $q.notify({
@@ -115,7 +105,7 @@ export default {
         .then((resp) => {
           this.successNotif(resp.data.message);
           this.dialog = false;
-
+          this.$q.loading.hide();
           this.$emit('get-data');
         })
         .catch((err) => {

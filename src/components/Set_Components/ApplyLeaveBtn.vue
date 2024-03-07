@@ -103,10 +103,21 @@
             Back
           </div>
           <q-btn
+            v-if="!special"
             label="Confirm"
             unelevated
             :style="{ backgroundColor: color }"
             :disable="totalDays > 8 || totalDays === 0"
+            @click="setLeave()"
+            text-color="white"
+            class="font-bold round text-center capitalize px-10 py-2"
+          />
+          <q-btn
+            v-if="special"
+            label="Confirm"
+            unelevated
+            :style="{ backgroundColor: color }"
+            :disable="!specialLeaveSelected || !startLeave"
             @click="setLeave()"
             text-color="white"
             class="font-bold round text-center capitalize px-10 py-2"
@@ -127,22 +138,12 @@ export default {
   setup() {
     const $q = useQuasar();
     const store = useColorStore();
-    let timer;
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer);
-        $q.loading.hide();
-      }
-    });
+
     return {
       store,
       color: '',
       showLoading() {
         $q.loading.show();
-        timer = setTimeout(() => {
-          $q.loading.hide();
-          timer = void 0;
-        }, 1500);
       },
       successNotif() {
         $q.notify({
@@ -247,12 +248,13 @@ export default {
 
             setInterval(() => {
               window.location.reload();
-            }, 1500);
+            }, 1000);
           })
           .catch((err) => {
             if (err.response) {
               const msg = err.response.data.message;
               this.failedNotif(msg);
+              this.$q.loading.hide();
             }
           });
       } else {
@@ -266,11 +268,7 @@ export default {
             this.specialLeaveId = '';
             this.startLeave = '';
             this.dialog = false;
-            setInterval(() => {
-              setInterval(() => {
-                window.location.reload();
-              }, 1000);
-            }, 2000);
+            this.$router.push('/special');
           })
           .catch((err) => {
             if (err.response) {

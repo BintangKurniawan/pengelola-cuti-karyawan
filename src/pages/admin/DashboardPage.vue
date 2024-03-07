@@ -428,7 +428,7 @@ export default {
       positionStatus: null,
 
       amountType: '',
-      amountTypeOptions: ['', 'Negative'],
+      amountTypeOptions: ['Negative'],
     };
   },
   mounted() {

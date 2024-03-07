@@ -453,6 +453,9 @@ export default {
           if (err.response.status == 403) {
             this.failedNotif(err.response.data.message);
           }
+          if (err.response.status === 404) {
+            this.failedNotif(err.response.data.message);
+          }
         });
     },
     async getSpecialData(page: number | undefined) {
@@ -474,6 +477,10 @@ export default {
           if (err.response.status == 403) {
             this.failedNotif(err.response.data.message);
           }
+
+          if (err.response.status === 404) {
+            this.failedNotif(err.response.data.message);
+          }
         });
     },
     async getHistoryAdjustData(page: any) {
@@ -485,7 +492,11 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          if (err.response.status == 403) {
+          if (err.response.status === 403) {
+            this.failedNotif(err.response.data.message);
+          }
+
+          if (err.response.status === 404) {
             this.failedNotif(err.response.data.message);
           }
         });

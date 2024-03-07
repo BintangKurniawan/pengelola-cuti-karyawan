@@ -15,7 +15,10 @@
             {{ formatDate(data.startLeave) }} - {{ formatDate(data.endLeave) }}
           </p>
           <RejcBtn
-            v-if="permissions.includes('Reject Optional Leave')"
+            v-if="
+              permissions.includes('Reject Optional Leave') &&
+              !isTomorrow(data.startLeave)
+            "
             :id="data.leaveEmployeeId"
             @get-data="handleChildEvent"
             :date="data.startLeave"
@@ -82,6 +85,13 @@ export default {
     this.getData(this.pagination.page);
   },
   methods: {
+    isTomorrow(date) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1); // Menggunakan +1 karena kita ingin membandingkan dengan besok, bukan kemarin
+      const givenDate = new Date(date);
+
+      return givenDate < tomorrow;
+    },
     handleChildEvent() {
       this.getData(this.current);
     },

@@ -3,44 +3,42 @@
     color="primary"
     text-color="white"
     label="Activate"
-    class="w-[270px] h-[56px] rounded-3xl"
+    class="w-[100px] h-[56px] rounded-3xl capitalize"
     @click="dialog = true"
   />
 
-  <div>
-    <q-dialog v-model="dialog">
-      <q-card class="bg-white">
-        <q-card-section>
-          <h6 class="font-bold text-center">Activate Employee</h6>
-        </q-card-section>
+  <q-dialog v-model="dialog">
+    <q-card class="bg-white">
+      <q-card-section>
+        <h6 class="font-bold text-center">Activate Employee</h6>
+      </q-card-section>
 
-        <q-card-section>
-          <p class="text-center text-[#a0a0a0]">
-            Are you sure want to activate this employee? <br />
-            It will change it's status into Active
-          </p>
-        </q-card-section>
+      <q-card-section>
+        <p class="text-center text-[#a0a0a0]">
+          Are you sure want to activate this employee? <br />
+          It will change it's status into Active
+        </p>
+      </q-card-section>
 
-        <q-card-section class="flex items-center gap-4 w-full justify-between">
-          <div
-            class="text-secondary rounded-lg flex items-center gap-2 cursor-pointer"
-            @click="dialog = false"
-          >
-            <Icon icon="mdi:arrow-collapse-left" size="24" />
-            Back
-          </div>
+      <q-card-section class="flex items-center gap-4 w-full justify-between">
+        <div
+          class="text-secondary rounded-lg flex items-center gap-2 cursor-pointer"
+          @click="dialog = false"
+        >
+          <Icon icon="mdi:arrow-collapse-left" size="24" />
+          Back
+        </div>
 
-          <q-btn
-            label="Activate"
-            unelevated
-            text-color="positive"
-            @click="activate(id)"
-            class="font-bold round text-center capitalize px-10 py-2"
-          />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-  </div>
+        <q-btn
+          label="Activate"
+          unelevated
+          text-color="positive"
+          @click="activate(id)"
+          class="font-bold round text-center capitalize px-10 py-2"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -92,7 +90,7 @@ export default {
           const msg = resp.data.message;
           this.successNotif(msg);
           this.dialog = false;
-          document.location.reload();
+          this.$emit('get-data');
         })
         .catch((err) => {
           if (err.response) {

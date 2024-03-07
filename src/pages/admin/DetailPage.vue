@@ -4,14 +4,14 @@
       dense
       flat
       @click="back()"
-      class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4 text-black self-start"
+      class="flex items-start w-fit hover:bg-gray-100 p-4 text-black self-start capitalize"
     >
       <div class="flex items-center gap-4">
         <Icon icon="mdi:arrow-left-circle-outline" width="24" />
         <p class="capitalize">Back</p>
       </div>
     </q-btn>
-    <div class="flex flex-wrap items-center gap-4 w-[1128px]">
+    <div class="flex flex-wrap items-center justify-center gap-4 xl:w-[1128px]">
       <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl">NIK</h5>
         <q-input
@@ -204,7 +204,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 justify-end">
+      <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl opacity-0 cursor-default">
           Adder's NIK
         </h5>
@@ -212,16 +212,23 @@
           color="primary"
           text-color="white"
           label="Edit Profile"
-          class="md:w-[270px] h-[56px] rounded-3xl"
+          class="h-[56px] rounded-3xl capitalize"
           @click="$router.push(`/admin/detail/${id}/edit`)"
         />
       </div>
 
       <div
-        class="flex flex-col h-[104px] justify-end"
+        class="flex flex-col gap-4"
         v-if="permissions.includes('Enable Employee')"
       >
-        <ActivateBtn :id="id" v-if="status === 'Resign'" />
+        <h5 class="font-semibold text-xs md:text-2xl opacity-0 cursor-default">
+          Adder's NIK
+        </h5>
+        <ActivateBtn
+          :id="id"
+          v-if="status === 'Resign'"
+          @get-data="handleChildEvent"
+        />
       </div>
     </div>
   </div>
@@ -296,6 +303,9 @@ export default {
     };
   },
   methods: {
+    handleChildEvent() {
+      this.getData();
+    },
     limitStringMobile(str) {
       if (str.length <= this.maxLengthMobile) {
         return str;

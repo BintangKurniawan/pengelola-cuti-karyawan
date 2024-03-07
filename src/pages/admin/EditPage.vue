@@ -4,15 +4,15 @@
       dense
       flat
       @click="$router.back()"
-      class="flex items-start w-full md:w-fit hover:bg-gray-100 p-4 text-black self-start"
+      class="flex items-start w-fit hover:bg-gray-100 p-4 text-black self-start capitalize"
     >
       <div class="flex items-center gap-4">
         <Icon icon="mdi:arrow-left-circle-outline" width="24" />
         <p class="capitalize">Back</p>
       </div>
     </q-btn>
-    <div class="flex flex-wrap items-center gap-4 w-[1128px] md:p-0 px-4">
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+    <div class="flex flex-wrap items-center gap-4 xl:w-[1128px] justify-center">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">NIK</h5>
         <q-input
           outlined
@@ -26,7 +26,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Name</h5>
         <q-input
           outlined
@@ -42,7 +42,10 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="statusBoolean">
+      <div
+        class="flex flex-col gap-4 md:w-fit w-full custom-size"
+        v-if="statusBoolean"
+      >
         <h5 class="font-semibold text-2xl">Position</h5>
         <q-select
           outlined
@@ -60,7 +63,7 @@
         ></q-select>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Status</h5>
         <div
           class="md:w-[270px] w-full px-3 py-4 rounded-[4px]"
@@ -73,7 +76,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Gender</h5>
         <q-select
           outlined
@@ -89,7 +92,7 @@
         ></q-select>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Start Contract</h5>
         <q-input
           outlined
@@ -119,7 +122,10 @@
         </q-input>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="contractBoolean">
+      <div
+        class="flex flex-col gap-4 md:w-fit w-full custom-size"
+        v-if="contractBoolean"
+      >
         <h5 class="font-semibold text-2xl">Contract Expires</h5>
         <q-input
           outlined
@@ -147,7 +153,10 @@
         </q-input>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="contractBoolean">
+      <div
+        class="flex flex-col gap-4 md:w-fit w-full custom-size"
+        v-if="contractBoolean"
+      >
         <h5 class="font-semibold text-2xl">Employee Status</h5>
         <q-select
           outlined
@@ -163,7 +172,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Type of Employee</h5>
         <q-select
           outlined
@@ -179,7 +188,7 @@
         ></q-select>
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full">
+      <div class="flex flex-col gap-4 md:w-fit w-full custom-size">
         <h5 class="font-semibold text-2xl">Email</h5>
         <q-input
           outlined
@@ -193,7 +202,10 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4 md:w-fit w-full" v-if="roleId === '1'">
+      <div
+        class="flex flex-col gap-4 md:w-fit w-full custom-size"
+        v-if="roleId === '1'"
+      >
         <h5 class="font-semibold text-2xl">Role</h5>
         <q-select
           outlined
@@ -205,7 +217,9 @@
           map-options
         />
       </div>
-      <div class="flex flex-col gap-4 md:w-fit w-full h-[104px] justify-end">
+      <div
+        class="flex flex-col gap-4 md:w-fit w-full custom-size h-[104px] justify-end"
+      >
         <q-btn
           color="primary"
           @click="edit"
@@ -247,16 +261,10 @@ export default {
     // TO GET ID FROM ROUTE
     const id = route.params.id;
     const $q = useQuasar();
-    let timer: string | number | NodeJS.Timeout | undefined;
 
     // TO GET ROLE
     const roleId = localStorage.getItem('role');
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer);
-        $q.loading.hide();
-      }
-    });
+
     const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
     return {
       permissions,
@@ -264,11 +272,6 @@ export default {
       id,
       showLoading() {
         $q.loading.show();
-
-        timer = setTimeout(() => {
-          $q.loading.hide();
-          timer = void 0;
-        }, 500);
       },
       date: ref('2023-11-20'),
       saveNotif(msg: any) {
@@ -559,13 +562,14 @@ export default {
           this.saveNotif(resp.data.message);
           setInterval(() => {
             document.location.reload();
-          }, 1500);
+          }, 1000);
         })
         .catch((err) => {
           console.error(err);
           if (err.response) {
             const msg = err.response.data.message;
             this.failedNotif(msg);
+            this.$q.loading.hide();
           }
         });
     },
@@ -573,4 +577,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media (max-width: 768px) {
+  .custom-size {
+    margin: 0 16px 0 16px;
+  }
+}
+</style>

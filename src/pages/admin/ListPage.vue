@@ -307,7 +307,7 @@ export default {
         align: 'center',
         field: 'name',
 
-        style: 'width: 150px;',
+        style: 'width: 100px;',
       },
 
       {
@@ -315,26 +315,27 @@ export default {
         label: 'Start Leave',
         align: 'center',
         field: 'start',
-        style: 'width: 100px;',
       },
       {
         name: 'end',
         label: 'End Leave',
         align: 'center',
         field: 'end',
-        style: 'width: 100px;',
+        style: 'width: 250px;',
       },
       {
         name: 'amount',
         label: 'Amount',
         align: 'center',
         field: 'amount',
+        style: 'width: 250px;',
       },
       {
         name: 'status',
         label: 'Status',
         align: 'center',
         field: 'statust',
+        style: 'width: 100px;',
       },
       {
         name: 'reason',
@@ -347,7 +348,7 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 100px',
+        style: 'width: 200px',
       },
     ];
 
