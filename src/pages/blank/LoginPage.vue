@@ -162,6 +162,7 @@ export default {
     console.log(location.host);
     config.configDotenv;
   },
+
   methods: {
     async checkIp() {
       console.log(await publicIpv4());

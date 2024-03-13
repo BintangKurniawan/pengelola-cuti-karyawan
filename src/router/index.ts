@@ -130,7 +130,7 @@ export default route(function (/* { store, ssrContext } */) {
       next();
     }
 
-    document.title = to.meta.title + ' - WGS';
+    document.title = to.meta.title + ' ';
   });
   return Router;
 });

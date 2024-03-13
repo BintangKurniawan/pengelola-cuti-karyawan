@@ -116,13 +116,13 @@
                 class="h-[2px] inline-block bg-primary absolute left-0 bottom-0.5 w-full transition-[width] ease duration-300"
                 >&nbsp;</span
               >
-              <p class="capitalize">Port Option</p>
+              <p class="capitalize">Config Option</p>
             </div>
           </q-card-section>
 
           <q-card-section>
             <div class="flex items-start gap-4">
-              <q-input
+              <!-- <q-input
                 v-model="port"
                 id="port"
                 outlined
@@ -132,7 +132,7 @@
                 type="number"
                 for="port"
                 placeholder="9000"
-              />
+              /> -->
               <q-input
                 v-model="gmail"
                 id="gmail"
@@ -162,7 +162,13 @@
                   />
                 </template>
               </q-input>
-              <p class="italic underline cursor-pointer">How to get password</p>
+              <a
+                class="italic underline cursor-pointer"
+                href="https://docs.google.com/document/d/1O9jgXflzM0E8YVyIotqw7P_ivKC76rgqTDVZrPQSjgs/edit?usp=sharing"
+                target="_blank"
+              >
+                How to get password
+              </a>
               <q-btn
                 label="Save"
                 class="capitalize"

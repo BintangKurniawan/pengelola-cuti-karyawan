@@ -7,7 +7,7 @@ const configFilePath = 'hm.json';
 export const useConfigPortStore = defineStore('config', {
   state: () => ({
     port: '8080',
-    ip: '10.10.101.57',
+    ip: '10.10.101.79',
   }),
   getters: {
     getPort: (state) => state.port,
