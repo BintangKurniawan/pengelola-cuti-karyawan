@@ -77,6 +77,7 @@ import os from 'os';
 import { networkInterfaces } from 'os';
 import config from 'dotenv';
 import { useConfigPortStore } from 'src/stores/configStore';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: {
     Icon,
@@ -86,6 +87,7 @@ export default {
     const $q = useQuasar();
     const store = useColorStore();
     const configStore = useConfigPortStore();
+    const permStore = usePermissionStore();
     const route = useRouter();
     setCssVar('primary', `${localStorage.getItem('color')}`);
 
@@ -109,6 +111,7 @@ export default {
 
     return {
       configStore,
+      permStore,
       store,
       route,
       showLoading() {
@@ -241,6 +244,7 @@ export default {
           );
 
           localStorage.setItem('permissions', JSON.stringify(permission));
+          this.permStore.setPerm(permission);
         })
         .catch((err) => {
           console.error(err);

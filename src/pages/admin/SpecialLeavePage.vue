@@ -98,6 +98,7 @@ import { ref } from 'vue';
 import EditSpecialLeave from 'src/components/Edit_Components/EditSpecialLeave.vue';
 import AddSpecialLeave from 'src/components/Add_Components/AddSpecialLeave.vue';
 import DeleteSpecialLeave from 'src/components/Delete_Components/DeleteSpecialLeave.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: { EditSpecialLeave, AddSpecialLeave, DeleteSpecialLeave },
   setup() {
@@ -146,7 +147,8 @@ export default {
         field: 'action',
       },
     ];
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       roleId,

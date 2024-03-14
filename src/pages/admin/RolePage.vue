@@ -80,6 +80,7 @@ import PermissionDetail from 'src/components/Display_Components/PermissionDetail
 import DeleteRole from 'src/components/Delete_Components/DeleteRole.vue';
 import AddRole from 'src/components/Add_Components/AddRole.vue';
 import EditRole from 'src/components/Edit_Components/EditRole.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: {
     PermissionDetail,
@@ -122,7 +123,8 @@ export default {
       },
     ];
 
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       column,
@@ -165,6 +167,7 @@ export default {
     handleChildEvent() {
       this.getData(this.current);
     },
+
     // TO GET DATA
     async getData(page) {
       const perPage = window.innerWidth >= 768 ? 10 : 9;

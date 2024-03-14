@@ -100,6 +100,7 @@ import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 import SendEmailBtn from 'src/components/Set_Components/SendEmailBtn.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   setup() {
     const $q = useQuasar();
@@ -142,7 +143,8 @@ export default {
       },
     ];
 
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       column,

@@ -203,7 +203,9 @@
           class="drop-shadow-sm md:w-[270px] w-[100px] custom-text-size outline-none focus:bg-transparent active:bg-transparent"
         />
       </div>
+    </div>
 
+    <div class="flex flex-wrap items-center justify-start gap-4 xl:w-[1128px]">
       <div class="flex flex-col gap-4">
         <h5 class="font-semibold text-xs md:text-2xl opacity-0 cursor-default">
           Adder's NIK
@@ -242,12 +244,14 @@ import { useRoute } from 'vue-router';
 import moment from 'moment';
 import ActivateBtn from 'src/components/Positive_Components/ActivateBtn.vue';
 import { useQuasar } from 'quasar';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   setup() {
     const maxLengthMobile = 12;
     const roleId = localStorage.getItem('role');
     const route = useRoute();
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     const $q = useQuasar();
     //  TO GET ID FROM ROUTE
     const id = route.params.id;

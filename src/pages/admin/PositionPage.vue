@@ -95,6 +95,7 @@ import { ref } from 'vue';
 import DeletePositionBtn from 'src/components/Delete_Components/DeletePosition.vue';
 import EditPosition from 'src/components/Edit_Components/EditPosition.vue';
 import AddPosition from 'src/components/Add_Components/AddPosition.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: {
     DeletePositionBtn,
@@ -129,7 +130,8 @@ export default {
         field: 'action',
       },
     ];
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       column,

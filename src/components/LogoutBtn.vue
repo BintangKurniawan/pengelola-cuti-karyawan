@@ -51,10 +51,13 @@ import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 // import { Cookies } from 'quasar';
 import { useQuasar } from 'quasar';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   setup() {
     const $q = useQuasar();
+    const permStore = usePermissionStore();
     return {
+      permStore,
       successNotif(msg) {
         $q.notify({
           progress: true,
@@ -105,6 +108,7 @@ export default {
             localStorage.removeItem('permissions');
             const msg = resp.data.message;
             this.successNotif(msg);
+            this.permStore.removePerm();
             this.$router.push('/login');
           });
       } catch (err) {

@@ -14,6 +14,7 @@ console.log(process.env);
 import { onMounted, onUnmounted } from 'vue';
 import { share } from 'pinia-shared-state';
 import { useConfigPortStore } from 'src/stores/configStore';
+import { usePermissionStore } from 'src/stores/permissionStore';
 
 /*
  * If not building with SSR mode, you can
@@ -88,7 +89,10 @@ export default route(function (/* { store, ssrContext } */) {
     // if(to.path !== '/login') {
 
     // }
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+
+    const perm = usePermissionStore();
+
+    const permissions = perm.getPerm;
 
     // const setPort = localStorage.setItem('port', 9000);
     if (color) {

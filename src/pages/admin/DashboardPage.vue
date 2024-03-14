@@ -285,6 +285,7 @@ import Delete from 'src/components/Delete_Components/DeleteBtn.vue';
 import api from 'src/AxiosInterceptors';
 import { useQuasar } from 'quasar';
 import AdjustLeaveBtn from 'src/components/AdjustLeaveBtn.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: {
     SetCollective,
@@ -358,9 +359,10 @@ export default {
         style: 'width: 260px',
       },
     ];
+    const perm = usePermissionStore();
     const roleId = localStorage.getItem('role');
     const $q = useQuasar();
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
+    const permissions = perm.getPerm;
 
     console.log(permissions);
 

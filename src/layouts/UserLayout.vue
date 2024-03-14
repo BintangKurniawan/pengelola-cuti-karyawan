@@ -9,6 +9,7 @@ import { useQuasar } from 'quasar';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
 import ApplyLeaveBtn from 'src/components/Set_Components/ApplyLeaveBtn.vue';
 import { useColorStore } from 'src/stores/colorStore';
+import { usePermissionStore } from 'src/stores/permissionStore';
 
 export default {
   setup() {
@@ -39,8 +40,9 @@ export default {
       },
     ];
 
+    const perm = usePermissionStore();
     const img = localStorage.getItem('logo') || undefined;
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
+    const permissions = perm.getPerm;
 
     const adminPage = [
       {

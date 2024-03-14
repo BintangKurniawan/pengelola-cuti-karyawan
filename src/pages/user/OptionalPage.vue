@@ -52,10 +52,12 @@ import { ref } from 'vue';
 import api from 'src/AxiosInterceptors';
 import RejcBtn from 'src/components/Negative_Components/RejectOptionalBtn.vue';
 import { useQuasar } from 'quasar';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   setup() {
     const $q = useQuasar();
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       current: ref(1),

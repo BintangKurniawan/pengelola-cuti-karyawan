@@ -5,13 +5,15 @@ import { ref } from 'vue';
 import Logout from 'src/components/LogoutBtn.vue';
 import SettingBtn from 'src/components/SettingBtn.vue';
 import AdminLinkBtn from 'src/components/Display_Components/AdminLinkBtn.vue';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   setup() {
     const page = window.innerWidth >= 1024 ? true : false;
     const leftDrawerOpen = ref(page);
     const roleId = localStorage.getItem('role');
     const img = localStorage.getItem('logo') || undefined;
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '');
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       img,

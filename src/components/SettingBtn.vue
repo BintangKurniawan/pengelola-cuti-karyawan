@@ -331,11 +331,13 @@ import { Icon } from '@iconify/vue';
 import api from 'src/AxiosInterceptors';
 import { setCssVar, useQuasar } from 'quasar';
 import { useConfigPortStore } from 'src/stores/configStore';
+import { usePermissionStore } from 'src/stores/permissionStore';
 
 export default {
   setup() {
     const $q = useQuasar();
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const permStore = usePermissionStore();
+    const permissions = permStore.getPerm;
     const imgURL = ref('');
     const img = ref(null);
     const handleUpload = () => {

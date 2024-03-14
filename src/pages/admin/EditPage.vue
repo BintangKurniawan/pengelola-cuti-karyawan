@@ -254,6 +254,7 @@ import { onBeforeUnmount, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 // import moment from 'moment';
 import 'moment/locale/en-ca';
+import { usePermissionStore } from 'src/stores/permissionStore';
 
 export default {
   setup() {
@@ -264,8 +265,8 @@ export default {
 
     // TO GET ROLE
     const roleId = localStorage.getItem('role');
-
-    const permissions = JSON.parse(localStorage.getItem('permissions') || '[]');
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       roleId,

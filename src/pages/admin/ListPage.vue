@@ -228,6 +228,7 @@ import api from 'src/AxiosInterceptors';
 import { ref } from 'vue';
 import NoteBtn from 'src/components/Display_Components/NoteBtn.vue';
 import { useQuasar } from 'quasar';
+import { usePermissionStore } from 'src/stores/permissionStore';
 export default {
   components: {
     Reject,
@@ -352,7 +353,8 @@ export default {
       },
     ];
 
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const perm = usePermissionStore();
+    const permissions = perm.getPerm;
     return {
       permissions,
       roleId,
