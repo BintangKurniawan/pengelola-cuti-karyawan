@@ -11,18 +11,41 @@
           <!-- <p>{{ selectedRole }}</p> -->
         </q-card-section>
 
-        <q-card-section class="flex items-center gap-4 w-full justify-between">
-          <div class="w-full">
-            <div class="flex flex-col items-start gap-1 w-[45%]">
-              <p class="text-primary font-semibold">Role Name</p>
-              <q-input
-                v-model="name"
+        <q-card-section
+          class="flex items-center flex-row w-full justify-between"
+        >
+          <div class="flex flex-col items-start gap-1 w-[45%]">
+            <p class="text-primary font-semibold">Role Name</p>
+            <q-input
+              v-model="name"
+              outlined
+              color="dark"
+              bg-color="white"
+              for="name"
+              placeholder="Name"
+              class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+            />
+          </div>
+          <div class="flex flex-col items-start gap-1 w-[45%]">
+            <p class="text-primary font-semibold">Group</p>
+            <div class="w-full flex items-center gap-1">
+              <q-select
+                class="rounded-lg w-[90%]"
                 outlined
-                color="dark"
-                bg-color="white"
-                for="name"
-                placeholder="Name"
-                class="drop-shadow-sm w-full outline-none focus:bg-transparent active:bg-transparent"
+                v-model="selectedGroup"
+                :options="groupOptions"
+                emit-value
+                map-options
+                @update:model-value="getGroupById"
+                label="Group Permission"
+              >
+              </q-select>
+              <q-icon
+                @click="reset"
+                v-if="selectedGroup"
+                size="16px"
+                name="close"
+                class="cursor-pointer"
               />
             </div>
           </div>
@@ -109,6 +132,8 @@ export default {
       roleOptions: [],
 
       selectedRole: ref([]),
+      groupOptions: [],
+      selectedGroup: ref(null),
     };
   },
   props: {
@@ -123,6 +148,50 @@ export default {
       this.dialog = true;
       this.getRole();
       this.getRoleById(id);
+      this.getGroupData();
+    },
+    reset() {
+      this.selectedGroup = null;
+      this.getRole();
+    },
+    async getGroupById() {
+      await api
+        .get('role/group-permission/' + this.selectedGroup)
+        .then((res) => {
+          const roles = res.data.data.permissions;
+          console.log(roles);
+
+          const mappedRoles = roles.map((role: { id: any; name: any }) => {
+            return {
+              value: role.id,
+              label: role.name,
+            };
+          });
+
+          this.roleOptions = mappedRoles;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    async getGroupData() {
+      await api
+        .get('/role/group-permission-name')
+        .then((res) => {
+          const grouptOpt = res.data.data;
+          const mappedGroupOptions = grouptOpt.map(
+            (perm: { id: any; name: any }) => {
+              return {
+                value: perm.id,
+                label: perm.name,
+              };
+            }
+          );
+          this.groupOptions = mappedGroupOptions;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     // TO GET PERMISSIONS
     async getRole() {
