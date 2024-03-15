@@ -8,7 +8,7 @@ const port = store.getPort;
 const ip = store.getIp;
 
 const api = axios.create({
-  baseURL: 'https://10.10.101.212:8080/api',
+  baseURL: process.env.API_URL,
 });
 api.interceptors.request.use(
   (config) => {

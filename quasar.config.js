@@ -10,11 +10,11 @@
 
 const { configure } = require('quasar/wrappers');
 const tes = require('./tsx.json');
-
 // const { getConfig } = require('config');
 // const config = getConfig();
 
 module.exports = configure(function (/* ctx */) {
+  require('dotenv').config();
   return {
     eslint: {
       // fix: true,
@@ -69,6 +69,7 @@ module.exports = configure(function (/* ctx */) {
       // analyze: true,
       env: {
         port: 2000,
+        API_URL: process.env.VUE_APP_API_URL,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
