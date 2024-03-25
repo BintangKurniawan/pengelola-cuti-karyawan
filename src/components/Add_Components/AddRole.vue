@@ -138,7 +138,7 @@ export default {
       // FOR SELECT IN Q-SELECT, THE DATA IS GAINED FROM API
       roleOptions: [],
 
-      selectedRole: ref([9, 5, 18, 17, 19, 20, 22]),
+      selectedRole: ref([]),
       groupOptions: [],
       selectedGroup: ref(null),
     };
@@ -175,6 +175,7 @@ export default {
           });
 
           this.roleOptions = mappedRoles;
+          this.selectedRole.push(...mappedRoles.map((perm: any) => perm.value));
         })
         .catch((err) => {
           console.error(err);
