@@ -6,7 +6,8 @@
     @click="dialog = true"
   >
     <div class="flex items-center justify-center gap-1">
-      <p>Send Email</p>
+      <Icon icon="mdi:email-arrow-right-outline" size="24" class="w-6 h-6" />
+      <!-- <p>Send Email</p> -->
     </div>
   </q-btn>
 

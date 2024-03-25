@@ -4,6 +4,7 @@
     flat
     :columns="column"
     :rows="data"
+    :loading="load"
     v-model:pagination="pagination"
     hide-pagination
     row-key
@@ -165,6 +166,7 @@ export default {
         rowsNumber: 0,
       },
       search: '',
+      load: false,
     };
   },
   async mounted() {
@@ -180,6 +182,7 @@ export default {
     // TO GET DATA
     async getData(page) {
       const perPage = window.innerWidth >= 768 ? 10 : 9;
+      this.load = true;
       await api
         .get(`/position?page=${page}&perPage=${perPage}`, {
           params: {
@@ -193,6 +196,7 @@ export default {
           // TO SAVE POSITION DATA IN LOCALSTORAGE. WHY I DO THIS? COZ IN SETTING I NEED THE POSIITON DATA
           const positionDataString = JSON.stringify(this.data);
           localStorage.setItem('position', positionDataString);
+          this.load = false;
         })
         .catch((err) => {
           if (err.response) {

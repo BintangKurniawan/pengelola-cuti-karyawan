@@ -475,6 +475,7 @@ export default {
         .then((resp) => {
           this.data = resp.data.data;
           this.pagination.rowsNumber = resp.data.meta.lastPage;
+          this.load = false;
         })
         .catch((err) => {
           console.error(err);
@@ -486,12 +487,12 @@ export default {
             this.failedNotif(msg);
           }
         });
-      this.load = false;
     },
 
     async getDataSpecial(page) {
       const perPage = window.innerWidth >= 768 ? 8 : 7;
 
+      this.load = true;
       await api
         .get(`/leave/employee-special-leaves?page=${page}&perPage=${perPage}`, {
           params: {
@@ -503,6 +504,7 @@ export default {
           this.specialData = res.data.data;
           this.pagination.rowsNumberSpe = res.data.meta.lastPage;
           console.log(res);
+          this.load = false;
         })
         .catch((err) => {
           console.error(err);

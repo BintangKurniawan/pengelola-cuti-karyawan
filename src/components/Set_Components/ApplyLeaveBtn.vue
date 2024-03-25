@@ -6,7 +6,8 @@
     @click="openDialog(id)"
   >
     <div class="flex items-center justify-center gap-1">
-      <p>Apply</p>
+      <Icon icon="mdi:calendar-plus-outline" class="w-6 h-6" />
+      <!-- <p>Apply</p> -->
     </div>
   </q-btn>
   <div>

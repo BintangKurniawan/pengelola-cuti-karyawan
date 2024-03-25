@@ -10,21 +10,15 @@
       <p class="capitalize">Back</p>
     </div>
   </q-btn>
-  <h1
-    class="mx-4 md:text-3xl text-xl font-bold text-start"
-    v-if="data && data.length > 0"
-  >
+  <h1 class="mx-4 md:text-3xl text-xl font-bold text-start">
     Name: {{ name }}
   </h1>
-  <h3
-    class="mx-4 md:text-2xl text-lg font-semibold text-start"
-    v-if="data && data.length > 0"
-  >
+  <h3 class="mx-4 md:text-2xl text-lg font-semibold text-start">
     NIK: {{ nik }}
   </h3>
 
   <div class="flex justify-between items-center gap-4 mx-4">
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2" v-if="switchTable !== 'Adjust'">
       <div class="flex items-center gap-1">
         <q-select
           class="rounded-lg w-[110px]"
@@ -32,9 +26,11 @@
           v-model="status"
           :options="statusOptions"
           @update:model-value="
-            switchTable
+            switchTable === 'Ordinary'
               ? getData(pagination.page)
-              : getSpecialData(pagination.page)
+              : switchTable === 'Special'
+              ? getSpecialData(pagination.page)
+              : ''
           "
           label="Status"
         >
@@ -47,7 +43,7 @@
           class="cursor-pointer"
         />
       </div>
-      <div class="flex items-center gap-1" v-if="switchTable">
+      <div class="flex items-center gap-1" v-if="switchTable === 'Ordinary'">
         <q-select
           class="rounded-lg w-[125px]"
           outlined
@@ -66,11 +62,16 @@
       </div>
     </div>
     <div
-      class="xl:w-[75%] w-full border-b-2 flex items-center justify-center gap-4"
+      class="w-full border-b-2 flex items-center justify-center gap-4"
+      :class="switchTable === 'Adjust' ? 'xl:w-full' : 'xl:w-[75%]'"
     >
       <div
         class="cursor-pointer group relative transition-all"
-        @click="switchTable = 'Ordinary'"
+        @click="
+          switchTable = 'Ordinary';
+          load2 = false;
+          load3 = false;
+        "
         :class="switchTable === 'Ordinary' ? 'text-primary font-semibold' : ''"
       >
         <span
@@ -85,6 +86,8 @@
         @click="
           switchTable = 'Special';
           getSpecialData(pagination2.page);
+          load1 = false;
+          load3 = false;
         "
         :class="switchTable === 'Special' ? 'text-primary font-semibold' : ''"
       >
@@ -100,6 +103,8 @@
         @click="
           switchTable = 'Adjust';
           getHistoryAdjustData(pagination3.page);
+          load1 = false;
+          load2 = false;
         "
         :class="switchTable === 'Adjust' ? 'text-primary font-semibold' : ''"
       >
@@ -140,6 +145,15 @@
     "
     v-model:pagination="pagination"
     hide-bottom
+    :loading="
+      switchTable === 'Ordinary'
+        ? load1
+        : switchTable === 'Special'
+        ? load2
+        : switchTable === 'Adjust'
+        ? load3
+        : false
+    "
   >
     <template v-slot:body-cell-type="props">
       <q-td class="text-center" :props="props" v-if="props.row.typeOfLeave">
@@ -404,6 +418,9 @@ export default {
       },
       switchTable: ref('Ordinary'),
       status: '',
+      load1: false,
+      load2: false,
+      load3: false,
       // FOR FILTER DATA
       statusOptions: ['Approve', 'Waiting', 'Reject'],
 
@@ -415,9 +432,9 @@ export default {
     resetStatus() {
       this.status = '';
       this.current = 1;
-      if (this.switchTable) {
+      if (this.switchTable === 'Ordinary') {
         this.getData(this.pagination.page);
-      } else {
+      } else if (this.switchTable === 'Special') {
         this.getSpecialData(this.pagination.page);
       }
     },
@@ -426,14 +443,15 @@ export default {
       this.typeLeave = '';
       this.getData(this.pagination.page);
     },
-    toggleTable() {
-      this.switchTable = false;
-      this.status = '';
-      this.current = 1;
-      this.getSpecialData(this.pagination.page);
-    },
+    // toggleTable() {
+    //   this.switchTable = false;
+    //   this.status = '';
+    //   this.current = 1;
+    //   this.getSpecialData(this.pagination.page);
+    // },
     // TO GET DATA
     async getData(page: number | undefined) {
+      this.load1 = true;
       await api
         .get(`/leave/history/${this.id}?page=${page}&perPage=8`, {
           params: {
@@ -442,13 +460,21 @@ export default {
           },
         })
         .then((resp) => {
-          this.data = resp.data.data;
+          this.load1 = false;
           this.name = resp.data.data[0].name;
           this.nik = resp.data.data[0].nik;
+          if (resp.data.meta.total) {
+            this.data = resp.data.data;
+          } else if (resp.data.meta.total === 0) {
+            this.failedNotif(resp.data.message);
+            this.data = [];
+          }
           this.pagination.rowsNumber = resp.data.meta.lastPage;
           console.log(resp);
         })
         .catch((err) => {
+          this.load1 = false;
+
           console.error(err);
           if (err.response.status == 403) {
             this.failedNotif(err.response.data.message);
@@ -459,6 +485,7 @@ export default {
         });
     },
     async getSpecialData(page: number | undefined) {
+      this.load2 = true;
       await api
         .get(
           `/leave/employee-special-leave/history/${this.id}?page=${page}&perPage=8`,
@@ -469,10 +496,18 @@ export default {
           }
         )
         .then((res) => {
-          this.specialData = res.data.data;
+          this.load2 = false;
+          if (res.data.meta.total) {
+            this.specialData = res.data.data;
+          } else if (res.data.meta.total === 0) {
+            this.failedNotif(res.data.message);
+            this.specialData = [];
+          }
           this.pagination2.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
+          this.load2 = false;
+
           console.error(err);
           if (err.response.status == 403) {
             this.failedNotif(err.response.data.message);
@@ -484,13 +519,17 @@ export default {
         });
     },
     async getHistoryAdjustData(page: any) {
+      this.load3 = true;
       await api
         .get(`/leave/adjust-leave/${this.id}?page=${page}&perPage=8`)
         .then((res) => {
+          this.load3 = false;
           this.adjustData = res.data.data[0].leaveAdjustments;
           this.pagination.rowsNumber = res.data.meta.lastPage;
         })
         .catch((err) => {
+          this.load3 = false;
+
           console.error(err);
           if (err.response.status === 403) {
             this.failedNotif(err.response.data.message);
