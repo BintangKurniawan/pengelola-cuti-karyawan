@@ -269,7 +269,10 @@ export default {
             this.specialLeaveId = '';
             this.startLeave = '';
             this.dialog = false;
-            this.$router.push('/special');
+
+            setInterval(() => {
+              window.location.reload();
+            }, 1000);
           })
           .catch((err) => {
             if (err.response) {

@@ -39,8 +39,8 @@ export default {
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-header reveal class="bg-white text-black" bordered>
-      <q-toolbar class="flex items-center justify-between">
-        <q-img :src="img" class="w-[130px] h-[29px]" ratio="16/9" />
+      <q-toolbar class="flex items-center justify-between p-4">
+        <q-img :src="img" class="w-[130px] h-auto" fetchpriority="low" />
         <div class="lg:hidden">
           <q-btn dense flat class="" @click="leftDrawerOpen = !leftDrawerOpen">
             <Icon icon="mdi:menu" width="24" />

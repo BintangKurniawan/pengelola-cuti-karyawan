@@ -215,7 +215,10 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props" class="flex items-center justify-center">
+      <q-td
+        :props="props"
+        class="items-center justify-center flex gap-1 !h-full text-center"
+      >
         <AdjustLeaveBtn
           :id="props.row.nik"
           @get-data="handleChildEvent"
@@ -308,14 +311,12 @@ export default {
         label: 'Name',
         align: 'center',
         field: 'name',
-        style: 'width: 100px;',
       },
       {
         name: 'position',
         label: 'Position',
         align: 'center',
         field: 'position',
-        style: 'width: 300px;',
       },
       {
         name: 'gender',
@@ -328,14 +329,12 @@ export default {
         label: 'This Year Leave',
         align: 'center',
         field: 'amountOfLeaveNow',
-        style: 'width: 250px;',
       },
       {
         name: 'amountOfLeaveThen',
         label: 'Last Year Leave',
         align: 'center',
         field: 'amountOfLeaveThen',
-        style: 'width: 250px;',
       },
 
       {
@@ -356,7 +355,6 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 260px',
       },
     ];
     const perm = usePermissionStore();
@@ -600,7 +598,7 @@ export default {
       position: any
     ) {
       this.load = true;
-      const perPage = window.innerWidth >= 768 ? 10 : 7;
+      const perPage = window.innerWidth >= 768 ? 9 : 7;
       const orderBy = `${label}_${sort ? 'desc' : 'asc'}`;
       await api
         .get(

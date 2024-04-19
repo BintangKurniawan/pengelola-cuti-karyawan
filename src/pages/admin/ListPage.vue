@@ -139,7 +139,7 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props" class="flex justify-center items-center gap-1">
+      <q-td :props="props" class="justify-center items-center gap-1">
         <Approve
           v-if="
             (permissions.includes('Approve and Reject Personal Leave') &&
@@ -273,7 +273,6 @@ export default {
         label: 'Leave Used',
         align: 'center',
         field: 'leaveUse',
-        style: 'width: 250px;',
       },
 
       {
@@ -288,6 +287,7 @@ export default {
         label: 'Reason',
         align: 'center',
         field: 'reason',
+        style: 'width: 200px;',
       },
 
       {
@@ -295,7 +295,8 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 200px;',
+        style:
+          'display: flex; justify-content: center; align-items: center; height: 100%;',
       },
 
       // here
@@ -307,8 +308,6 @@ export default {
         label: 'Name',
         align: 'center',
         field: 'name',
-
-        style: 'width: 100px;',
       },
 
       {
@@ -322,21 +321,18 @@ export default {
         label: 'End Leave',
         align: 'center',
         field: 'end',
-        style: 'width: 250px;',
       },
       {
         name: 'amount',
         label: 'Amount',
         align: 'center',
         field: 'amount',
-        style: 'width: 250px;',
       },
       {
         name: 'status',
         label: 'Status',
         align: 'center',
         field: 'statust',
-        style: 'width: 100px;',
       },
       {
         name: 'reason',
@@ -349,7 +345,8 @@ export default {
         label: 'Action',
         align: 'center',
         field: 'action',
-        style: 'width: 200px',
+        style:
+          'display: flex; justify-content: center; align-items: center; height: 100%;',
       },
     ];
 

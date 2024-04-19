@@ -252,6 +252,7 @@ export default {
     },
     async login() {
       this.loading = true;
+      this.showLoading();
       await api
         .post(
           '/auth/login',
@@ -259,8 +260,6 @@ export default {
           { withCredentials: true }
         )
         .then((resp) => {
-          this.showLoading();
-
           this.response = resp.data.data;
           this.role = resp.data.data.user.roleId;
           const token = resp.data.data.accessToken;
@@ -293,6 +292,7 @@ export default {
           if (error.response) {
             const msg = error.response.data.message;
             this.failedNotif(msg, this.color);
+            this.$q.loading.hide();
           }
         });
 

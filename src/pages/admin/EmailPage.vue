@@ -64,10 +64,7 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td
-        :props="props"
-        class="flex items-center gap-1 justify-center md:w-full w-[200px]"
-      >
+      <q-td :props="props" class="items-center gap-1 justify-center w-[200px]">
         <SendEmailBtn
           :id="props.row.id"
           :type="props.row.name"

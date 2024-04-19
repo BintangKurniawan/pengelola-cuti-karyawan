@@ -63,7 +63,7 @@
     <template v-slot:body-cell-action="props">
       <q-td
         :props="props"
-        class="flex gap-1 justify-center items-center text-center lg::w-full w-[200px]"
+        class="flex gap-1 justify-center items-center text-center h-full"
       >
         <EditSpecialLeave
           :id="props.row.id"

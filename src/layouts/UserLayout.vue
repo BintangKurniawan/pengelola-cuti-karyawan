@@ -200,7 +200,7 @@ export default {
   <q-layout view="lHh lpR fFf">
     <q-header reveal class="bg-white text-black">
       <q-toolbar class="flex justify-between p-4 items-center">
-        <q-img :src="img" class="w-[130px] h-[29px]" />
+        <q-img :src="img" class="w-[130px] h-auto" />
 
         <div class="md:hidden">
           <q-btn dense flat class="" @click="showNav">
