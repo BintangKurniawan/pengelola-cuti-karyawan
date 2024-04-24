@@ -2,6 +2,9 @@
 
 pkl
 
+## Add the API
+create .env and then copy all text from .env.test. 
+
 ## Install the dependencies
 
 ```bash
