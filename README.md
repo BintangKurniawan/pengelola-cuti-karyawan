@@ -12,7 +12,9 @@ npm install
 ```
 
 ### Add the API
+```bash
 create .env and then copy all text from .env.test.
+```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
