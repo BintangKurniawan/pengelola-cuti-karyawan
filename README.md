@@ -1,9 +1,7 @@
 # WGS CUTI
 
 pkl
-
-## Add the API
-create .env and then copy all text from .env.test. 
+ 
 
 ## Install the dependencies
 
@@ -12,6 +10,9 @@ yarn
 # or
 npm install
 ```
+
+### Add the API
+create .env and then copy all text from .env.test.
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
